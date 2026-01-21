@@ -1,0 +1,812 @@
+\documentclass[11pt]{exam}
+\footer{}{\thepage}{} % avoid ``Page X''
+\usepackage[left=0.7in, right=0.7in, top=0.8in, bottom=0.8in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage[all]{foreign}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,mathtools,bm}
+\usepackage[low-sup]{subdepth} % alignment of sub and sup scripts
+\usepackage{stackengine} % stacking matrix dimensions
+\stackMath
+\def\sss{\scriptstyle}
+\setstackgap{L}{12pt}
+\def\stacktype{L}
+
+\usepackage{siunitx}
+
+\usepackage[sc]{mathpazo}
+%\usepackage{euscript}
+\usepackage{float,booktabs,threeparttable,caption,subcaption,xcolor}
+\usepackage[low-sup]{subdepth}
+\usepackage{mathrsfs,dsfont}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\graphicspath{{figs/}}
+\usepackage{natbib}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{hyperref}
+\usepackage[noabbrev,nameinlink,capitalise]{cleveref}
+\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
+
+% avoid line breaks at binary operators and relation operators in inline math
+\binoppenalty=10000 
+\relpenalty=10000 
+
+% spacing of align
+\expandafter\def\expandafter\normalsize\expandafter{%
+	\normalsize%
+	\setlength\abovedisplayskip{8pt}%
+	\setlength\belowdisplayskip{8pt}%
+	\setlength\abovedisplayshortskip{-8pt}%
+	\setlength\belowdisplayshortskip{2pt}%
+}
+
+\renewcommand{\questionshook}{\setlength{\itemsep}{0.06in}}
+% referring to questions
+\Crefformat{question}{#2Q#1#3}
+\crefname{question}{question}{questions}
+\Crefname{question}{Q}{Qs}
+
+\printanswers
+
+%% Build Directory Configuration
+%%
+%% To compile this document with auxiliary files (.aux, .log, .out, etc.) 
+%% written to a separate build folder, use one of the following methods:
+%%
+%% Method 1: Using pdflatex directly
+%%   pdflatex -output-directory=build EMII_QSMII_PS1_Template.tex
+%%   (Note: You may need to run this twice for cross-references)
+%%
+%% Method 2: Using latexmk (recommended)
+%%   latexmk -pdf -auxdir=build -outdir=build EMII_QSMII_PS1_Template.tex
+%%
+%% Method 3: Create a .latexmkrc file in the same directory with:
+%%   $aux_dir = 'build';
+%%   $out_dir = 'build';
+%%   Then run: latexmk -pdf EMII_QSMII_PS1_Template.tex
+%%
+%% The build folder will contain all auxiliary files, keeping your source
+%% directory clean. The PDF output will also be placed in the build folder.
+
+%% notation
+
+% bold math
+\newcommand{\bom}[1]{\bm{#1}}
+\newcommand{\bX}{\bom{X}}
+\newcommand{\bi}{\bom{\iota}}
+
+% probability
+\DeclareMathOperator*{\pp}{\mathbb{P}}
+
+% expectation with round brackets
+\NewDocumentCommand{\expect}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{E}}%     the expectation operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the expectation
+	\IfBooleanTF{#2}{% *-variant
+		\expectarg*{\expectvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\expectarg{\expectvar#4}%
+		}{% optional argument
+			\expectarg[#3]{\expectvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\expectvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\expectarg}[1]{(}{)}{#1}
+
+% expectation with square brackets
+\NewDocumentCommand{\expectsq}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{E}}%     the expectation operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the expectation
+	\IfBooleanTF{#2}{% *-variant
+		\expectargsq*{\expectvarsq#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\expectargsq{\expectvarsq#4}%
+		}{% optional argument
+			\expectargsq[#3]{\expectvarsq#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\expectvarsq}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\expectargsq}[1]{[}{]}{#1}
+
+% covariance
+\NewDocumentCommand{\cov}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{C}ov}%     the covariance operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the covariance
+	\IfBooleanTF{#2}{% *-variant
+		\covarg*{\covvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\covarg{\covvar#4}%
+		}{% optional argument
+			\covarg[#3]{\covvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\covvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\covarg}[1]{(}{)}{#1}
+
+% covariance HAT
+\NewDocumentCommand{\covhat}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\ensuremath{\widehat{\mathbb{C}ov}}}%     the covariance operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the covariance
+	\IfBooleanTF{#2}{% *-variant
+		\covhatarg*{\covhatvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\covhatarg{\covhatvar#4}%
+		}{% optional argument
+			\covhatarg[#3]{\covhatvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\covhatvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\covhatarg}[1]{(}{)}{#1}
+
+% variance
+\NewDocumentCommand{\var}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{V}ar}%     the variance operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the variance
+	\IfBooleanTF{#2}{% *-variant
+		\vararg*{\varvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\vararg{\varvar#4}%
+		}{% optional argument
+			\vararg[#3]{\varvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\varvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\vararg}[1]{(}{)}{#1}
+
+
+\DeclareMathOperator*{\trace}{tr}
+\DeclareMathOperator*{\rank}{rank}
+
+\newcommand{\duedate}{{\large\bfseries\color{red} Due date: Monday, 19 January, 23:59}}
+
+
+\title{\vspace*{-4em}EM II/QSM II: Development\\ Problem Set 1
+	\ifprintanswers
+	{\color{red}Solutions}
+	\fi
+\\	
+{\normalsize Barcelona School of Economics, Spring 2026} \\
+\duedate}
+
+\author{Group members: AB, CD, EF, GH.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\vspace*{-1em}
+
+\section*{Submission Instructions}
+Please submit a document with your answers, including Stata or R output and programs, to our TA Janik Deutscher via the Google Classroom by Monday, 19 January, 23:59 at the very latest. You can work in groups of up to four.
+
+\section{Random Effects Model}
+
+Consider the model with a single regressor $x_{it}$:
+\begin{align}
+	y_{it} = \beta_0 + \beta_1 x_{it} + \alpha_i + u_{it} \,,
+\end{align}
+where $\alpha_i$ represents an unobserved effect fixed over time and $u_{it}$ is a homoskedastic error term which is independent over time $t$ and individuals $i$. There are $N$ randomly sampled individuals, each observed for $T=4$ time periods. Assume that $\expect{u_{it} | X_i, \alpha_i} = 0$ for all $i$ and that $\expect{u_{it} u_{is} | X_i, \alpha_i} = 0$ for any $t$ and $s: t \neq s$ where $X_i$ represents the $T \times 2$ data matrix for individual $i$.
+
+\begin{questions}
+
+\question State under which assumptions you would estimate a random effects model in this context. Derive the random effects estimator and show that it is a consistent estimator of $\bom{\beta} = [\beta_0, \beta_1]'$.
+\begin{solution}
+
+\textbf{Part 1: Assumptions for the Random Effects Model}
+
+The random effects model is appropriate under the following assumptions:
+
+\begin{itemize}
+	\item[\textbf{RE1.}] \textbf{Random individual effects:} The unobserved effect is uncorrelated with the regressors:
+	\begin{align}
+		\expect{\alpha_i | X_i} = \expect{\alpha_i} = 0
+	\end{align}
+	where $X_i$ is the $T \times 2$ data matrix for individual $i$. This is the key distinction from fixed effects, which allows $\expect{\alpha_i | X_i} \neq 0$.
+	
+	\item[\textbf{RE2.}] \textbf{Strictly exogenous regressors:} The idiosyncratic error is mean-independent of all regressors (past, present, and future) conditional on the unobserved effect:
+	\begin{align}
+		\expect{u_{it} | X_i, \alpha_i} = 0 \quad \text{for all } t = 1, \ldots, T
+	\end{align}
+	
+	\item[\textbf{RE3.}] \textbf{Homoscedasticity:} The variance of both error components is constant:
+	\begin{align}
+		\var{\alpha_i | X_i} &= \sigma_\alpha^2 \\
+		\var{u_{it} | X_i, \alpha_i} &= \sigma_u^2 \\
+		\cov{u_{it}, u_{is} | X_i, \alpha_i} &= 0 \quad \text{for } t \neq s
+	\end{align}
+	
+	\item[\textbf{RE4.}] \textbf{Rank condition:} The matrix $\expect{X_i' X_i}$ is positive definite with rank 2 (full column rank).
+\end{itemize}
+
+\textbf{Part 2: Covariance Structure of the Composite Error}
+
+Define the composite error $v_{it} = \alpha_i + u_{it}$. Under RE1-RE3, we can derive:
+\begin{align}
+	\cov{v_{it}, v_{is} | X_i} &= \expect{v_{it} v_{is} | X_i} \\
+	&= \expect{(\alpha_i + u_{it})(\alpha_i + u_{is}) | X_i} \\
+	&= \expect{\alpha_i^2 | X_i} + \expect{u_{it} u_{is} | X_i} + \expect{\alpha_i u_{it} | X_i} + \expect{\alpha_i u_{is} | X_i} \\
+	&= \sigma_\alpha^2 + \delta_{ts} \sigma_u^2
+\end{align}
+where $\delta_{ts}$ is the Kronecker delta (1 if $t=s$, 0 otherwise). The cross-terms vanish by iterated expectations using RE2.
+
+For individual $i$, stack the $T=4$ observations: $v_i = (v_{i1}, v_{i2}, v_{i3}, v_{i4})'$. The covariance matrix is:
+\begin{align}
+	V = \expect{v_i v_i' | X_i} = \sigma_u^2 I_T + \sigma_\alpha^2 J_T
+\end{align}
+where $I_T$ is the $T \times T$ identity matrix and $J_T$ is a $T \times T$ matrix of ones.
+
+\textbf{Part 3: Derivation of the Random Effects Estimator}
+
+The model in vector form for individual $i$ is:
+\begin{align}
+	y_i = X_i \bom{\beta} + v_i
+\end{align}
+
+Since $\expect{v_i v_i' | X_i} = V$ is not diagonal, OLS is inefficient (though consistent). The efficient estimator is the Generalized Least Squares (GLS) estimator, which minimizes the weighted sum of squared residuals.
+
+The GLS estimator for the entire sample is:
+\begin{align}
+	\hat{\bom{\beta}}^{RE} = \left(\sum_{i=1}^N X_i' V^{-1} X_i\right)^{-1} \left(\sum_{i=1}^N X_i' V^{-1} y_i\right)
+\end{align}
+
+\textbf{Part 4: Proof of Consistency}
+
+To show consistency, we demonstrate that $\hat{\bom{\beta}}^{RE} \xrightarrow{p} \bom{\beta}$ as $N \to \infty$.
+
+Substituting $y_i = X_i \bom{\beta} + v_i$ into the estimator:
+\begin{align}
+	\hat{\bom{\beta}}^{RE} &= \left(\sum_{i=1}^N X_i' V^{-1} X_i\right)^{-1} \left(\sum_{i=1}^N X_i' V^{-1} (X_i \bom{\beta} + v_i)\right) \\
+	&= \bom{\beta} + \left(\sum_{i=1}^N X_i' V^{-1} X_i\right)^{-1} \left(\sum_{i=1}^N X_i' V^{-1} v_i\right)
+\end{align}
+
+For consistency, we need:
+\begin{enumerate}
+	\item $\frac{1}{N}\sum_{i=1}^N X_i' V^{-1} X_i \xrightarrow{p} \expect{X_i' V^{-1} X_i}$, which is positive definite by RE4.
+	
+	\item $\frac{1}{N}\sum_{i=1}^N X_i' V^{-1} v_i \xrightarrow{p} \expect{X_i' V^{-1} v_i}$.
+\end{enumerate}
+
+Both follow from the Law of Large Numbers under random sampling. For the second term:
+\begin{align}
+	\expect{X_i' V^{-1} v_i} &= \expect{\expect{X_i' V^{-1} v_i | X_i}} \\
+	&= \expect{X_i' V^{-1} \expect{v_i | X_i}} \\
+	&= 0
+\end{align}
+
+The last equality holds because under RE1 and RE2, $\expect{v_i | X_i} = \expect{\alpha_i | X_i} + \expect{u_i | X_i} = 0$.
+
+Therefore:
+\begin{align}
+	\hat{\bom{\beta}}^{RE} - \bom{\beta} = \left(\frac{1}{N}\sum_{i=1}^N X_i' V^{-1} X_i\right)^{-1} \left(\frac{1}{N}\sum_{i=1}^N X_i' V^{-1} v_i\right) \xrightarrow{p} \expect{X_i' V^{-1} X_i}^{-1} \cdot 0 = 0
+\end{align}
+
+Hence, $\hat{\bom{\beta}}^{RE}$ is a consistent estimator of $\bom{\beta}$.
+
+\end{solution}
+
+\question Derive the (asymptotic) variance-covariance matrix of the random effects estimator.
+\begin{solution}
+
+\textbf{Derivation of the Asymptotic Variance-Covariance Matrix}
+
+From Question 1, we have:
+\begin{align}
+	\hat{\bom{\beta}}^{RE} - \bom{\beta} = \left(\sum_{i=1}^N X_i' V^{-1} X_i\right)^{-1} \left(\sum_{i=1}^N X_i' V^{-1} v_i\right)
+\end{align}
+
+Multiplying both sides by $\sqrt{N}$:
+\begin{align}
+	\sqrt{N}(\hat{\bom{\beta}}^{RE} - \bom{\beta}) = \left(\frac{1}{N}\sum_{i=1}^N X_i' V^{-1} X_i\right)^{-1} \left(\frac{1}{\sqrt{N}}\sum_{i=1}^N X_i' V^{-1} v_i\right)
+\end{align}
+
+\textbf{Step 1: Apply the Law of Large Numbers}
+
+Under random sampling and RE4:
+\begin{align}
+	\frac{1}{N}\sum_{i=1}^N X_i' V^{-1} X_i \xrightarrow{p} \expect{X_i' V^{-1} X_i} \equiv Q
+\end{align}
+where $Q$ is a positive definite $2 \times 2$ matrix.
+
+\textbf{Step 2: Apply the Central Limit Theorem}
+
+Consider the term $\frac{1}{\sqrt{N}}\sum_{i=1}^N X_i' V^{-1} v_i$. Define $Z_i = X_i' V^{-1} v_i$, which is a $2 \times 1$ random vector. Under random sampling:
+\begin{itemize}
+	\item $Z_i$ are i.i.d. across $i$.
+	\item $\expect{Z_i} = \expect{X_i' V^{-1} v_i} = 0$ (shown in Question 1).
+	\item $\var{Z_i} = \expect{Z_i Z_i'} = \expect{X_i' V^{-1} v_i v_i' V^{-1} X_i}$.
+\end{itemize}
+
+By the Central Limit Theorem:
+\begin{align}
+	\frac{1}{\sqrt{N}}\sum_{i=1}^N Z_i \xrightarrow{d} \mathcal{N}(0, \Sigma)
+\end{align}
+where $\Sigma = \var{Z_i} = \expect{X_i' V^{-1} v_i v_i' V^{-1} X_i}$.
+
+\textbf{Step 3: Calculate the Variance $\Sigma$}
+
+Under RE1-RE3, $\expect{v_i v_i' | X_i} = V$, so:
+\begin{align}
+	\Sigma &= \expect{X_i' V^{-1} v_i v_i' V^{-1} X_i} \\
+	&= \expect{\expect{X_i' V^{-1} v_i v_i' V^{-1} X_i | X_i}} \\
+	&= \expect{X_i' V^{-1} \expect{v_i v_i' | X_i} V^{-1} X_i} \\
+	&= \expect{X_i' V^{-1} V V^{-1} X_i} \\
+	&= \expect{X_i' V^{-1} X_i} \\
+	&= Q
+\end{align}
+
+\textbf{Step 4: Derive the Asymptotic Distribution}
+
+Combining Steps 1-3 and applying Slutsky's Theorem:
+\begin{align}
+	\sqrt{N}(\hat{\bom{\beta}}^{RE} - \bom{\beta}) &= \left(\frac{1}{N}\sum_{i=1}^N X_i' V^{-1} X_i\right)^{-1} \left(\frac{1}{\sqrt{N}}\sum_{i=1}^N X_i' V^{-1} v_i\right) \\
+	&\xrightarrow{d} Q^{-1} \mathcal{N}(0, Q) \\
+	&= \mathcal{N}(0, Q^{-1} Q Q^{-1}) \\
+	&= \mathcal{N}(0, Q^{-1})
+\end{align}
+
+\textbf{Step 5: State the Final Result}
+
+The asymptotic variance-covariance matrix of $\hat{\bom{\beta}}^{RE}$ is:
+\begin{align}
+	\text{Avar}(\hat{\bom{\beta}}^{RE}) = \frac{1}{N} \left(\expect{X_i' V^{-1} X_i}\right)^{-1}
+\end{align}
+
+This can be consistently estimated by:
+\begin{align}
+	\widehat{\text{Avar}}(\hat{\bom{\beta}}^{RE}) = \left(\sum_{i=1}^N X_i' \hat{V}^{-1} X_i\right)^{-1}
+\end{align}
+where $\hat{V}$ is a consistent estimator of $V$ (obtained from the feasible GLS procedure, as discussed in Question 3).
+
+\textbf{Interpretation:} The asymptotic variance depends on:
+\begin{itemize}
+	\item The inverse of the variance components (through $V^{-1}$): smaller variance in the composite error leads to more precise estimates.
+	\item The variation in the regressors: more variation in $X_i$ leads to smaller variance.
+	\item The sample size $N$: the variance decreases at rate $1/N$.
+\end{itemize}
+
+\end{solution}
+
+\question Explain how you would implement this estimator using the data in your sample.
+\begin{solution}
+
+\textbf{Feasible GLS Implementation}
+
+Since the variance components $\sigma_\alpha^2$ and $\sigma_u^2$ are unknown in practice, we cannot directly compute $V = \sigma_u^2 I_T + \sigma_\alpha^2 J_T$. Instead, we use a \textit{feasible GLS} (FGLS) approach, which estimates these parameters from the data and then applies GLS with the estimated covariance matrix.
+
+\textbf{Step 1: Pooled OLS Estimation}
+
+First, estimate the model by pooled OLS, ignoring the panel structure:
+\begin{align}
+	\hat{\bom{\beta}}^{POLS} = \left(\sum_{i=1}^N X_i' X_i\right)^{-1} \left(\sum_{i=1}^N X_i' y_i\right)
+\end{align}
+
+Compute the residuals:
+\begin{align}
+	\hat{v}_{it} = y_{it} - x_{it}' \hat{\bom{\beta}}^{POLS}
+\end{align}
+
+Although pooled OLS is inefficient (due to serial correlation in $v_{it}$), it is consistent under RE1-RE2 and provides consistent estimates of the residuals.
+
+\textbf{Step 2: Estimate Variance Components}
+
+Using the POLS residuals, estimate the variance of the composite error:
+\begin{align}
+	\hat{\sigma}_v^2 = \frac{1}{NT - K} \sum_{i=1}^N \sum_{t=1}^T \hat{v}_{it}^2
+\end{align}
+where $K=2$ is the number of regressors. With $T=4$, this uses $4N-2$ degrees of freedom.
+
+Next, estimate the covariance between residuals at different time periods for the same individual:
+\begin{align}
+	\hat{\sigma}_\alpha^2 = \frac{1}{NT(T-1)/2 - K} \sum_{i=1}^N \sum_{t=2}^T \sum_{s=1}^{t-1} \hat{v}_{it} \hat{v}_{is}
+\end{align}
+
+This averages all distinct pairs of time periods. For $T=4$, there are $\binom{4}{2} = 6$ pairs per individual, giving $6N-2$ degrees of freedom.
+
+Finally, recover the idiosyncratic variance:
+\begin{align}
+	\hat{\sigma}_u^2 = \hat{\sigma}_v^2 - \hat{\sigma}_\alpha^2
+\end{align}
+
+This follows from $\var{v_{it}} = \var{\alpha_i + u_{it}} = \sigma_\alpha^2 + \sigma_u^2$ and $\cov{v_{it}, v_{is}} = \sigma_\alpha^2$ for $t \neq s$.
+
+\textbf{Step 3: Construct the Estimated Covariance Matrix}
+
+Construct $\hat{V}$ using the estimated variance components:
+\begin{align}
+	\hat{V} = \hat{\sigma}_u^2 I_4 + \hat{\sigma}_\alpha^2 J_4 = \begin{pmatrix}
+		\hat{\sigma}_u^2 + \hat{\sigma}_\alpha^2 & \hat{\sigma}_\alpha^2 & \hat{\sigma}_\alpha^2 & \hat{\sigma}_\alpha^2 \\
+		\hat{\sigma}_\alpha^2 & \hat{\sigma}_u^2 + \hat{\sigma}_\alpha^2 & \hat{\sigma}_\alpha^2 & \hat{\sigma}_\alpha^2 \\
+		\hat{\sigma}_\alpha^2 & \hat{\sigma}_\alpha^2 & \hat{\sigma}_u^2 + \hat{\sigma}_\alpha^2 & \hat{\sigma}_\alpha^2 \\
+		\hat{\sigma}_\alpha^2 & \hat{\sigma}_\alpha^2 & \hat{\sigma}_\alpha^2 & \hat{\sigma}_u^2 + \hat{\sigma}_\alpha^2
+	\end{pmatrix}
+\end{align}
+
+\textbf{Step 4: Compute Feasible GLS Estimator}
+
+Apply GLS using $\hat{V}$:
+\begin{align}
+	\hat{\bom{\beta}}^{FGLS} = \left(\sum_{i=1}^N X_i' \hat{V}^{-1} X_i\right)^{-1} \left(\sum_{i=1}^N X_i' \hat{V}^{-1} y_i\right)
+\end{align}
+
+\textbf{Alternative Implementation via Transformation}
+
+Rather than directly inverting $\hat{V}$, it is computationally more efficient to transform the data and apply OLS. Define:
+\begin{align}
+	\theta = 1 - \sqrt{\frac{\hat{\sigma}_u^2}{\hat{\sigma}_u^2 + T\hat{\sigma}_\alpha^2}} = 1 - \sqrt{\frac{\hat{\sigma}_u^2}{\hat{\sigma}_u^2 + 4\hat{\sigma}_\alpha^2}}
+\end{align}
+
+Transform the data by \textit{quasi-demeaning}:
+\begin{align}
+	y_{it}^* &= y_{it} - \theta \bar{y}_i \\
+	x_{it}^* &= x_{it} - \theta \bar{x}_i
+\end{align}
+where $\bar{y}_i = \frac{1}{4}\sum_{t=1}^4 y_{it}$ and $\bar{x}_i = \frac{1}{4}\sum_{t=1}^4 x_{it}$ are individual-specific time averages.
+
+Then apply OLS to the transformed data:
+\begin{align}
+	\hat{\bom{\beta}}^{FGLS} = \left(\sum_{i=1}^N \sum_{t=1}^T x_{it}^{*'} x_{it}^*\right)^{-1} \left(\sum_{i=1}^N \sum_{t=1}^T x_{it}^{*'} y_{it}^*\right)
+\end{align}
+
+\textbf{Interpretation of the Transformation:}
+\begin{itemize}
+	\item If $\theta = 0$ (i.e., $\hat{\sigma}_\alpha^2 = 0$): no transformation, equivalent to pooled OLS.
+	\item If $\theta = 1$ (i.e., $\hat{\sigma}_u^2 = 0$): full demeaning, equivalent to fixed effects.
+	\item In general, $0 < \theta < 1$: partial demeaning, balancing between and within variation.
+\end{itemize}
+
+\textbf{Practical Software Implementation:}
+
+In Stata:
+\begin{verbatim}
+xtset id time
+xtreg y x, re
+\end{verbatim}
+
+In R (using the plm package):
+\begin{verbatim}
+library(plm)
+model <- plm(y ~ x, data=panel_data, model="random")
+\end{verbatim}
+
+Both commands automatically perform all the steps above: estimate variance components from POLS residuals, compute the transformation parameter, and apply FGLS.
+
+\end{solution}
+
+\end{questions}
+
+\section{Fixed Effects Variance Estimation}
+
+\begin{questions}
+
+\question Show in detail why, in the context of the fixed effects model, we need to use the formula
+\begin{align}
+	\hat{\sigma}_u^2 = \frac{1}{N(T-1)} \sum_{i=1}^{N} \sum_{t=1}^{T} \tilde{u}_{it}^2
+\end{align}
+to obtain a consistent estimate of $\hat{\sigma}_u^2$ (we are ignoring the degrees of freedom adjustment for the $K$ regressors here which is asymptotically irrelevant). In particular, show that we need to divide by $N(T-1)$ rather than $NT$. (Note: for simplicity, it is fine here to work with $\tilde{u}_{it}$ rather than $\hat{\tilde{u}}_{it}$).
+\begin{solution}
+
+\textbf{Derivation of the Correct Degrees of Freedom for Fixed Effects Variance Estimation}
+
+In the fixed effects model, we eliminate the individual-specific effect $f_i$ by applying the within transformation (demeaning). This transformation has important implications for the degrees of freedom available for variance estimation.
+
+\textbf{Step 1: Setup and Notation}
+
+In the fixed effects model, we transform the original error $u_{it}$ into the demeaned error:
+\begin{align}
+	\tilde{u}_{it} = u_{it} - \bar{u}_i
+\end{align}
+where $\bar{u}_i = \frac{1}{T}\sum_{t=1}^T u_{it}$ is the individual-specific time average of the errors.
+
+Under the fixed effects assumptions (FE1-FE4), we have:
+\begin{itemize}
+	\item $\expect{u_{it} | X_i, f_i} = 0$ for all $t$ (strict exogeneity)
+	\item $\var{u_{it} | X_i, f_i} = \sigma_u^2$ (homoscedasticity)
+	\item $\cov{u_{it}, u_{is} | X_i, f_i} = 0$ for $t \neq s$ (no serial correlation)
+\end{itemize}
+
+\textbf{Step 2: Calculate the Expected Value of $\tilde{u}_{it}^2$}
+
+To understand why we divide by $N(T-1)$ instead of $NT$, we need to compute $\expect{\tilde{u}_{it}^2 | X_i, f_i}$.
+
+Expanding the squared demeaned error:
+\begin{align}
+	\tilde{u}_{it}^2 &= (u_{it} - \bar{u}_i)^2 \\
+	&= u_{it}^2 - 2u_{it}\bar{u}_i + \bar{u}_i^2
+\end{align}
+
+Taking expectations conditional on $X_i$ and $f_i$:
+\begin{align}
+	\expect{\tilde{u}_{it}^2 | X_i, f_i} &= \expect{u_{it}^2 | X_i, f_i} - 2\expect{u_{it}\bar{u}_i | X_i, f_i} + \expect{\bar{u}_i^2 | X_i, f_i}
+\end{align}
+
+Now evaluate each term:
+
+\textit{First term:}
+\begin{align}
+	\expect{u_{it}^2 | X_i, f_i} = \sigma_u^2
+\end{align}
+
+\textit{Second term:}
+\begin{align}
+	\expect{u_{it}\bar{u}_i | X_i, f_i} &= \expect{u_{it} \cdot \frac{1}{T}\sum_{s=1}^T u_{is} | X_i, f_i} \\
+	&= \frac{1}{T}\sum_{s=1}^T \expect{u_{it}u_{is} | X_i, f_i} \\
+	&= \frac{1}{T}\expect{u_{it}^2 | X_i, f_i} \quad \text{(only the $s=t$ term survives)} \\
+	&= \frac{\sigma_u^2}{T}
+\end{align}
+
+\textit{Third term:}
+\begin{align}
+	\expect{\bar{u}_i^2 | X_i, f_i} &= \expect{\left(\frac{1}{T}\sum_{t=1}^T u_{it}\right)^2 | X_i, f_i} \\
+	&= \frac{1}{T^2}\expect{\sum_{t=1}^T \sum_{s=1}^T u_{it}u_{is} | X_i, f_i} \\
+	&= \frac{1}{T^2}\sum_{t=1}^T \expect{u_{it}^2 | X_i, f_i} \quad \text{(cross terms vanish)} \\
+	&= \frac{1}{T^2} \cdot T\sigma_u^2 \\
+	&= \frac{\sigma_u^2}{T}
+\end{align}
+
+Combining these results:
+\begin{align}
+	\expect{\tilde{u}_{it}^2 | X_i, f_i} &= \sigma_u^2 - 2 \cdot \frac{\sigma_u^2}{T} + \frac{\sigma_u^2}{T} \\
+	&= \sigma_u^2 - \frac{\sigma_u^2}{T} \\
+	&= \sigma_u^2 \left(1 - \frac{1}{T}\right) \\
+	&= \sigma_u^2 \cdot \frac{T-1}{T}
+\end{align}
+
+\textbf{Step 3: Sum Over All Observations}
+
+Summing over all individuals and time periods:
+\begin{align}
+	\expect{\sum_{i=1}^N \sum_{t=1}^T \tilde{u}_{it}^2 | X, f} &= \sum_{i=1}^N \sum_{t=1}^T \expect{\tilde{u}_{it}^2 | X_i, f_i} \\
+	&= \sum_{i=1}^N \sum_{t=1}^T \sigma_u^2 \cdot \frac{T-1}{T} \\
+	&= NT \cdot \sigma_u^2 \cdot \frac{T-1}{T} \\
+	&= N(T-1) \sigma_u^2
+\end{align}
+
+\textbf{Step 4: Derive the Consistent Estimator}
+
+To obtain an unbiased (and consistent) estimator of $\sigma_u^2$, we need:
+\begin{align}
+	\expect{\hat{\sigma}_u^2} = \sigma_u^2
+\end{align}
+
+From Step 3, we have $\expect{\sum_{i=1}^N \sum_{t=1}^T \tilde{u}_{it}^2} = N(T-1)\sigma_u^2$. Therefore:
+\begin{align}
+	\hat{\sigma}_u^2 = \frac{1}{N(T-1)} \sum_{i=1}^{N} \sum_{t=1}^{T} \tilde{u}_{it}^2
+\end{align}
+is the correct estimator.
+
+\textbf{Intuition:}
+
+The demeaning transformation imposes $N$ linear constraints (one for each individual), as:
+\begin{align}
+	\sum_{t=1}^T \tilde{u}_{it} = \sum_{t=1}^T (u_{it} - \bar{u}_i) = 0 \quad \text{for each } i
+\end{align}
+
+Therefore, out of $NT$ total observations, only $N(T-1)$ are "free" after demeaning. Each individual contributes $(T-1)$ degrees of freedom rather than $T$. This is why the denominator must be $N(T-1)$ rather than $NT$.
+
+If we incorrectly used $NT$ in the denominator, we would obtain:
+\begin{align}
+	\expect{\frac{1}{NT}\sum_{i=1}^N \sum_{t=1}^T \tilde{u}_{it}^2} = \frac{N(T-1)\sigma_u^2}{NT} = \frac{T-1}{T}\sigma_u^2 < \sigma_u^2
+\end{align}
+which would systematically underestimate the true variance $\sigma_u^2$.
+
+\end{solution}
+
+\end{questions}
+
+\section{Fixed Effects versus First Difference Estimator}
+
+\begin{questions}
+
+\question Consider the following estimation equation:
+\begin{align}
+	y_{it} = \alpha + x_{it} \beta + f_i + u_{it}
+\end{align}
+for $i = 1, \dots, N$ and $t = 1, \dots, T$.
+
+where $\alpha$ is a constant, $x_{it}$ is a single time-varying regressor and the idiosyncratic errors are serially uncorrelated and homoscedastic. Show that if $T=2$, the fixed effects estimator and first difference estimator (which you obtain from transforming the model to $\Delta y_{it} = \Delta x_{it} \beta + \Delta u_{it}$ and then applying OLS to the transformed model) lead to identical estimates of both the coefficient and its variance.
+\begin{solution}
+
+We will show that when $T=2$, the fixed effects (FE) and first difference (FD) estimators yield identical coefficient estimates and identical variance estimates.
+
+\textbf{Part A: Equivalence of Coefficient Estimates}
+
+\textbf{Step 1: The Model with $T=2$}
+
+For each individual $i$, we have two time periods:
+\begin{align}
+	y_{i1} &= \alpha + x_{i1}\beta + f_i + u_{i1} \\
+	y_{i2} &= \alpha + x_{i2}\beta + f_i + u_{i2}
+\end{align}
+
+\textbf{Step 2: The Fixed Effects Transformation}
+
+The FE estimator applies the within transformation, demeaning each variable:
+\begin{align}
+	\tilde{y}_{it} = y_{it} - \bar{y}_i \quad \text{where} \quad \bar{y}_i = \frac{1}{2}(y_{i1} + y_{i2})
+\end{align}
+
+For $T=2$, the demeaned values are:
+\begin{align}
+	\tilde{y}_{i1} &= y_{i1} - \frac{1}{2}(y_{i1} + y_{i2}) = \frac{1}{2}(y_{i1} - y_{i2}) = -\frac{1}{2}(y_{i2} - y_{i1}) \\
+	\tilde{y}_{i2} &= y_{i2} - \frac{1}{2}(y_{i1} + y_{i2}) = \frac{1}{2}(y_{i2} - y_{i1})
+\end{align}
+
+Similarly, for $x_{it}$:
+\begin{align}
+	\tilde{x}_{i1} &= x_{i1} - \frac{1}{2}(x_{i1} + x_{i2}) = -\frac{1}{2}(x_{i2} - x_{i1}) \\
+	\tilde{x}_{i2} &= x_{i2} - \frac{1}{2}(x_{i1} + x_{i2}) = \frac{1}{2}(x_{i2} - x_{i1})
+\end{align}
+
+And for $u_{it}$:
+\begin{align}
+	\tilde{u}_{i1} &= u_{i1} - \frac{1}{2}(u_{i1} + u_{i2}) = -\frac{1}{2}(u_{i2} - u_{i1}) \\
+	\tilde{u}_{i2} &= u_{i2} - \frac{1}{2}(u_{i1} + u_{i2}) = \frac{1}{2}(u_{i2} - u_{i1})
+\end{align}
+
+Note that both $f_i$ and $\alpha$ drop out after demeaning since they are time-invariant.
+
+The FE estimator is then:
+\begin{align}
+	\hat{\beta}^{FE} = \frac{\sum_{i=1}^N \sum_{t=1}^2 \tilde{x}_{it} \tilde{y}_{it}}{\sum_{i=1}^N \sum_{t=1}^2 \tilde{x}_{it}^2}
+\end{align}
+
+\textbf{Step 3: Simplify the FE Estimator for $T=2$}
+
+The numerator is:
+\begin{align}
+	\sum_{i=1}^N \sum_{t=1}^2 \tilde{x}_{it} \tilde{y}_{it} &= \sum_{i=1}^N (\tilde{x}_{i1}\tilde{y}_{i1} + \tilde{x}_{i2}\tilde{y}_{i2}) \\
+	&= \sum_{i=1}^N \left[-\frac{1}{2}(x_{i2} - x_{i1}) \cdot (-\frac{1}{2}(y_{i2} - y_{i1})) + \frac{1}{2}(x_{i2} - x_{i1}) \cdot \frac{1}{2}(y_{i2} - y_{i1})\right] \\
+	&= \sum_{i=1}^N \left[\frac{1}{4}(x_{i2} - x_{i1})(y_{i2} - y_{i1}) + \frac{1}{4}(x_{i2} - x_{i1})(y_{i2} - y_{i1})\right] \\
+	&= \sum_{i=1}^N \frac{1}{2}(x_{i2} - x_{i1})(y_{i2} - y_{i1})
+\end{align}
+
+The denominator is:
+\begin{align}
+	\sum_{i=1}^N \sum_{t=1}^2 \tilde{x}_{it}^2 &= \sum_{i=1}^N (\tilde{x}_{i1}^2 + \tilde{x}_{i2}^2) \\
+	&= \sum_{i=1}^N \left[\frac{1}{4}(x_{i2} - x_{i1})^2 + \frac{1}{4}(x_{i2} - x_{i1})^2\right] \\
+	&= \sum_{i=1}^N \frac{1}{2}(x_{i2} - x_{i1})^2
+\end{align}
+
+Therefore:
+\begin{align}
+	\hat{\beta}^{FE} = \frac{\sum_{i=1}^N \frac{1}{2}(x_{i2} - x_{i1})(y_{i2} - y_{i1})}{\sum_{i=1}^N \frac{1}{2}(x_{i2} - x_{i1})^2} = \frac{\sum_{i=1}^N (x_{i2} - x_{i1})(y_{i2} - y_{i1})}{\sum_{i=1}^N (x_{i2} - x_{i1})^2}
+\end{align}
+
+\textbf{Step 4: The First Difference Estimator}
+
+The FD estimator takes first differences to eliminate $f_i$ and $\alpha$. For $T=2$, we have only one difference per individual:
+\begin{align}
+	\Delta y_{i2} &= y_{i2} - y_{i1} = (x_{i2} - x_{i1})\beta + (u_{i2} - u_{i1}) \\
+	&= \Delta x_{i2} \beta + \Delta u_{i2}
+\end{align}
+
+where $\Delta x_{i2} = x_{i2} - x_{i1}$ and $\Delta u_{i2} = u_{i2} - u_{i1}$.
+
+Applying OLS to the differenced model:
+\begin{align}
+	\hat{\beta}^{FD} = \frac{\sum_{i=1}^N \Delta x_{i2} \Delta y_{i2}}{\sum_{i=1}^N (\Delta x_{i2})^2} = \frac{\sum_{i=1}^N (x_{i2} - x_{i1})(y_{i2} - y_{i1})}{\sum_{i=1}^N (x_{i2} - x_{i1})^2}
+\end{align}
+
+\textbf{Step 5: Conclusion for Coefficient Estimates}
+
+Comparing the expressions from Steps 3 and 4:
+\begin{align}
+	\hat{\beta}^{FE} = \frac{\sum_{i=1}^N (x_{i2} - x_{i1})(y_{i2} - y_{i1})}{\sum_{i=1}^N (x_{i2} - x_{i1})^2} = \hat{\beta}^{FD}
+\end{align}
+
+Therefore, when $T=2$, the FE and FD estimators produce identical coefficient estimates.
+
+\textbf{Part B: Equivalence of Variance Estimates}
+
+\textbf{Step 6: Variance of the FE Estimator}
+
+Under homoscedasticity ($\var{u_{it} | X_i, f_i} = \sigma_u^2$) and no serial correlation, the variance of the FE estimator is:
+\begin{align}
+	\var{\hat{\beta}^{FE} | X, f} = \frac{\sigma_u^2}{\sum_{i=1}^N \sum_{t=1}^2 \tilde{x}_{it}^2}
+\end{align}
+
+From Step 3, we know that:
+\begin{align}
+	\sum_{i=1}^N \sum_{t=1}^2 \tilde{x}_{it}^2 = \sum_{i=1}^N \frac{1}{2}(x_{i2} - x_{i1})^2 = \frac{1}{2}\sum_{i=1}^N (\Delta x_{i2})^2
+\end{align}
+
+Therefore:
+\begin{align}
+	\var{\hat{\beta}^{FE} | X, f} = \frac{\sigma_u^2}{\frac{1}{2}\sum_{i=1}^N (\Delta x_{i2})^2} = \frac{2\sigma_u^2}{\sum_{i=1}^N (\Delta x_{i2})^2}
+\end{align}
+
+\textbf{Step 7: Variance of the FD Estimator}
+
+For the FD estimator, the error term is $\Delta u_{i2} = u_{i2} - u_{i1}$. Under the assumptions of homoscedasticity and no serial correlation:
+\begin{align}
+	\var{\Delta u_{i2} | X_i, f_i} &= \var{u_{i2} - u_{i1} | X_i, f_i} \\
+	&= \var{u_{i2} | X_i, f_i} + \var{u_{i1} | X_i, f_i} - 2\cov{u_{i2}, u_{i1} | X_i, f_i} \\
+	&= \sigma_u^2 + \sigma_u^2 - 0 \\
+	&= 2\sigma_u^2
+\end{align}
+
+The variance of the FD estimator is:
+\begin{align}
+	\var{\hat{\beta}^{FD} | X, f} = \frac{\var{\Delta u_{i2}}}{\sum_{i=1}^N (\Delta x_{i2})^2} = \frac{2\sigma_u^2}{\sum_{i=1}^N (\Delta x_{i2})^2}
+\end{align}
+
+\textbf{Step 8: Conclusion for Variance Estimates}
+
+Comparing the variances from Steps 6 and 7:
+\begin{align}
+	\var{\hat{\beta}^{FE} | X, f} = \frac{2\sigma_u^2}{\sum_{i=1}^N (\Delta x_{i2})^2} = \var{\hat{\beta}^{FD} | X, f}
+\end{align}
+
+Therefore, when $T=2$, the FE and FD estimators also have identical variances.
+
+\textbf{Summary:}
+
+When $T=2$, the within transformation and first differencing are algebraically equivalent transformations. The FE estimator demeans the data, which with two periods amounts to taking half the difference. The FD estimator takes the full difference. Since both numerators and denominators differ by the same factor of 2, the coefficient estimates are identical. Moreover, because the variance of the differenced error is exactly twice the variance of the original error, and the denominator of the FE variance is exactly half that of the FD variance, the two variance formulas are also identical.
+
+\end{solution}
+
+\end{questions}
+
+\section{Empirical Analysis: Children and Life Satisfaction}
+
+In this question, we will use panel data methods to understand how having children affects life satisfaction. Download the SOEP practise data set \texttt{soep\_lebensz\_en.dta}, which is available on the course website, and inspect its variables (using Stata or R).
+
+\begin{questions}
+
+\question Construct a binary variable \texttt{has\_kids} that indicates if a person at time $t$ has any children at all. Then, regress the (standardized) variable measuring current life satisfaction, \texttt{satisf\_std}, on your constructed indicator. Include the individual's gender, education, categorical health and indicator variables for each year in the regression, and cluster your standard errors at the level of the individual.
+
+First, estimate the effect of the children indicator on life satisfaction in a pooled OLS regression. Then, estimate the effect with a fixed effects regression. What does the difference of the estimated coefficients tell you about the unobserved effect $f_i$ and, in particular, its covariance with \texttt{has\_kids}?
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\question Why has the coefficient on gender disappeared in the fixed effects regression? Run the same fixed effects regression as in the previous question but this time interact the gender indicator with the children indicator. Are women and men affected differentially? How do you interpret the magnitudes of the estimated coefficients?
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\question Test the effect of having children on life satisfaction in a random effects model. Do the coefficients of the children indicator differ between the fixed and random effects model? What can you infer from this? Can you trust the assumptions of the RE model in this context? Why? Why not?
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\question Perform a formal Hausman test to compare the fixed effects and the random effects model. Do you reject the null hypothesis? What does this result tell you? (Hint: check out the command \texttt{hausman} in Stata or \texttt{phtest} in R).
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\end{questions}
+
+%% If you want to insert a figure, please see below how to do it.
+%\begin{solution}
+%	\centering
+%	\includegraphics[scale=1,keepaspectratio]{figure.pdf}
+%	\captionof{figure}{Figure caption}
+%	\label{fig:example}
+%\end{solution}
+
+	
+\end{document}
+

@@ -1,0 +1,303 @@
+\documentclass[11pt]{exam}
+\footer{}{\thepage}{} % avoid ``Page X''
+\usepackage[left=0.7in, right=0.7in, top=0.8in, bottom=0.8in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage[all]{foreign}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,mathtools,bm}
+\usepackage[low-sup]{subdepth} % alignment of sub and sup scripts
+\usepackage{stackengine} % stacking matrix dimensions
+\stackMath
+\def\sss{\scriptstyle}
+\setstackgap{L}{12pt}
+\def\stacktype{L}
+
+\usepackage{siunitx}
+
+\usepackage[sc]{mathpazo}
+%\usepackage{euscript}
+\usepackage{float,booktabs,threeparttable,caption,subcaption,xcolor}
+\usepackage[low-sup]{subdepth}
+\usepackage{mathrsfs,dsfont}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\graphicspath{{figs/}}
+\usepackage{natbib}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{hyperref}
+\usepackage[noabbrev,nameinlink,capitalise]{cleveref}
+\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
+
+% avoid line breaks at binary operators and relation operators in inline math
+\binoppenalty=10000 
+\relpenalty=10000 
+
+% spacing of align
+\expandafter\def\expandafter\normalsize\expandafter{%
+	\normalsize%
+	\setlength\abovedisplayskip{8pt}%
+	\setlength\belowdisplayskip{8pt}%
+	\setlength\abovedisplayshortskip{-8pt}%
+	\setlength\belowdisplayshortskip{2pt}%
+}
+
+\renewcommand{\questionshook}{\setlength{\itemsep}{0.06in}}
+% referring to questions
+\Crefformat{question}{#2Q#1#3}
+\crefname{question}{question}{questions}
+\Crefname{question}{Q}{Qs}
+
+\printanswers
+
+%% Build Directory Configuration
+%%
+%% To compile this document with auxiliary files (.aux, .log, .out, etc.) 
+%% written to a separate build folder, use one of the following methods:
+%%
+%% Method 1: Using pdflatex directly
+%%   pdflatex -output-directory=build EMII_QSMII_PS1_Template.tex
+%%   (Note: You may need to run this twice for cross-references)
+%%
+%% Method 2: Using latexmk (recommended)
+%%   latexmk -pdf -auxdir=build -outdir=build EMII_QSMII_PS1_Template.tex
+%%
+%% Method 3: Create a .latexmkrc file in the same directory with:
+%%   $aux_dir = 'build';
+%%   $out_dir = 'build';
+%%   Then run: latexmk -pdf EMII_QSMII_PS1_Template.tex
+%%
+%% The build folder will contain all auxiliary files, keeping your source
+%% directory clean. The PDF output will also be placed in the build folder.
+
+%% notation
+
+% bold math
+\newcommand{\bom}[1]{\bm{#1}}
+\newcommand{\bX}{\bom{X}}
+\newcommand{\bi}{\bom{\iota}}
+
+% probability
+\DeclareMathOperator*{\pp}{\mathbb{P}}
+
+% expectation with round brackets
+\NewDocumentCommand{\expect}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{E}}%     the expectation operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the expectation
+	\IfBooleanTF{#2}{% *-variant
+		\expectarg*{\expectvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\expectarg{\expectvar#4}%
+		}{% optional argument
+			\expectarg[#3]{\expectvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\expectvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\expectarg}[1]{(}{)}{#1}
+
+% expectation with square brackets
+\NewDocumentCommand{\expectsq}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{E}}%     the expectation operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the expectation
+	\IfBooleanTF{#2}{% *-variant
+		\expectargsq*{\expectvarsq#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\expectargsq{\expectvarsq#4}%
+		}{% optional argument
+			\expectargsq[#3]{\expectvarsq#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\expectvarsq}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\expectargsq}[1]{[}{]}{#1}
+
+% covariance
+\NewDocumentCommand{\cov}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{C}ov}%     the covariance operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the covariance
+	\IfBooleanTF{#2}{% *-variant
+		\covarg*{\covvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\covarg{\covvar#4}%
+		}{% optional argument
+			\covarg[#3]{\covvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\covvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\covarg}[1]{(}{)}{#1}
+
+% covariance HAT
+\NewDocumentCommand{\covhat}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\ensuremath{\widehat{\mathbb{C}ov}}}%     the covariance operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the covariance
+	\IfBooleanTF{#2}{% *-variant
+		\covhatarg*{\covhatvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\covhatarg{\covhatvar#4}%
+		}{% optional argument
+			\covhatarg[#3]{\covhatvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\covhatvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\covhatarg}[1]{(}{)}{#1}
+
+% variance
+\NewDocumentCommand{\var}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{V}ar}%     the variance operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the variance
+	\IfBooleanTF{#2}{% *-variant
+		\vararg*{\varvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\vararg{\varvar#4}%
+		}{% optional argument
+			\vararg[#3]{\varvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\varvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\vararg}[1]{(}{)}{#1}
+
+
+\DeclareMathOperator*{\trace}{tr}
+\DeclareMathOperator*{\rank}{rank}
+
+\newcommand{\duedate}{{\large\bfseries\color{red} Due date: Monday, 19 January, 23:59}}
+
+
+\title{\vspace*{-4em}EM II/QSM II: Development\\ Problem Set 1
+	\ifprintanswers
+	{\color{red}Solutions}
+	\fi
+\\	
+{\normalsize Barcelona School of Economics, Spring 2026} \\
+\duedate}
+
+\author{Group members: AB, CD, EF, GH.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\vspace*{-1em}
+
+\section*{Submission Instructions}
+Please submit a document with your answers, including Stata or R output and programs, to our TA Janik Deutscher via the Google Classroom by Monday, 19 January, 23:59 at the very latest. You can work in groups of up to four.
+
+\section{Random Effects Model}
+
+Consider the model with a single regressor $x_{it}$:
+\begin{align}
+	y_{it} = \beta_0 + \beta_1 x_{it} + \alpha_i + u_{it} \,,
+\end{align}
+where $\alpha_i$ represents an unobserved effect fixed over time and $u_{it}$ is a homoskedastic error term which is independent over time $t$ and individuals $i$. There are $N$ randomly sampled individuals, each observed for $T=4$ time periods. Assume that $\expect{u_{it} | X_i, \alpha_i} = 0$ for all $i$ and that $\expect{u_{it} u_{is} | X_i, \alpha_i} = 0$ for any $t$ and $s: t \neq s$ where $X_i$ represents the $T \times 2$ data matrix for individual $i$.
+
+\begin{questions}
+
+\question State under which assumptions you would estimate a random effects model in this context. Derive the random effects estimator and show that it is a consistent estimator of $\bom{\beta} = [\beta_0, \beta_1]'$.
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\question Derive the (asymptotic) variance-covariance matrix of the random effects estimator.
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\question Explain how you would implement this estimator using the data in your sample.
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\end{questions}
+
+\section{Fixed Effects Variance Estimation}
+
+\begin{questions}
+
+\question Show in detail why, in the context of the fixed effects model, we need to use the formula
+\begin{align}
+	\hat{\sigma}_u^2 = \frac{1}{N(T-1)} \sum_{i=1}^{N} \sum_{t=1}^{T} \tilde{u}_{it}^2
+\end{align}
+to obtain a consistent estimate of $\hat{\sigma}_u^2$ (we are ignoring the degrees of freedom adjustment for the $K$ regressors here which is asymptotically irrelevant). In particular, show that we need to divide by $N(T-1)$ rather than $NT$. (Note: for simplicity, it is fine here to work with $\tilde{u}_{it}$ rather than $\hat{\tilde{u}}_{it}$).
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\end{questions}
+
+\section{Fixed Effects versus First Difference Estimator}
+
+\begin{questions}
+
+\question Consider the following estimation equation:
+\begin{align}
+	y_{it} = \alpha + x_{it} \beta + f_i + u_{it}
+\end{align}
+for $i = 1, \dots, N$ and $t = 1, \dots, T$.
+
+where $\alpha$ is a constant, $x_{it}$ is a single time-varying regressor and the idiosyncratic errors are serially uncorrelated and homoscedastic. Show that if $T=2$, the fixed effects estimator and first difference estimator (which you obtain from transforming the model to $\Delta y_{it} = \Delta x_{it} \beta + \Delta u_{it}$ and then applying OLS to the transformed model) lead to identical estimates of both the coefficient and its variance.
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\end{questions}
+
+\section{Empirical Analysis: Children and Life Satisfaction}
+
+In this question, we will use panel data methods to understand how having children affects life satisfaction. Download the SOEP practise data set \texttt{soep\_lebensz\_en.dta}, which is available on the course website, and inspect its variables (using Stata or R).
+
+\begin{questions}
+
+\question Construct a binary variable \texttt{has\_kids} that indicates if a person at time $t$ has any children at all. Then, regress the (standardized) variable measuring current life satisfaction, \texttt{satisf\_std}, on your constructed indicator. Include the individual's gender, education, categorical health and indicator variables for each year in the regression, and cluster your standard errors at the level of the individual.
+
+First, estimate the effect of the children indicator on life satisfaction in a pooled OLS regression. Then, estimate the effect with a fixed effects regression. What does the difference of the estimated coefficients tell you about the unobserved effect $f_i$ and, in particular, its covariance with \texttt{has\_kids}?
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\question Why has the coefficient on gender disappeared in the fixed effects regression? Run the same fixed effects regression as in the previous question but this time interact the gender indicator with the children indicator. Are women and men affected differentially? How do you interpret the magnitudes of the estimated coefficients?
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\question Test the effect of having children on life satisfaction in a random effects model. Do the coefficients of the children indicator differ between the fixed and random effects model? What can you infer from this? Can you trust the assumptions of the RE model in this context? Why? Why not?
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\question Perform a formal Hausman test to compare the fixed effects and the random effects model. Do you reject the null hypothesis? What does this result tell you? (Hint: check out the command \texttt{hausman} in Stata or \texttt{phtest} in R).
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\end{questions}
+
+%% If you want to insert a figure, please see below how to do it.
+%\begin{solution}
+%	\centering
+%	\includegraphics[scale=1,keepaspectratio]{figure.pdf}
+%	\captionof{figure}{Figure caption}
+%	\label{fig:example}
+%\end{solution}
+
+	
+\end{document}
+

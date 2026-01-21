@@ -1,0 +1,348 @@
+\documentclass[11pt]{exam}
+\footer{}{\thepage}{} % avoid ``Page X''
+\usepackage[left=0.7in, right=0.7in, top=0.8in, bottom=0.8in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage[all]{foreign}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,mathtools,bm}
+\usepackage[low-sup]{subdepth} % alignment of sub and sup scripts
+\usepackage{stackengine} % stacking matrix dimensions
+\stackMath
+\def\sss{\scriptstyle}
+\setstackgap{L}{12pt}
+\def\stacktype{L}
+
+\usepackage{siunitx}
+
+\usepackage[sc]{mathpazo}
+%\usepackage{euscript}
+\usepackage{float,booktabs,threeparttable,caption,subcaption,xcolor}
+\usepackage[low-sup]{subdepth}
+\usepackage{mathrsfs,dsfont}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\graphicspath{{figs/}}
+\usepackage{natbib}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{hyperref}
+\usepackage[noabbrev,nameinlink,capitalise]{cleveref}
+\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
+
+% avoid line breaks at binary operators and relation operators in inline math
+\binoppenalty=10000 
+\relpenalty=10000 
+
+% spacing of align
+\expandafter\def\expandafter\normalsize\expandafter{%
+	\normalsize%
+	\setlength\abovedisplayskip{8pt}%
+	\setlength\belowdisplayskip{8pt}%
+	\setlength\abovedisplayshortskip{-8pt}%
+	\setlength\belowdisplayshortskip{2pt}%
+}
+
+\renewcommand{\questionshook}{\setlength{\itemsep}{0.06in}}
+% referring to questions
+\Crefformat{question}{#2Q#1#3}
+\crefname{question}{question}{questions}
+\Crefname{question}{Q}{Qs}
+
+\printanswers
+
+%% notation
+
+% bold math
+\newcommand{\bom}[1]{\bm{#1}}
+\newcommand{\bX}{\bom{X}}
+\newcommand{\bi}{\bom{\iota}}
+
+% probability
+\DeclareMathOperator*{\pp}{\mathbb{P}}
+
+% expectation with round brackets
+\NewDocumentCommand{\expect}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{E}}%     the expectation operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the expectation
+	\IfBooleanTF{#2}{% *-variant
+		\expectarg*{\expectvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\expectarg{\expectvar#4}%
+		}{% optional argument
+			\expectarg[#3]{\expectvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\expectvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\expectarg}[1]{(}{)}{#1}
+
+% expectation with square brackets
+\NewDocumentCommand{\expectsq}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{E}}%     the expectation operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the expectation
+	\IfBooleanTF{#2}{% *-variant
+		\expectargsq*{\expectvarsq#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\expectargsq{\expectvarsq#4}%
+		}{% optional argument
+			\expectargsq[#3]{\expectvarsq#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\expectvarsq}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\expectargsq}[1]{[}{]}{#1}
+
+% covariance
+\NewDocumentCommand{\cov}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{C}ov}%     the covariance operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the covariance
+	\IfBooleanTF{#2}{% *-variant
+		\covarg*{\covvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\covarg{\covvar#4}%
+		}{% optional argument
+			\covarg[#3]{\covvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\covvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\covarg}[1]{(}{)}{#1}
+
+% covariance HAT
+\NewDocumentCommand{\covhat}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\ensuremath{\widehat{\mathbb{C}ov}}}%     the covariance operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the covariance
+	\IfBooleanTF{#2}{% *-variant
+		\covhatarg*{\covhatvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\covhatarg{\covhatvar#4}%
+		}{% optional argument
+			\covhatarg[#3]{\covhatvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\covhatvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\covhatarg}[1]{(}{)}{#1}
+
+% variance
+\NewDocumentCommand{\var}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{V}ar}%     the variance operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the variance
+	\IfBooleanTF{#2}{% *-variant
+		\vararg*{\varvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\vararg{\varvar#4}%
+		}{% optional argument
+			\vararg[#3]{\varvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\varvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\vararg}[1]{(}{)}{#1}
+
+
+\DeclareMathOperator*{\trace}{tr}
+\DeclareMathOperator*{\rank}{rank}
+
+\newcommand{\duedate}{{\large\bfseries\color{red} Due date: October 8th, 12:00 PM (noon)}}
+
+
+\title{\vspace*{-4em}Econometric Methods I \& Quantitative and Statistical Methods I\\ Problem Set 1
+	\ifprintanswers
+	{\color{red}Solutions}
+	\fi
+\\	
+{\normalsize Barcelona School of Economics, 2025--2026 Academic Year} \\
+\duedate}
+
+\author{Group members: AB, CD, EF, GH.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\vspace*{-1em}
+
+
+\vspace*{-1em}\section*{General setup}
+Consider the classical linear regression model discussed in class. We have
+\begin{align}
+	\stackunder{\bom{y}}{\sss (n \times 1)} = \stackunder{\bom{X}}{\sss(n \times K)} \stackunder{\bom{\beta}}{\sss (K \times 1)} + \stackunder{\bom{\varepsilon}}{\sss (n \times 1)} \,,
+\end{align}
+where the dimensions are shown under the arrays. The model includes a constant (\ie the first column of $\bom{X}$ is a vector of ones). Assume that Assumptions 1--4 hold throughout the problem set. Let us define the OLS estimator of $\bom{\beta}$ as
+\begin{align}
+\bom{b} \equiv (\bom{X}' \bom{X})^{-1} \bom{X}' \bom{y} \,,
+\end{align}
+and the fitted values $\widehat{\bom{y}}$ and OLS residuals $\bom{e}$ as
+\begin{align}
+	\widehat{\bom{y}} &\equiv \bom{X}\bom{b} \,, \\
+	\bom{e} &\equiv \bom{y} - \widehat{\bom{y}} \,,
+\end{align}
+where $\widehat{\bom{y}} = (\widehat{y}_1, \dots, \widehat{y}_n)'$ and $\bom{e} = (e_1, \dots, e_n)'$. The projection matrix $\bom{P}$ and the annihilator matrix $\bom{M}$ are
+\begin{align}
+	\bom{P} &\equiv \bom{X} (\bom{X}'\bom{X})^{-1} \bom{X}' \,, \\
+	\bom{M} &\equiv \bom{I}_n - \bom{P} \,.
+\end{align}
+
+To answer the questions in \cref{sec:algebra}, the following might be useful:
+\begin{enumerate}
+	\item \emph{Definition}: A square matrix $\bom{A}$ is \textbf{idempotent} if $\bom{A} = \bom{A} \bom{A}$.
+	\item \emph{Definition}: A square matrix $\bom{B}$ is \textbf{symmetric} if it is equal to its transpose: $\bom{B} = \bom{B}'$.
+	\item For two $n$-vectors of observations $\bom{u}=(u_1, \dots, u_n)'$ and $\bom{v}=(v_1, \dots,v_n)'$ of the random variables $U$ and $V$, we estimate their covariance as $\covhat{\bom{u},\bom{v}} = \frac{1}{n-1}\sum_{i=1}^{n} \bigl[ (u_i - \overline{u}) \cdot (v_i - \overline{v} \bigr)] = \frac{1}{n-1}\bigl[\sum_{i=1}^{n} u_i \cdot v_i - n \cdot \overline{u} \cdot \overline{v} \bigr]$, where $\overline{u} = \frac{1}{n}\sum_{i=1}^{n}u_i$ and $\overline{v} = \frac{1}{n}\sum_{i=1}^{n}v_i$.
+\end{enumerate}
+
+\section{(Conditional) expectations (6 points)}
+
+\begin{questions}
+	
+\question[2] Prove that Assumptions 2 and 4 imply
+\begin{align}
+	\cov{\varepsilon_i, \varepsilon_j | \bom{X}} = 0 \quad \text{for $ i, j = 1, \dots, n \,, i \neq j$} \,.
+\end{align}
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\question[2] Prove that Assumptions 2 and 4 imply
+\begin{alignat}{2}
+\var{\varepsilon_i} &= \sigma^2 &&\quad \text{for $ i = 1, \dots, n$} \,, \label{eq:uncondvar} \\
+\cov{\varepsilon_i, \varepsilon_j} &= 0 &&\quad \text{for $i, j = 1, \dots, n \,, i \neq j$.} \label{eq:uncondcov}
+\end{alignat}
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\question[2] Prove that under random sampling, $ \expect{\varepsilon_i \varepsilon_j | \bom{X}} = \expect{\varepsilon_i | \bom{x}_i} \expect{\varepsilon_j | \bom{x}_j}$ for $i \neq j$.
+\begin{solution}
+Here comes the solution.
+\end{solution}
+	
+\end{questions}
+
+
+\section{OLS: algebraic properties (14 points)}\label{sec:algebra}
+
+\begin{questions}
+
+\question[1] Prove that $\bom{P}$ is symmetric and idempotent. \label{q:P}
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\question[1] Prove that $\bom{M}$ is symmetric and idempotent. \label{q:M}
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\question[1] Prove that $\bom{P} \bom{X} = \bom{X}$. \label{q:PXX}
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\question[1] Prove that $ \widehat{\bom{y}} = \bom{P}\bom{y}$. (This is why $\bom{P}$ is often called the ``hat matrix'', as it ``puts a hat on $\bom{y}$''). \label{q:Py}
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\question[1] Prove that $\bom{M} \bom{X} = \bom{0}$.
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\question[1] Prove that $\bom{e} = \bom{M}\bom{y}$. (This is why $\bom{M}$ is often called the ``residual maker matrix''). \label{q:My}
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\question[1] Prove that $\bom{e} = \bom{M} \bom{\varepsilon}$.\label{q:eMe}
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\question[1] Prove that the sum of squared residuals can be written as $\bom{e}' \bom{e} = \bom{\varepsilon}' \bom{M} \bom{\varepsilon}$.
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\question[1] Prove that the average of the residuals is zero: $\frac{1}{n} \sum_{i=1}^{n}e_i = 0$. \label{q:avge}
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\question[2] Prove that the \emph{sample covariance} between the $k$th regressor and the residuals is zero:\newline$\covhat{\bom{X}_{[1:n,k]}, \bom{e}} = 0$ for $k=1,\dots,K$, where $\bom{X}_{[1:n,k]}$ denotes the $k$th column of the data matrix $\bX$.
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+
+\question[1] Prove that the \emph{sample covariance} between the fitted values and the residuals is zero: $\covhat{\bom{\widehat{y}}, \bom{e}} = 0$.
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\question[1] Prove that the estimated regression line passes through the sample mean of the dependent variable and the sample mean of the regressors. In other words, let $\overline{y} = \frac{1}{n} \sum_{i=1}^{n} y_i$ and $\overline{\bom{x}} = \frac{1}{n} \sum_{i=1}^{n} \bom{x}_i$, and you need to prove that $ \overline{y} = \overline{\bom{x}}' \bom{b}$.
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\question[1] Prove that the mean of the fitted values equals the mean of the observed values of the dependent variable: $\frac{1}{n} \sum_{i=1}^{n} \widehat{y}_i = \frac{1}{n} \sum_{i=1}^{n} y_i$.
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+\end{questions}
+
+\section{Non-singular linear transformation of regressors (2 bonus points)}
+
+Consider a simple linear regression model given by
+\begin{align}
+	y_i &= \beta_1 + \beta_2 x_i + \varepsilon_i \,, \tag{10}
+\end{align}
+where $y_i$ corresponds to the electricity consumption of household $i$ measured in kilowatthours (\si{\kilo\watt\hour}) in a given year, and $x_i$ is the average summer temperature measured in Celsius (centigrade) degrees in the block where household $i$ is located. Imagine you estimate the model using OLS, and obtain $\bom{b}$, $\bom{\widehat{y}}$ and $\bom{e}$.
+
+Now imagine that your coauthor prefers measuring temperature in Fahrenheit degrees, and tells you that $f = 32 + 1.8 \cdot c$ is the formula to convert $c$ degrees Celsius into $f$ degrees Fahrenheit.
+
+\begin{questions}
+\question[1] Find the transformation that gives you the new data matrix $\bom{\widetilde{X}}$, corresponding your coauthor's preference. In other words, find the $(2 \times 2)$ matrix $\bom{Q}$ such that $\bom{\widetilde{X}} = \bom{X} \bom{Q}$ measures temperature in Fahrenheit.
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+
+\question[1] Now you re-estimate the model with $\bom{\widetilde{X}}$ in place of $\bom{X}$. Let $\bom{\widetilde{b}}$ denote the new OLS estimate, $\bom{\widetilde{y}}$ the new fitted values, and $\bom{\widetilde{e}}$ the new residuals. How are they related to the original $\bom{b}$, $\bom{\widehat{y}}$ and $\bom{e}$? Interpret your findings.
+\begin{solution}
+Here comes the solution.
+\end{solution}
+
+
+\end{questions}
+
+
+%% If you want to insert a figure, please see below how to do it. This is from the solutions of PS0.
+%\begin{solution}
+%	See \texttt{EMIQSMI2025PS0Code.m}. \cref{fig:MCsim} shows the histogram of $b_m$ along with the true value of $\beta = 1$ and the Monte Carlo estimate $\overline{b}$. As we can see, the histogram is centered around the true value of $\beta = 1$, and the Monte Carlo estimate $\overline{b}$ is also very close to $\beta = 1$.
+%	
+%	\centering
+%	\includegraphics[scale=1,keepaspectratio]{PS0Problem4.pdf}
+%	\captionof{figure}{Monte Carlo simulation results}
+%	\label{fig:MCsim}
+%\end{solution}
+
+
+	
+\end{document}
