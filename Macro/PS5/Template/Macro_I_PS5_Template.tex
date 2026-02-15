@@ -504,17 +504,133 @@ since $\mu_{i}>1$. This yields two conclusions:
 \end{itemize}
 What can we conclude from these distributions about the level of misallocation in this economy? Are these measures, computed as described above, good proxies for misallocation? What assumptions are we making that might be violated in the data?
 \begin{solution}
-% Your solution here
+\textbf{What the distributions tell us.}
+Both the MPK and MPL distributions exhibit substantial dispersion and pronounced right-skewness. In a perfectly competitive economy (parts~a--d), all firms equalize their marginal products to common factor prices, so the cross-sectional distribution would collapse to a point mass. The wide spread observed in the data is therefore prima facie evidence of \textbf{misallocation}: marginal products are not equalized across firms, and a reallocation of inputs could in principle raise aggregate output.
+
+\medskip
+\textbf{Are these good proxies for misallocation?}
+A crucial subtlety is that the measures use \emph{sales} (revenue $=p_{i}Y_{i}$) rather than physical output~$Y_{i}$. Concretely, for labor:
+\[
+\text{``}MPL_{i}\text{''}\;=\;\beta\,\frac{p_{i}\,Y_{i}}{L_{i}}
+\;=\;p_{i}\cdot\underbrace{\beta\,\frac{Y_{i}}{L_{i}}}_{\text{physical }MPL_{i}}.
+\]
+What is actually computed is the \emph{value of the marginal product} (VMP), not the physical marginal product. From the FOCs derived in part~(e), a profit-maximizing firm with market power sets
+\[
+MR_{i}\cdot MPL_{i}=w
+\quad\Longrightarrow\quad
+VMP_{L,i}\equiv p_{i}\cdot MPL_{i}=\mu_{i}\,w,
+\]
+where $\mu_{i}=p_{i}/MR_{i}$ is the markup. An analogous expression holds for capital. Therefore, \emph{the dispersion in the revenue-based measures reflects dispersion in markups}, not (only) dispersion in physical marginal products. If markups were constant across firms (e.g.\ under CES demand), the computed VMP would be identical for all firms and the distributions would show zero variance---even though physical marginal products may still differ across firms producing differentiated goods.
+
+In summary, the revenue-based measures are informative about cross-sectional misallocation \emph{to the extent that markup variation drives misallocation}, but they conflate price differences with quantity differences and can overstate or misattribute the source of inefficiency.
+
+\medskip
+\textbf{Key assumptions that might be violated in the data.}
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{Common Cobb--Douglas technology.} The formulas assume all firms in the industry share the same functional form and output elasticities $(\alpha,\beta)$. In practice, technology may differ across firms.
+\item \textbf{Correct estimation of $\alpha$ and $\beta$.} Production function estimation suffers from well-known endogeneity problems (simultaneity bias: input choices respond to productivity shocks that the econometrician does not observe; selection bias: less productive firms exit). Errors in the estimated elasticities directly bias the computed marginal products.
+\item \textbf{Revenue $\neq$ physical output.} As discussed above, using sales rather than quantities means the measures capture value marginal products, not physical ones. Disentangling the two requires firm-level price data, which is often unavailable.
+\item \textbf{Measurement error.} Capital stocks are notoriously hard to measure (book value vs.\ replacement cost, heterogeneous vintages). Employment is measured in headcounts, ignoring hours worked and human-capital differences. Sales may include inventory changes or multi-product revenue.
+\item \textbf{Static model.} The theoretical framework is static, whereas firms in the data face adjustment costs, financial frictions, and dynamic investment decisions. Apparent ``misallocation'' of capital may partly reflect optimal responses to adjustment costs.
+\item \textbf{Profit maximization (FOCs hold).} If some firms face credit constraints, regulatory barriers, or other frictions, their factor demands are distorted beyond what the markup alone implies, and the simple VMP $=\mu_{i}\,w$ relationship breaks down.
+\end{enumerate}
 \end{solution}
 
 \question So far we have only assumed that firms are heterogeneous and have some market power. Consider now the specific preferences given by a CES aggregator. How do your previous conclusions change?
 \begin{solution}
-% Your solution here
+Suppose the representative consumer aggregates the differentiated varieties through a CES aggregator:
+\[
+Y=\left(\int_{0}^{1}y_{i}^{\,\frac{\sigma-1}{\sigma}}\,di\right)^{\!\frac{\sigma}{\sigma-1}},
+\qquad \sigma>1.
+\]
+Cost minimization by the consumer (or, equivalently, the demand side of the economy) yields the inverse demand function for variety~$i$:
+\[
+p_{i}(y_{i})=P\left(\frac{y_{i}}{Y}\right)^{\!-1/\sigma},
+\]
+where $P$ is the aggregate price index. The price elasticity of demand faced by each firm is
+\[
+\varepsilon_{i}\equiv -\frac{p_{i}}{p_{i}'\,y_{i}}=\sigma \qquad\forall\;i,
+\]
+which is \emph{constant and identical across all firms}, regardless of their productivity~$\varphi_{i}$ or output level~$y_{i}$.
+
+\medskip
+\textbf{Constant markup.}
+Because the demand elasticity is constant at~$\sigma$, every firm charges the same markup:
+\[
+\mu_{i}=\frac{\sigma}{\sigma-1}\equiv\mu>1 \qquad\forall\;i.
+\]
+
+\medskip
+\textbf{How the previous conclusions change.}
+
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{Cross-sectional efficiency (no misallocation).}
+From part~(h), the ratio of market-induced to socially optimal firm output is
+\[
+\frac{Y_{i}^{M}}{Y_{i}^{S}}=\mu^{\,-\frac{\alpha+\beta}{1-\alpha-\beta}}
+\qquad\text{(same constant for all $i$)}.
+\]
+All firms are scaled down by the \emph{same factor}. Relative firm sizes (and hence the cross-sectional allocation of inputs) are exactly as a social planner would choose. There is \textbf{no cross-sectional misallocation}. This overturns the finding of part~(e), where a general (non-isoelastic) demand function generated variable markups and therefore $\tau_{x}>0$.
+
+\item \textbf{Level inefficiency persists.}
+Since $\mu>1$, every firm still produces strictly less than the social optimum ($Y_{i}^{M}<Y_{i}^{S}$). Aggregate output is below the first-best level. This is the standard deadweight loss of monopoly pricing, present even though markups are uniform.
+
+\item \textbf{Reinterpretation of $\tau_{x}$.}
+Physical marginal products $MPL_{i}^{*}=w\mu/p_{i}^{*}$ still differ across firms (because $p_{i}$ differs), so $\tau_{x}=\operatorname{var}(MPX^{*})>0$. However, this dispersion does \emph{not} indicate misallocation: in an economy with differentiated goods, even the social planner's allocation features unequal physical marginal products (the planner allocates more inputs to more-valued varieties). The constant markup ensures that the market reproduces the planner's \emph{relative} allocation perfectly. Therefore, $\tau_{x}$ is a \textbf{misleading measure of misallocation} in this setting---it conflates the efficient response to product differentiation with cross-sectional inefficiency.
+
+\item \textbf{Revenue-based measure $\tilde{\tau}_{x}$.}
+As in part~(f), $\tilde{\tau}_{x}=\operatorname{var}(MRPX^{*})=0$, unchanged.
+\end{enumerate}
+
+\medskip
+\textbf{Summary.} Moving from a general demand function to CES preferences eliminates cross-sectional misallocation entirely: the isoelastic demand guarantees constant markups, so all firms are distorted by the same proportional wedge. The only welfare loss is a uniform level inefficiency (aggregate underproduction).
 \end{solution}
 
 \question Assume now that in this CES economy, firms compete in monopolistic competition. How do your previous conclusions change?
 \begin{solution}
-% Your solution here
+Under monopolistic competition each firm is atomistic: it takes the aggregate price index~$P$ and aggregate output~$Y$ as given when setting its own price (or quantity). Combined with CES preferences, this has the following implications.
+
+\medskip
+\textbf{Firm problem.}
+Each firm~$i$ with productivity $\varphi_{i}$ faces the demand schedule from part~(j),
+\[
+y_{i}=\left(\frac{p_{i}}{P}\right)^{\!-\sigma}Y,
+\]
+and maximizes profit $\pi_{i}=p_{i}\,y_{i}-wL_{i}-rK_{i}$ subject to $y_{i}=\varphi_{i}\,L_{i}^{\alpha}K_{i}^{\beta}$. Because the firm is atomistic, the perceived demand elasticity is exactly~$\sigma$, giving the constant markup
+\[
+\mu=\frac{\sigma}{\sigma-1}.
+\]
+This is the same for every firm, confirming the result of part~(j) and ruling out any strategic interaction that might otherwise make markups firm-size-dependent.
+
+\medskip
+\textbf{Equilibrium firm size.}
+Substituting the constant markup into the market-induced size from part~(h):
+\[
+Y_{i}^{M}=\left(\varphi_{i}\,\frac{\alpha^{\alpha}\beta^{\beta}}{w^{\alpha}r^{\beta}}\left(\frac{p_{i}}{\mu}\right)^{\!\alpha+\beta}\right)^{\!\frac{1}{1-\alpha-\beta}},
+\]
+while the socially optimal size satisfies
+\[
+Y_{i}^{S}=\left(\varphi_{i}\,\frac{\alpha^{\alpha}\beta^{\beta}}{w^{\alpha}r^{\beta}}\,p_{i}^{\,\alpha+\beta}\right)^{\!\frac{1}{1-\alpha-\beta}}.
+\]
+Hence
+\[
+\frac{Y_{i}^{M}}{Y_{i}^{S}}=\mu^{-\frac{\alpha+\beta}{1-\alpha-\beta}}=\left(\frac{\sigma}{\sigma-1}\right)^{-\frac{\alpha+\beta}{1-\alpha-\beta}}<1 \qquad\forall\;i.
+\]
+
+\medskip
+\textbf{How the previous conclusions change (relative to part~(j)).}
+
+The conclusions from part~(j) are \textbf{fully confirmed and unchanged}:
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{No cross-sectional misallocation.} The constant markup under monopolistic competition means all firms are scaled down by the same factor relative to the social optimum. Relative firm sizes, and therefore the cross-sectional allocation of inputs, are efficient. Both $\tau_{x}$ (to the extent it can be correctly interpreted) and $\tilde{\tau}_{x}$ are consistent with no allocative inefficiency across firms.
+
+\item \textbf{Level inefficiency only.} The sole source of inefficiency is that every firm underproduces by the constant factor $\mu^{-(\alpha+\beta)/(1-\alpha-\beta)}$. Aggregate output is below the first-best level by this same proportion. The welfare loss is the standard Dixit--Stiglitz deadweight loss: market power depresses output uniformly, but does not distort the relative allocation across firms.
+
+\item \textbf{Welfare loss is fully characterized.} Monopolistic competition with CES provides a sharp characterization: the entire welfare cost of market power is captured by the single parameter~$\mu$ (or equivalently by the substitution elasticity~$\sigma$). As $\sigma\to\infty$, goods become perfect substitutes, $\mu\to 1$, and the competitive benchmark is recovered with no efficiency loss. As $\sigma$ falls, markups rise and level inefficiency worsens, but cross-sectional efficiency is preserved throughout.
+\end{enumerate}
+
+\medskip
+\textbf{Summary.} Monopolistic competition is the natural market structure for the CES economy with a continuum of firms. It guarantees that each firm perceives the demand elasticity~$\sigma$ exactly, locking in a constant markup. The key implication is a clean separation: there is \emph{no cross-sectional misallocation} (the market replicates the planner's relative allocation), and the \emph{only} welfare loss is a uniform level inefficiency due to markups above marginal cost.
 \end{solution}
 
 \end{questions}
