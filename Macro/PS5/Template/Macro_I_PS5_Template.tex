@@ -328,22 +328,169 @@ Under CRS ($\alpha+\beta=1$), zero profits and indeterminate firm size mean that
 
 \question Now let's allow for market power. We can keep this very general by simply having the firm optimize over an inverse demand schedule $p(c_{i})$ which responds to its decisions. Assume that the function $p(\cdot)$ is the same for all firms. Write down the firm's maximization problem, compute the measure of misallocation and discuss your finding. Is your finding the same if we assume productivity to be the same at all firms $(\varphi_{i}=\varphi)$?
 \begin{solution}
-% Your solution here
+With market power, each firm $i$ recognises that its output choice affects the price it receives through the inverse demand function $p(\cdot)$. The firm solves
+\[
+\max_{L_{i},\,K_{i}}\;\pi_{i}=p(Y_{i})\,Y_{i}-wL_{i}-rK_{i},
+\qquad Y_{i}=\varphi_{i}\,L_{i}^{\alpha}K_{i}^{\beta}.
+\]
+Using the chain rule ($\partial Y_{i}/\partial L_{i}=\alpha Y_{i}/L_{i}$, etc.), the FOCs are:
+\begin{align*}
+\frac{\partial \pi_{i}}{\partial L_{i}}&:\quad
+\bigl[p'(Y_{i})\,Y_{i}+p(Y_{i})\bigr]\,\alpha\,\varphi_{i}\,L_{i}^{\alpha-1}K_{i}^{\beta}=w,\\[4pt]
+\frac{\partial \pi_{i}}{\partial K_{i}}&:\quad
+\bigl[p'(Y_{i})\,Y_{i}+p(Y_{i})\bigr]\,\beta\,\varphi_{i}\,L_{i}^{\alpha}K_{i}^{\beta-1}=r.
+\end{align*}
+Define the \emph{marginal revenue} of firm $i$ as
+\[
+MR_{i}\;\equiv\;p'(Y_{i})\,Y_{i}+p(Y_{i})
+\;=\;p(Y_{i})\!\left(1-\frac{1}{\varepsilon_{i}}\right),
+\]
+where $\varepsilon_{i}\equiv -\frac{p(Y_{i})}{p'(Y_{i})\,Y_{i}}>1$ is the (absolute) price elasticity of demand faced by firm~$i$. The \emph{markup} is $\mu_{i}\equiv p(Y_{i})/MR_{i}=\varepsilon_{i}/(\varepsilon_{i}-1)>1$.
+
+The FOCs can then be written compactly as
+\[
+MR_{i}\cdot MPL_{i}=w,
+\qquad
+MR_{i}\cdot MPK_{i}=r,
+\]
+so the equilibrium marginal products are
+\[
+MPL_{i}^{*}=\frac{w}{MR_{i}^{*}}=\frac{\mu_{i}^{*}\,w}{p(Y_{i}^{*})},
+\qquad
+MPK_{i}^{*}=\frac{r}{MR_{i}^{*}}=\frac{\mu_{i}^{*}\,r}{p(Y_{i}^{*})}.
+\]
+
+\medskip
+\textbf{Heterogeneous productivity $(\varphi_{i})$.}
+With different $\varphi_{i}$, firms produce different output levels $Y_{i}^{*}$. Because the demand function $p(\cdot)$ is generally non-isoelastic, the elasticity $\varepsilon_{i}$ and hence the markup $\mu_{i}$ vary with $Y_{i}^{*}$. Consequently, $MR_{i}^{*}$ differs across firms, and so do the physical marginal products:
+\[
+\boxed{\tau_{L}=\operatorname{var}(MPL^{*})>0,\qquad \tau_{K}=\operatorname{var}(MPK^{*})>0.}
+\]
+\emph{Market power combined with firm heterogeneity generates misallocation}: physical marginal products are no longer equalized across firms, so a reallocation of inputs could raise aggregate output.
+
+\medskip
+\textbf{Homogeneous productivity $(\varphi_{i}=\varphi)$.}
+If all firms are identical, the equilibrium is symmetric: every firm chooses the same $(L^{*},K^{*},Y^{*})$, faces the same price $p^{*}=p(Y^{*})$, the same elasticity $\varepsilon^{*}$, and the same markup $\mu^{*}$. Therefore $MPL_{i}^{*}$ and $MPK_{i}^{*}$ are the same for all $i$, giving
+\[
+\tau_{L}=0,\qquad \tau_{K}=0.
+\]
+There is \textbf{no cross-sectional misallocation}. However, market power still causes each firm to produce below the socially efficient level (level inefficiency), a distortion that the variance-based measure $\tau_{x}$ does not capture.
 \end{solution}
 
 \question In the same economy of point (e), compute a new measure of misallocation $\tilde{\tau}_{x}$ defined as the variance of the marginal \emph{revenue} product of input $x$ (at the equilibrium). The marginal revenue product is defined as: $MRPX\equiv\partial r(\cdot)/\partial x$, where $r(\cdot)$ is the revenue function: $r(y_{i})=p_{i}(y_{i})y_{i}$. Discuss your findings.
 \begin{solution}
-% Your solution here
+The revenue function of firm $i$ is $r(Y_{i})=p(Y_{i})\,Y_{i}$. The marginal revenue products of labor and capital are
+\begin{align*}
+MRPL_{i}&\equiv\frac{\partial\,r(Y_{i})}{\partial L_{i}}
+=\frac{d\,[p(Y_{i})\,Y_{i}]}{d\,Y_{i}}\cdot\frac{\partial Y_{i}}{\partial L_{i}}
+=\bigl[p'(Y_{i})\,Y_{i}+p(Y_{i})\bigr]\cdot\alpha\,\varphi_{i}\,L_{i}^{\alpha-1}K_{i}^{\beta}
+=MR_{i}\cdot MPL_{i},\\[4pt]
+MRPK_{i}&\equiv\frac{\partial\,r(Y_{i})}{\partial K_{i}}
+=MR_{i}\cdot MPK_{i}.
+\end{align*}
+
+But from the first-order conditions derived in part~(e), profit maximization requires exactly
+\[
+MR_{i}\cdot MPL_{i}=w,\qquad MR_{i}\cdot MPK_{i}=r,
+\]
+for \emph{every} firm~$i$. Therefore, at the equilibrium:
+\[
+MRPL_{i}^{*}=w\;\;\forall\,i,\qquad MRPK_{i}^{*}=r\;\;\forall\,i.
+\]
+
+Since the marginal revenue products are identical across all firms, the new misallocation measure is
+\[
+\boxed{\tilde{\tau}_{L}=\operatorname{var}(MRPL^{*})=0,\qquad \tilde{\tau}_{K}=\operatorname{var}(MRPK^{*})=0.}
+\]
+This result holds \emph{regardless} of whether firms are heterogeneous in productivity~$\varphi_{i}$ or not.
+
+\medskip
+\textbf{Discussion.} The equalization of marginal revenue products is a direct consequence of profit maximization with common factor prices. Every firm---no matter its size, productivity, or markup---hires inputs up to the point where the marginal \emph{revenue} contribution equals the factor price. The measure $\tilde{\tau}_{x}=0$ tells us that no firm has a \emph{private} incentive to deviate, but it says nothing about whether the allocation is socially efficient. In particular, it is silent about the level inefficiency (underproduction) caused by markups and, as we saw in part~(e), about the cross-sectional misallocation of \emph{physical} marginal products.
 \end{solution}
 
 \question Discuss these two measures. Are they good measures of misallocation? How do they relate to one another (and when are they equal)? What can we infer about the efficiency of the allocation in this economy (with the assumptions of point (e))?
 \begin{solution}
-% Your solution here
+\textbf{Relationship between the two measures.}
+For any input $x$, the marginal revenue product and the physical marginal product are related by
+\[
+MRPX_{i}=MR_{i}\cdot MPX_{i}=\frac{p(Y_{i})}{\mu_{i}}\cdot MPX_{i}.
+\]
+The two measures therefore satisfy
+\[
+\tilde{\tau}_{x}=\operatorname{var}(MRPX^{*})
+=\operatorname{var}\!\bigl(MR_{i}^{*}\cdot MPX_{i}^{*}\bigr),
+\qquad
+\tau_{x}=\operatorname{var}(MPX^{*}).
+\]
+They \textbf{coincide} when $MR_{i}=p(Y_{i})$ for every firm, i.e.\ when $\mu_{i}=1$ (firms are price-takers). This is exactly the competitive case of parts~(a)--(d), where both measures equal zero.
+
+\medskip
+\textbf{Are they good measures of misallocation?}
+
+\emph{Physical-MP measure $(\tau_{x})$.}
+This measure captures \emph{cross-sectional} (allocative) inefficiency: when $\tau_{x}>0$, aggregate output could be increased by reallocating inputs from firms with low marginal products to firms with high marginal products. However, $\tau_{x}$ is blind to \emph{level} inefficiency. Even when $\varphi_{i}=\varphi$ so that $\tau_{x}=0$, every firm still produces below the socially efficient quantity because of the markup. Hence $\tau_{x}=0$ does \emph{not} imply that the allocation is efficient.
+
+\emph{Revenue-MP measure $(\tilde{\tau}_{x})$.}
+This measure is always zero in an economy where all firms face common factor prices and maximize profits. It merely confirms that no firm has a private incentive to deviate---a necessary condition for equilibrium, not for efficiency. It detects neither cross-sectional nor level inefficiency. Therefore, $\tilde{\tau}_{x}$ is a \textbf{poor} measure of misallocation in the presence of market power.
+
+\medskip
+\textbf{What can we infer about efficiency?}
+
+In the economy of part~(e) with heterogeneous $\varphi_{i}$ and market power:
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{Cross-sectional inefficiency} ($\tau_{x}>0$): because markups $\mu_{i}$ vary across firms (for a general demand function), physical marginal products are not equalized. Inputs are misallocated---firms with higher markups use too few inputs relative to the social optimum.
+\item \textbf{Level inefficiency}: every firm restricts output below the competitive/socially optimal level. Aggregate output is below the first-best, even if all firms had the same markup.
+\end{enumerate}
+In summary, $\tau_{x}$ is the more informative measure of the two---it correctly flags cross-sectional misallocation---but a full welfare assessment requires comparing actual firm sizes to the socially optimal ones, as we do in part~(h).
 \end{solution}
 
 \question Derive the socially optimal and market-induced firm size. What can you conclude about the level and cross-section efficiency of this economy?
 \begin{solution}
-% Your solution here
+Assume $\alpha+\beta<1$ throughout (strictly decreasing returns to scale) so that firm size is uniquely determined.
+
+\medskip
+\textbf{Market-induced firm size.}
+From the FOCs in part~(e), $MR_{i}\cdot\alpha\,Y_{i}/L_{i}=w$ and $MR_{i}\cdot\beta\,Y_{i}/K_{i}=r$, so
+\[
+wL_{i}=\alpha\,\frac{p_{i}}{\mu_{i}}\,Y_{i},\qquad rK_{i}=\beta\,\frac{p_{i}}{\mu_{i}}\,Y_{i},
+\]
+where $p_{i}=p(Y_{i})$ and $\mu_{i}=p_{i}/MR_{i}$. Substituting $L_{i}$ and $K_{i}$ into the production function $Y_{i}=\varphi_{i}\,L_{i}^{\alpha}K_{i}^{\beta}$ and solving:
+\[
+\boxed{Y_{i}^{M}=\left(\varphi_{i}\,\frac{\alpha^{\alpha}\beta^{\beta}}{w^{\alpha}r^{\beta}}\left(\frac{p_{i}}{\mu_{i}}\right)^{\!\alpha+\beta}\right)^{\!\frac{1}{1-\alpha-\beta}}.}
+\]
+
+\medskip
+\textbf{Socially optimal firm size.}
+A social planner maximizes total surplus from each variety. The surplus from firm~$i$ is $\int_{0}^{Y_{i}}p(q)\,dq-wL_{i}-rK_{i}$. The FOCs equate the \emph{price} (marginal valuation) to the value of the marginal product:
+\[
+p(Y_{i})\cdot\alpha\,\varphi_{i}\,L_{i}^{\alpha-1}K_{i}^{\beta}=w,\qquad
+p(Y_{i})\cdot\beta\,\varphi_{i}\,L_{i}^{\alpha}K_{i}^{\beta-1}=r,
+\]
+which give $wL_{i}=\alpha\,p_{i}\,Y_{i}$ and $rK_{i}=\beta\,p_{i}\,Y_{i}$. Following the same algebra:
+\[
+\boxed{Y_{i}^{S}=\left(\varphi_{i}\,\frac{\alpha^{\alpha}\beta^{\beta}}{w^{\alpha}r^{\beta}}\,p_{i}^{\,\alpha+\beta}\right)^{\!\frac{1}{1-\alpha-\beta}}.}
+\]
+
+\medskip
+\textbf{Comparison.}
+The ratio of market to socially optimal output is
+\[
+\frac{Y_{i}^{M}}{Y_{i}^{S}}=\mu_{i}^{\,-\frac{\alpha+\beta}{1-\alpha-\beta}}<1,
+\]
+since $\mu_{i}>1$. This yields two conclusions:
+
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{Level inefficiency.} Every firm produces strictly less than the social optimum: $Y_{i}^{M}<Y_{i}^{S}$ for all~$i$. Market power causes underproduction across the board. This is the standard deadweight loss of monopoly pricing.
+
+\item \textbf{Cross-sectional efficiency.}
+\begin{itemize}
+\item If the markup is \emph{constant} across firms ($\mu_{i}=\mu$ for all~$i$, as would be the case with a constant-elasticity demand), the ratio $Y_{i}^{M}/Y_{i}^{S}=\mu^{-(\alpha+\beta)/(1-\alpha-\beta)}$ is the same for every firm. All firms are scaled down uniformly, so \emph{relative} firm sizes are the same as under the planner. There is \textbf{no cross-sectional misallocation}---only level inefficiency.
+\item If the markup \emph{varies} across firms ($\mu_{i}\neq\mu_{j}$ for $i\neq j$, which generically occurs with a non-isoelastic demand and heterogeneous~$\varphi_{i}$), firms with higher markups are disproportionately too small relative to the social optimum. The relative size distribution is distorted, generating \textbf{both level and cross-sectional inefficiency}.
+\end{itemize}
+\end{enumerate}
+
+\medskip
+\textbf{Summary.} Market power always causes level inefficiency (underproduction). Whether it also distorts the cross-sectional allocation of inputs depends on whether markups are constant or variable across firms. For a general (non-isoelastic) demand function $p(\cdot)$, markups vary with firm size, so both types of inefficiency are present.
 \end{solution}
 
 \question Consider the following graphs of the distribution of marginal product of capital and labor (see Figures~\ref{fig:mpk} and~\ref{fig:mpl}). As background, we obtained these distributions from firm level data by doing the following steps:
