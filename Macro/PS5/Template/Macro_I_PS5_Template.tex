@@ -1,0 +1,400 @@
+\documentclass[11pt]{exam}
+\footer{}{\thepage}{} % avoid ``Page X''
+\usepackage[left=0.7in, right=0.7in, top=0.8in, bottom=0.8in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage[all]{foreign}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,mathtools,bm}
+\usepackage[low-sup]{subdepth} % alignment of sub and sup scripts
+\usepackage{stackengine} % stacking matrix dimensions
+\stackMath
+\def\sss{\scriptstyle}
+\setstackgap{L}{12pt}
+\def\stacktype{L}
+
+\usepackage{siunitx}
+
+\usepackage[sc]{mathpazo}
+%\usepackage{euscript}
+\usepackage{float,booktabs,threeparttable,caption,subcaption,xcolor}
+\usepackage[low-sup]{subdepth}
+\usepackage{mathrsfs,dsfont}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\graphicspath{{figs/}}
+\usepackage{natbib}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{hyperref}
+\usepackage[noabbrev,nameinlink,capitalise]{cleveref}
+\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
+
+% avoid line breaks at binary operators and relation operators in inline math
+\binoppenalty=10000 
+\relpenalty=10000 
+
+% spacing of align
+\expandafter\def\expandafter\normalsize\expandafter{%
+	\normalsize%
+	\setlength\abovedisplayskip{8pt}%
+	\setlength\belowdisplayskip{8pt}%
+	\setlength\abovedisplayshortskip{-8pt}%
+	\setlength\belowdisplayshortskip{2pt}%
+}
+
+\renewcommand{\questionshook}{\setlength{\itemsep}{0.06in}}
+\renewcommand{\questionlabel}{\alph{question}.}
+% referring to questions
+\Crefformat{question}{#2Q#1#3}
+\crefname{question}{question}{questions}
+\Crefname{question}{Q}{Qs}
+
+\printanswers
+
+%% Build Directory Configuration
+%%
+%% To compile this document with auxiliary files (.aux, .log, .out, etc.) 
+%% written to a separate build folder, use one of the following methods:
+%%
+%% Method 1: Using pdflatex directly
+%%   pdflatex -output-directory=build Macro_I_PS5_Template.tex
+%%   (Note: You may need to run this twice for cross-references)
+%%
+%% Method 2: Using latexmk (recommended)
+%%   latexmk -pdf -auxdir=build -outdir=build Macro_I_PS5_Template.tex
+%%
+%% Method 3: Create a .latexmkrc file in the same directory with:
+%%   $aux_dir = 'build';
+%%   $out_dir = 'build';
+%%   Then run: latexmk -pdf Macro_I_PS5_Template.tex
+%%
+%% The build folder will contain all auxiliary files, keeping your source
+%% directory clean. The PDF output will also be placed in the build folder.
+
+%% notation
+
+% bold math
+\newcommand{\bom}[1]{\bm{#1}}
+\newcommand{\bX}{\bom{X}}
+\newcommand{\bi}{\bom{\iota}}
+
+% probability
+\DeclareMathOperator*{\pp}{\mathbb{P}}
+
+% expectation with round brackets
+\NewDocumentCommand{\expect}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{E}}%     the expectation operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the expectation
+	\IfBooleanTF{#2}{% *-variant
+		\expectarg*{\expectvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\expectarg{\expectvar#4}%
+		}{% optional argument
+			\expectarg[#3]{\expectvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\expectvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\expectarg}[1]{(}{)}{#1}
+
+% expectation with square brackets
+\NewDocumentCommand{\expectsq}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{E}}%     the expectation operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the expectation
+	\IfBooleanTF{#2}{% *-variant
+		\expectargsq*{\expectvarsq#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\expectargsq{\expectvarsq#4}%
+		}{% optional argument
+			\expectargsq[#3]{\expectvarsq#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\expectvarsq}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\expectargsq}[1]{[}{]}{#1}
+
+% covariance
+\NewDocumentCommand{\cov}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{C}ov}%     the covariance operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the covariance
+	\IfBooleanTF{#2}{% *-variant
+		\covarg*{\covvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\covarg{\covvar#4}%
+		}{% optional argument
+			\covarg[#3]{\covvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\covvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\covarg}[1]{(}{)}{#1}
+
+% covariance HAT
+\NewDocumentCommand{\covhat}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\ensuremath{\widehat{\mathbb{C}ov}}}%     the covariance operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the covariance
+	\IfBooleanTF{#2}{% *-variant
+		\covhatarg*{\covhatvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\covhatarg{\covhatvar#4}%
+		}{% optional argument
+			\covhatarg[#3]{\covhatvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\covhatvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\covhatarg}[1]{(}{)}{#1}
+
+% variance
+\NewDocumentCommand{\var}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{V}ar}%     the variance operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the variance
+	\IfBooleanTF{#2}{% *-variant
+		\vararg*{\varvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\vararg{\varvar#4}%
+		}{% optional argument
+			\vararg[#3]{\varvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\varvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\vararg}[1]{(}{)}{#1}
+
+
+\DeclareMathOperator*{\trace}{tr}
+\DeclareMathOperator*{\rank}{rank}
+
+\newcommand{\duedate}{{\large\bfseries\color{red} Due date: Monday, 16th February, 23:59}}
+
+
+\title{\vspace*{-4em}Macroeconomics I\\ Problem Set 5
+	\ifprintanswers
+	{\color{red}Solutions}
+	\fi
+\\	
+{\normalsize Barcelona School of Economics, Spring 2026} \\
+\duedate}
+
+\author{Group members: AB, CD, EF, GH.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\vspace*{-1em}
+
+\section*{Submission Instructions}
+Please submit a document with your answers to the course instructor via the designated submission platform by Monday, 16th February, 23:59 at the very latest. You can work in groups of up to four.
+
+\section{Misallocation and Market Power}
+
+In this whole exercise, we consider a closed economy, with a fixed population size. Assume the firm's production function is given by
+\begin{align}
+	Y_{i}=\varphi L_{i}^{\alpha}K_{i}^{\beta} \quad \text{with} \quad \alpha+\beta\le 1 \label{eq:production}
+\end{align}
+(Note: there is no $i$ index on $\varphi$ in the baseline case.)
+
+\begin{questions}
+
+\question Take the standard firm problem (static setting) with a continuum of identical atomistic firms and decreasing returns to scale technology. Assume firms are competitive on both their output and input markets. Describe the firm's problem and the first order conditions for capital and labor.
+\begin{solution}
+Each firm $i$ takes the output price (normalized to $1$), the wage $w$, and the rental rate $r$ as given, and solves
+\[
+\max_{L_{i},\,K_{i}}\;\pi_{i}=\varphi\, L_{i}^{\alpha}K_{i}^{\beta}-wL_{i}-rK_{i}.
+\]
+Since $\alpha+\beta\le 1$ the technology exhibits (weakly) decreasing returns to scale, so the objective is strictly concave in $(L_{i},K_{i})$ and the first-order conditions are both necessary and sufficient for a unique interior maximum.
+
+The FOCs are:
+\begin{align*}
+\frac{\partial \pi_{i}}{\partial L_{i}}&:\quad \alpha\,\varphi\, L_{i}^{\alpha-1}K_{i}^{\beta}=w
+\qquad\Longleftrightarrow\qquad MPL_{i}=w,\\[4pt]
+\frac{\partial \pi_{i}}{\partial K_{i}}&:\quad \beta\,\varphi\, L_{i}^{\alpha}K_{i}^{\beta-1}=r
+\qquad\Longleftrightarrow\qquad MPK_{i}=r.
+\end{align*}
+That is, each competitive firm hires labor and capital up to the point where their marginal products equal the respective factor prices.
+\end{solution}
+
+\question Define the following measure of misallocation of factors: for generic factor $x$, denote $\tau_{x}=\operatorname{var}(MPX^{*})$, where $\operatorname{var}(\cdot)$ is the variance across firms and $MPX$ is the marginal product of $x$. The $*$ indicates a value taken at the equilibrium. What is the level of misallocation in this model? Derive and argue your answer.
+\begin{solution}
+From the FOCs in part~(a), at the competitive equilibrium every firm $i$ satisfies
+\[
+MPL_{i}^{*}=\alpha\,\varphi\,(L_{i}^{*})^{\alpha-1}(K_{i}^{*})^{\beta}=w,
+\qquad
+MPK_{i}^{*}=\beta\,\varphi\,(L_{i}^{*})^{\alpha}(K_{i}^{*})^{\beta-1}=r.
+\]
+Because all firms are \emph{identical} (same $\varphi$, same technology) and face the same factor prices $w$ and $r$, they all choose the same input bundle $(L_{i}^{*},K_{i}^{*})$. Consequently the marginal products are the same constant across all firms:
+\[
+MPL_{i}^{*}=w\;\;\forall\,i,
+\qquad
+MPK_{i}^{*}=r\;\;\forall\,i.
+\]
+Since the marginal products are identical across firms, their cross-sectional variance is zero:
+\[
+\boxed{\tau_{L}=\operatorname{var}(MPL^{*})=0,\qquad \tau_{K}=\operatorname{var}(MPK^{*})=0.}
+\]
+There is \textbf{no misallocation} of factors. This is a direct consequence of the First Welfare Theorem: in a competitive equilibrium without distortions, the allocation of resources is Pareto efficient. Because all firms equalize their marginal products to common factor prices, no reallocation of inputs across firms could raise aggregate output.
+\end{solution}
+
+\question Assume now that firms are heterogeneous in productivity $\varphi_{i}$. Compute again $\tau_{x}$ for capital and labor and discuss your finding.
+\begin{solution}
+With heterogeneous productivity $\varphi_{i}$, each firm $i$ still takes $w$ and $r$ as given and maximizes
+\[
+\max_{L_{i},\,K_{i}}\;\varphi_{i}\,L_{i}^{\alpha}K_{i}^{\beta}-wL_{i}-rK_{i}.
+\]
+The FOCs are:
+\begin{align*}
+\alpha\,\varphi_{i}\,L_{i}^{\alpha-1}K_{i}^{\beta}&=w \qquad\Longleftrightarrow\qquad MPL_{i}=w,\\
+\beta\,\varphi_{i}\,L_{i}^{\alpha}K_{i}^{\beta-1}&=r \qquad\Longleftrightarrow\qquad MPK_{i}=r.
+\end{align*}
+Even though $\varphi_{i}$ differs across firms, each firm \emph{still} equates its marginal product to the common factor price. At equilibrium, $MPL_{i}^{*}=w$ and $MPK_{i}^{*}=r$ for every firm $i$, regardless of the level of $\varphi_{i}$. Firms with higher $\varphi_{i}$ simply choose larger input bundles $(L_{i}^{*},K_{i}^{*})$, but the marginal products at the optimum are the same across all firms.
+
+Therefore:
+\[
+\boxed{\tau_{L}=\operatorname{var}(MPL^{*})=0,\qquad \tau_{K}=\operatorname{var}(MPK^{*})=0.}
+\]
+\textbf{Discussion.} Introducing firm-level productivity heterogeneity does \emph{not} generate misallocation in a competitive economy. Competitive factor markets ensure that inputs flow to where their marginal product equals the market price, so marginal products are equalized across firms. More productive firms attract proportionally more capital and labor, but this is precisely the efficient allocation: any reallocation of inputs away from this equilibrium would \emph{lower} aggregate output. This result is again a manifestation of the First Welfare Theorem.
+\end{solution}
+
+\question Compute the optimal size of the firm and the associated profits. Discuss the implication of what you found in terms of efficiency of the allocation. In particular, discuss how your conclusions depend on whether $\alpha+\beta<1$ or $\alpha+\beta=1$.
+\begin{solution}
+From the FOCs of the firm with heterogeneous $\varphi_{i}$ (part~c) we can write
+\[
+wL_{i}=\alpha\,Y_{i},\qquad rK_{i}=\beta\,Y_{i},
+\]
+so $L_{i}=\frac{\alpha\,Y_{i}}{w}$ and $K_{i}=\frac{\beta\,Y_{i}}{r}$. Substituting into the production function $Y_{i}=\varphi_{i}\,L_{i}^{\alpha}K_{i}^{\beta}$:
+\[
+Y_{i}=\varphi_{i}\left(\frac{\alpha\,Y_{i}}{w}\right)^{\!\alpha}\left(\frac{\beta\,Y_{i}}{r}\right)^{\!\beta}
+=\varphi_{i}\,\frac{\alpha^{\alpha}\beta^{\beta}}{w^{\alpha}r^{\beta}}\,Y_{i}^{\alpha+\beta},
+\]
+which gives
+\[
+Y_{i}^{1-\alpha-\beta}=\varphi_{i}\,\frac{\alpha^{\alpha}\beta^{\beta}}{w^{\alpha}r^{\beta}}.
+\]
+
+\medskip
+\textbf{Case 1: $\alpha+\beta<1$ (strictly decreasing returns to scale).}
+
+The optimal output of firm $i$ is
+\[
+Y_{i}^{*}=\left(\varphi_{i}\,\frac{\alpha^{\alpha}\beta^{\beta}}{w^{\alpha}r^{\beta}}\right)^{\!\frac{1}{1-\alpha-\beta}},
+\]
+and the optimal input demands are
+\[
+L_{i}^{*}=\frac{\alpha}{w}\,Y_{i}^{*},\qquad K_{i}^{*}=\frac{\beta}{r}\,Y_{i}^{*}.
+\]
+Profits are
+\[
+\pi_{i}^{*}=Y_{i}^{*}-wL_{i}^{*}-rK_{i}^{*}=Y_{i}^{*}-\alpha\,Y_{i}^{*}-\beta\,Y_{i}^{*}=(1-\alpha-\beta)\,Y_{i}^{*}>0.
+\]
+Firm size (output, inputs, and profits) is uniquely determined and strictly increasing in $\varphi_{i}$: more productive firms are larger and earn higher profits.
+
+\medskip
+\textbf{Case 2: $\alpha+\beta=1$ (constant returns to scale).}
+
+The equation becomes $Y_{i}^{0}=1=\varphi_{i}\,\frac{\alpha^{\alpha}\beta^{\beta}}{w^{\alpha}r^{\beta}}$, which is a condition on equilibrium prices $(w,r)$, \emph{not} on firm size. The profit function is linear in scale:
+\[
+\pi_{i}=Y_{i}-\alpha\,Y_{i}-\beta\,Y_{i}=(1-\alpha-\beta)\,Y_{i}=0.
+\]
+Profits are zero and firm size is \textbf{indeterminate}: any $(L_{i},K_{i})$ with
+$K_{i}/L_{i}=\beta w/(\alpha r)$ is optimal. With heterogeneous $\varphi_{i}$,
+equilibrium prices can satisfy the zero-profit condition for at most one value
+of~$\varphi$, so only the most productive firms can operate; all others make
+losses and exit.
+
+\medskip
+\textbf{Efficiency discussion.}
+In both cases the competitive allocation is efficient (First Welfare Theorem): marginal products are equalized across firms and there is no misallocation ($\tau_{L}=\tau_{K}=0$).
+
+Under DRS ($\alpha+\beta<1$), positive profits $(1-\alpha-\beta)Y_{i}^{*}$ represent the return to the implicit ``entrepreneurial'' or fixed factor that generates decreasing returns at the firm level. Multiple heterogeneous firms coexist in equilibrium, each at their uniquely determined efficient scale.
+
+Under CRS ($\alpha+\beta=1$), zero profits and indeterminate firm size mean that the distribution of production across firms is irrelevant for aggregate efficiency---any allocation of inputs that equates marginal products is equally efficient. However, with heterogeneous $\varphi_{i}$, the model cannot sustain the coexistence of firms with different productivities, so only the most productive firms survive.
+\end{solution}
+
+\question Now let's allow for market power. We can keep this very general by simply having the firm optimize over an inverse demand schedule $p(c_{i})$ which responds to its decisions. Assume that the function $p(\cdot)$ is the same for all firms. Write down the firm's maximization problem, compute the measure of misallocation and discuss your finding. Is your finding the same if we assume productivity to be the same at all firms $(\varphi_{i}=\varphi)$?
+\begin{solution}
+% Your solution here
+\end{solution}
+
+\question In the same economy of point (e), compute a new measure of misallocation $\tilde{\tau}_{x}$ defined as the variance of the marginal \emph{revenue} product of input $x$ (at the equilibrium). The marginal revenue product is defined as: $MRPX\equiv\partial r(\cdot)/\partial x$, where $r(\cdot)$ is the revenue function: $r(y_{i})=p_{i}(y_{i})y_{i}$. Discuss your findings.
+\begin{solution}
+% Your solution here
+\end{solution}
+
+\question Discuss these two measures. Are they good measures of misallocation? How do they relate to one another (and when are they equal)? What can we infer about the efficiency of the allocation in this economy (with the assumptions of point (e))?
+\begin{solution}
+% Your solution here
+\end{solution}
+
+\question Derive the socially optimal and market-induced firm size. What can you conclude about the level and cross-section efficiency of this economy?
+\begin{solution}
+% Your solution here
+\end{solution}
+
+\question Consider the following graphs of the distribution of marginal product of capital and labor (see Figures~\ref{fig:mpk} and~\ref{fig:mpl}). As background, we obtained these distributions from firm level data by doing the following steps:
+\begin{itemize}
+	\item We estimated the industry production function to obtain estimates of $\alpha$ and $\beta$, the output elasticities of capital and labor.
+	\item We used firm sales, number of workers, and capital stock to compute:
+	\begin{align}
+		MPL_{i}&=\beta\frac{\text{sales}_{i}}{\#\text{workers}_{i}} \\
+		MPK_{i}&=\alpha\frac{\text{sales}_{i}}{\text{capital stock}_{i}}
+	\end{align}
+\end{itemize}
+What can we conclude from these distributions about the level of misallocation in this economy? Are these measures, computed as described above, good proxies for misallocation? What assumptions are we making that might be violated in the data?
+\begin{solution}
+% Your solution here
+\end{solution}
+
+\question So far we have only assumed that firms are heterogeneous and have some market power. Consider now the specific preferences given by a CES aggregator. How do your previous conclusions change?
+\begin{solution}
+% Your solution here
+\end{solution}
+
+\question Assume now that in this CES economy, firms compete in monopolistic competition. How do your previous conclusions change?
+\begin{solution}
+% Your solution here
+\end{solution}
+
+\end{questions}
+
+\subsection*{Figures}
+
+%% Place mpk_distribution.pdf and mpl_distribution.pdf in the figs/ subdirectory.
+\begin{figure}[H]
+	\centering
+	\IfFileExists{figs/mpk_distribution.pdf}{%
+		\includegraphics[scale=0.9,keepaspectratio]{mpk_distribution.pdf}%
+	}{%
+		\fbox{\parbox{0.8\textwidth}{\centering\small [Figure 1: MPK distribution --- add mpk\_distribution.pdf to figs/]}}%
+	}
+	\caption{Distribution of Marginal Product of Capital (MPK) across firms.}
+	\label{fig:mpk}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\IfFileExists{figs/mpl_distribution.pdf}{%
+		\includegraphics[scale=0.9,keepaspectratio]{mpl_distribution.pdf}%
+	}{%
+		\fbox{\parbox{0.8\textwidth}{\centering\small [Figure 2: MPL distribution --- add mpl\_distribution.pdf to figs/]}}%
+	}
+	\caption{Distribution of Marginal Product of Labor (MPL) across firms.}
+	\label{fig:mpl}
+\end{figure}
+
+\end{document}

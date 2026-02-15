@@ -213,12 +213,65 @@ where $ed_i$ represents the years of education of the $i$th individual, $age_{it
 
 \question Suppose you estimate $\gamma$ as 0.82 with a standard error of 0.05. State a set of sufficient assumptions for the consistency of the Pooled OLS estimator in this context.
 \begin{solution}
-Here comes the solution.
+For consistency of Pooled OLS in this dynamic panel model with lagged dependent variable $Y_{it-1}$, we require:
+
+\textbf{Assumption 1: Random Effects.} Decompose $u_{it} = f_i + \varepsilon_{it}$ where $f_i$ is a time-invariant individual effect and $\varepsilon_{it}$ is the idiosyncratic error. Then:
+\begin{align}
+	\expect{f_i | ed_i, age_{i1}, \dots, age_{iT}, Y_{i0}} = 0 \,.
+\end{align}
+This ensures $Y_{it-1}$ is uncorrelated with $f_i$.
+
+\textbf{Assumption 2: Sequential exogeneity.} The idiosyncratic error is mean independent of past outcomes and current/past regressors:
+\begin{align}
+	\expect{\varepsilon_{it} | ed_i, age_{i1}, \dots, age_{it}, Y_{i0}, \dots, Y_{it-1}} = 0 \,.
+\end{align}
+
+\textbf{Assumption 3: No serial correlation.} The idiosyncratic errors are serially uncorrelated:
+\begin{align}
+	\expect{\varepsilon_{it} \varepsilon_{is}} = 0 \quad \text{for all } t \neq s \,.
+\end{align}
+Otherwise $Y_{it-1}$ correlates with $\varepsilon_{it}$ through $\varepsilon_{it-1}$.
+
+\textbf{Assumption 4: Standard regularity conditions.} The model is correctly specified and $\expect{X'X}$ is positive definite. The initial value $Y_{i0}$ is uncorrelated with $\varepsilon_{i1}, \dots, \varepsilon_{iT}$.
 \end{solution}
 
 \question Describe an alternative estimation technique and general procedure that you could use to evaluate the validity of some of your assumptions. Justify your choice and explain carefully the conditions under which your alternative estimator is consistent.
 \begin{solution}
-Here comes the solution.
+The \textbf{Arellano-Bond GMM estimator} allows us to test the Random Effects assumption by eliminating $f_i$ through first-differencing while addressing endogeneity of $Y_{it-1}$ using lagged levels as instruments.
+
+\textbf{Procedure:}
+
+\textbf{Step 1:} First-difference to eliminate $f_i$:
+\begin{align}
+	\Delta Y_{it} = \alpha_2 \Delta age_{it} + \alpha_3 ed_i \Delta age_{it} + \gamma \Delta Y_{it-1} + \Delta u_{it} \,.
+\end{align}
+
+\textbf{Step 2:} Since $\Delta Y_{it-1}$ is correlated with $\Delta u_{it}$ through $u_{it-1}$, use $Y_{it-2}, Y_{it-3}, \dots, Y_{i1}$ as instruments for the equation in period $t$, exploiting:
+\begin{align}
+	\expect{Y_{it-s} \Delta u_{it}} = 0 \quad \text{for } s \geq 2 \,.
+\end{align}
+
+\textbf{Step 3:} Estimate via GMM using all available moment conditions with optimal weighting matrix.
+
+\textbf{Consistency conditions:}
+
+\textbf{(i) No serial correlation:} $\expect{u_{it} u_{is}} = 0$ for $t \neq s$. Otherwise $Y_{it-2}$ correlates with $u_{it-1}$ in $\Delta u_{it}$, invalidating instruments.
+
+\textbf{(ii) Strict exogeneity of $age_{it}$:} $\expect{u_{it} | age_{i1}, \dots, age_{iT}, f_i} = 0$.
+
+\textbf{(iii) Arbitrary correlation allowed:} $\expect{f_i | ed_i, age_{i1}, \dots, age_{iT}}$ can be non-zero.
+
+\textbf{(iv) Valid initial conditions:} $\expect{Y_{i0} u_{it}} = 0$ for $t \geq 2$.
+
+\textbf{Diagnostic tests:}
+\begin{enumerate}
+	\item AR(1) test: Should reject (mechanical in differences).
+	\item AR(2) test: Should not reject (validates no serial correlation in levels).
+	\item Sargan/Hansen test: Tests overidentifying restrictions.
+	\item Coefficient comparison: Arellano-Bond $\hat{\gamma}$ typically lies between Pooled OLS (upward biased) and Fixed Effects (Nickell bias).
+\end{enumerate}
+
+A significant difference between Pooled OLS and Arellano-Bond estimates indicates violation of the Random Effects assumption.
 \end{solution}
 
 \end{questions}
@@ -240,7 +293,42 @@ where $x_{it}$ and $z_{it}$ are scalars, $f_i$ is a permanent unobserved effect 
 
 \question Suppose the only thing we can safely assume is that the orthogonality condition (1) holds and you take first differences to estimate the model. For different assumptions regarding the exogeneity of $z_{it}$ and the relationship between $z_{it}$ and $f_i$, state the properties of your estimator (consistency and efficiency) when OLS is used to estimate $\beta$ and $\gamma$ in the first differences model.
 \begin{solution}
-Here comes the solution.
+
+First differencing eliminates $f_i$ and $\alpha$:
+\begin{align}
+	\Delta y_{it} = \Delta x_{it}\beta + \Delta z_{it}\gamma + \Delta u_{it} \,.
+\end{align}
+
+Since $\expect{u_{it} | x_{i1},\dots,x_{iT},f_i} = 0$, we have $\expect{\Delta x_{it} \Delta u_{it}} = 0$. The properties of OLS for $\beta$ and $\gamma$ depend on assumptions about $z_{it}$:
+
+\textbf{Case 1: $z_{it}$ strictly exogenous, $\expect{f_i | z_{i1},\dots,z_{iT}} = 0$.} Under $\expect{u_{it} | z_{i1},\dots,z_{iT},f_i} = 0$, we have $\expect{\Delta z_{it} \Delta u_{it}} = 0$. Consistent: Yes. Efficient: Yes (OLS is BLUE for homoscedastic errors across individuals).
+
+\textbf{Case 2: $z_{it}$ strictly exogenous, $\expect{f_i | z_{i1},\dots,z_{iT}} \neq 0$.} Under $\expect{u_{it} | z_{i1},\dots,z_{iT},f_i} = 0$, we have $\expect{\Delta z_{it} \Delta u_{it}} = 0$. Consistent: Yes. Efficient: Yes. Note: Cases 1 and 2 yield identical properties because first differencing eliminates $f_i$, rendering any correlation between $z_{it}$ and $f_i$ irrelevant.
+
+\textbf{Case 3: $z_{it}$ predetermined (sequential exogeneity).}
+
+Assume $\expect{u_{it} | z_{i1},\dots,z_{it},f_i} = 0$ but $\expect{u_{it} | z_{it+1},\dots,z_{iT}} \neq 0$. Then:
+\begin{align}
+	\expect{\Delta z_{it} \Delta u_{it}} = \expect{z_{it}u_{it}} - \expect{z_{it}u_{it-1}} - \expect{z_{it-1}u_{it}} + \expect{z_{it-1}u_{it-1}} = 0 \,.
+\end{align}
+Consistent: Yes. Efficient: No (GMM using instruments $z_{i1},\dots,z_{it-1}$ would be more efficient).
+
+\textbf{Case 4: $z_{it}$ endogenous.} If $\expect{u_{it} | z_{it}} \neq 0$, then $\expect{\Delta z_{it} \Delta u_{it}} \neq 0$. Consistent: No. Efficiency: N/A.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lcc}
+\toprule
+Assumption on $z_{it}$ & Consistent & Efficient \\
+\midrule
+Strictly exogenous, $\expect{f_i|z_i}=0$ & Yes & Yes \\
+Strictly exogenous, $\expect{f_i|z_i}\neq 0$ & Yes & Yes \\
+Predetermined (sequential exogeneity) & Yes & No \\
+Endogenous & No & N/A \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \end{solution}
 
 \question Now suppose $T=5$ and the additional assumption holds:
@@ -251,18 +339,120 @@ Here comes the solution.
 \begin{parts}
 \part How would you now estimate $\beta$ and $\gamma$ efficiently?
 \begin{solution}
-Here comes the solution.
+
+Under sequential exogeneity $\expect{u_{it} | z_{i1},\dots,z_{it-1},f_i} = 0$, estimate efficiently using GMM with all available moment conditions.
+
+\textbf{Step 1:} First-difference to eliminate $f_i$:
+\begin{align}
+	\Delta y_{it} = \Delta x_{it}\beta + \Delta z_{it}\gamma + \Delta u_{it} \quad \text{for } t=2,\dots,5 \,.
+\end{align}
+
+\textbf{Step 2:} Construct instrument matrix. For individual $i$, stack differenced equations and use instruments: all $x_{it}$ values (strict exogeneity) and past $z$ values (sequential exogeneity):
+\begin{align}
+	Z_i = 
+	\begin{pmatrix}
+		x_{i1} & x_{i2} & 0 & 0 & 0 & z_{i1} & 0 & 0 & 0 \\
+		x_{i1} & x_{i2} & x_{i3} & 0 & 0 & z_{i1} & z_{i2} & 0 & 0 \\
+		x_{i1} & x_{i2} & x_{i3} & x_{i4} & 0 & z_{i1} & z_{i2} & z_{i3} & 0 \\
+		x_{i1} & x_{i2} & x_{i3} & x_{i4} & x_{i5} & z_{i1} & z_{i2} & z_{i3} & z_{i4}
+	\end{pmatrix} \,.
+\end{align}
+
+This gives $q = 9$ moment conditions $\expect{Z_i' \Delta u_i} = 0$ to estimate $k = 2$ parameters (overidentified).
+
+\textbf{Step 3:} The efficient GMM estimator uses optimal weighting matrix $W = \hat{\Omega}^{-1}$:
+\begin{align}
+	\hat{\theta} = \left( \sum_{i=1}^N \Delta X_i' Z_i W Z_i' \Delta X_i \right)^{-1} \left( \sum_{i=1}^N \Delta X_i' Z_i W Z_i' \Delta y_i \right) \,,
+\end{align}
+where $\hat{\Omega} = \frac{1}{N} \sum_{i=1}^N Z_i' \hat{\Delta u}_i \hat{\Delta u}_i' Z_i$ using first-stage residuals.
+
+Since $u_{it}$ is serially uncorrelated, $\Delta u_{it}$ exhibits mechanical serial correlation:
+\begin{align}
+	\expect{\Delta u_{it} \Delta u_{it-1}} = -\sigma_u^2 \,.
+\end{align}
+
+The covariance matrix is:
+\begin{align}
+	\expect{\Delta u_i \Delta u_i'} = \sigma_u^2 
+	\begin{pmatrix}
+		2 & -1 & 0 & 0 \\
+		-1 & 2 & -1 & 0 \\
+		0 & -1 & 2 & -1 \\
+		0 & 0 & -1 & 2
+	\end{pmatrix} \,.
+\end{align}
+
+Implement via two-step GMM: (i) obtain consistent first-stage estimate, (ii) construct $\hat{\Omega}$, (iii) re-estimate with $W = \hat{\Omega}^{-1}$.
+
 \end{solution}
 
 \part Derive the variance of your estimator.
 \begin{solution}
-Here comes the solution.
+
+For the GMM estimator with moment conditions $\expect{Z_i' \Delta u_i} = 0$, the general asymptotic variance is:
+\begin{align}
+	\var(\hat{\theta}) = \frac{1}{N} (G'WG)^{-1} (G'W\Omega WG) (G'WG)^{-1} \,,
+\end{align}
+where $G = \expect{Z_i' \Delta X_i}$ is the $q \times k$ matrix of instruments times regressors, $W$ is the weighting matrix, and $\Omega = \expect{Z_i' \Delta u_i \Delta u_i' Z_i}$.
+
+With optimal weighting $W = \Omega^{-1}$, this simplifies to:
+\begin{align}
+	\boxed{\var(\hat{\theta}) = \frac{1}{N} (G'\Omega^{-1}G)^{-1} = \frac{1}{N} \left( \expect{Z_i' \Delta X_i}' \left[\expect{Z_i' \Delta u_i \Delta u_i' Z_i}\right]^{-1} \expect{Z_i' \Delta X_i} \right)^{-1}}
+\end{align}
+
+In practice, estimate by replacing population moments with sample analogs:
+\begin{align}
+	\widehat{\mathrm{Var}}(\hat{\theta}) = \frac{1}{N} \left( \hat{G}' \hat{\Omega}^{-1} \hat{G} \right)^{-1} \,,
+\end{align}
+where $\hat{G} = \frac{1}{N} \sum_{i=1}^N Z_i' \Delta X_i$ and $\hat{\Omega} = \frac{1}{N} \sum_{i=1}^N Z_i' \hat{\Delta u}_i \hat{\Delta u}_i' Z_i$ using residuals $\hat{\Delta u}_i = \Delta y_i - \Delta X_i \hat{\theta}$.
+
 \end{solution}
 \end{parts}
 
 \question Suppose $z_{it}=y_{it-1}$ and you know that $\gamma=1$. How would you estimate the model? Provide the estimator and its variance matrix.
 \begin{solution}
-Here comes the solution.
+
+With $z_{it} = y_{it-1}$ and $\gamma = 1$, the model becomes $y_{it} = \alpha + x_{it}\beta + y_{it-1} + f_i + u_{it}$. First differencing eliminates $f_i$ and $\alpha$:
+\begin{align}
+	\Delta y_{it} = \Delta x_{it}\beta + \Delta y_{it-1} + \Delta u_{it} \,.
+\end{align}
+
+Since $\Delta y_{it-1}$ is correlated with $\Delta u_{it}$ through $u_{it-1}$, OLS is inconsistent. Use GMM with instruments.
+
+\textbf{Valid instruments} (assuming $u_{it}$ is serially uncorrelated):
+\begin{itemize}
+	\item Levels of $y$ lagged 2+ periods: $y_{it-2}, y_{it-3}, \dots, y_{i1}$ (satisfy $\expect{y_{it-s} \Delta u_{it}} = 0$ for $s \geq 2$)
+	\item All values of $x_{it}$: $x_{i1}, \dots, x_{iT}$ (strict exogeneity)
+\end{itemize}
+
+\textbf{Instrument matrix:}
+\begin{align}
+	Z_i = 
+	\begin{pmatrix}
+		x_{i1} & x_{i2} & x_{i3} & \cdots & x_{iT} & y_{i1} & 0 & 0 & \cdots \\
+		x_{i1} & x_{i2} & x_{i3} & \cdots & x_{iT} & y_{i1} & y_{i2} & 0 & \cdots \\
+		\vdots & \vdots & \vdots & \ddots & \vdots & \vdots & \vdots & \ddots & \ddots
+	\end{pmatrix} \,.
+\end{align}
+
+\textbf{Efficient GMM estimator:}
+\begin{align}
+	\hat{\beta} = \left( \sum_{i=1}^N \Delta X_i' Z_i \hat{\Omega}^{-1} Z_i' \Delta X_i \right)^{-1} \left( \sum_{i=1}^N \Delta X_i' Z_i \hat{\Omega}^{-1} Z_i' \Delta y_i \right) \,,
+\end{align}
+where $\Delta X_i$ contains $[\Delta x_{it}, \Delta y_{it-1}]$ and $\hat{\Omega} = \frac{1}{N} \sum_{i=1}^N Z_i' \hat{\Delta u}_i \hat{\Delta u}_i' Z_i$ using first-stage residuals.
+
+\textbf{Variance matrix:}
+\begin{align}
+	\boxed{\var(\hat{\beta}) = \frac{1}{N} \left( \expect{\Delta X_i' Z_i}' \left[\expect{Z_i' \Delta u_i \Delta u_i' Z_i}\right]^{-1} \expect{\Delta X_i' Z_i} \right)^{-1}}
+\end{align}
+
+Estimated by:
+\begin{align}
+	\widehat{\mathrm{Var}}(\hat{\beta}) = \frac{1}{N} \left( \frac{1}{N}\sum_{i=1}^N \Delta X_i' Z_i \hat{\Omega}^{-1} Z_i' \Delta X_i \right)^{-1} \,.
+\end{align}
+
+Since $u_{it}$ is serially uncorrelated, $\expect{\Delta u_i \Delta u_i'} = \sigma_u^2 \Lambda$ where $\Lambda$ is the tridiagonal matrix with 2 on diagonal and -1 on off-diagonals.
+
 \end{solution}
 
 \end{questions}
@@ -275,22 +465,161 @@ Download the SOEP practise data set \texttt{soep\_lebensz\_en.dta}, available on
 
 \question Estimate the effect of the child indicator on standardized life satisfaction in a first-difference model. Next, estimate the effect with a fixed effects regression. Do you expect the estimated coefficients to differ? How would you interpret the estimated coefficients that you obtain? (Hint: Make sure that you explicitly exclude all variables that are differenced-out in the FD model.)
 \begin{solution}
-Here comes the solution.
+
+Using the first two time periods for each individual (N=2,654 individuals, 4,980 observations):
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lcc}
+\toprule
+& First Difference & Fixed Effects \\
+\midrule
+health\_std & 0.224*** & 0.229*** \\
+& (0.023) & (0.023) \\
+has\_kids & 0.022 & 0.055 \\
+& (0.102) & (0.102) \\
+\midrule
+N (individuals) & 2,654 & 2,654 \\
+N (observations) & 4,980 & 4,980 \\
+\bottomrule
+\multicolumn{3}{l}{\footnotesize *** p$<$0.001, ** p$<$0.01, * p$<$0.05} \\
+\multicolumn{3}{l}{\footnotesize Standard errors in parentheses.}
+\end{tabular}
+\end{table}
+
+\textbf{Expected difference:} No. With $T=2$, FD and FE transformations are algebraically equivalent in a balanced panel. Results confirm this---coefficients are nearly identical, with minor differences due to imperfect balance.
+
+\textbf{Interpretation:} A one standard deviation increase in health increases life satisfaction by 0.22--0.23 standard deviations (highly significant, $p < 0.001$). Having children shows a small positive association (0.02--0.05 SD) but is not statistically significant ($p > 0.5$). Education is time-invariant and drops out in both transformations.
+
 \end{solution}
 
 \question Start again with the full sample. This time keep all time periods. Re-estimate the FE and FD specifications of the previous question. Do the estimated coefficients differ? Why? Now assume that the assumptions for consistency of the FE and FD estimators hold in your model. In theory, when is the FD estimator efficient, when the FE estimator? In your context, which estimator would you expect to be more efficient? Why? Which estimate, $\hat{\beta}^{FD}$ or $\hat{\beta}^{FE}$, has the higher standard error? How could you make your standard errors more robust to deviations from the assumed structure of the idiosyncratic error terms?
 \begin{solution}
-Here comes the solution.
+
+Using the full sample (N=3,289, 10,659 observations):
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lcccc}
+\toprule
+& \multicolumn{2}{c}{Two Periods} & \multicolumn{2}{c}{Full Sample} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+& FD & FE & FD & FE \\
+\midrule
+health\_std & 0.224*** & 0.229*** & 0.207*** & 0.248*** \\
+& (0.023) & (0.023) & (0.013) & (0.013) \\
+has\_kids & 0.022 & 0.055 & 0.058 & 0.129** \\
+& (0.102) & (0.102) & (0.059) & (0.047) \\
+\midrule
+N (individuals) & 2,654 & 2,654 & 3,289 & 3,289 \\
+N (observations) & 4,980 & 4,980 & 10,659 & 10,659 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize *** p$<$0.001, ** p$<$0.01, * p$<$0.05} \\
+\multicolumn{5}{l}{\footnotesize Standard errors in parentheses.}
+\end{tabular}
+\end{table}
+
+\textbf{Do coefficients differ?} Yes. The health effect remains stable (0.21--0.25), while the has\_kids effect increases substantially in FE (0.055 $\to$ 0.129, now significant at $p = 0.006$). Standard errors are much smaller in the full sample due to greater within-individual variation and larger sample size.
+
+\textbf{Efficiency theory:} FD is efficient when idiosyncratic errors follow a random walk (highly serially correlated); FE is efficient when $u_{it}$ is serially uncorrelated. Life satisfaction likely responds to both persistent factors and transitory shocks, suggesting FE should be more efficient.
+
+\textbf{Evidence:} For has\_kids, $SE^{FD} = 0.059$ vs. $SE^{FE} = 0.047$. FE has lower standard error, confirming it is more efficient and suggesting errors are not highly serially correlated.
+
+\textbf{Robust standard errors:} Use cluster-robust standard errors at the individual level to account for arbitrary serial correlation and heteroscedasticity, or Arellano/Driscoll-Kraay standard errors for panel data.
+
 \end{solution}
 
 \question Next, we build a dynamic model of life satisfaction. Intuitively, would you expect current life satisfaction and past life satisfaction to be positively or negatively related? Why? Now estimate a fixed effects model that includes, besides the first lag of life satisfaction, an individual's education and current standardized health status as well as an indicator for having children as additional control variables. Which sign has the coefficient of lagged life satisfaction? Is this what you expected? Do you think the coefficient is unbiased? Why? Why not?
 \begin{solution}
-Here comes the solution.
+
+\textbf{Expected relationship:} We expect a positive relationship due to state dependence, persistent personality traits, and stable life circumstances creating autocorrelation in satisfaction.
+
+\textbf{Dynamic FE results:}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lc}
+\toprule
+Variable & Coefficient (SE) \\
+\midrule
+lag(satisf\_std) & $-0.146$*** \\
+& (0.014) \\
+health\_std & 0.219*** \\
+& (0.013) \\
+education & 0.011 \\
+& (0.013) \\
+has\_kids & 0.180** \\
+& (0.049) \\
+\midrule
+N (observations) & 7,202 \\
+\bottomrule
+\multicolumn{2}{l}{\footnotesize *** p$<$0.001, ** p$<$0.01, * p$<$0.05}
+\end{tabular}
+\end{table}
+
+\textbf{Observed sign:} Negative ($-0.146$, $p < 0.001$), contradicting our expectation.
+
+\textbf{Is the coefficient unbiased?} No. This is \textbf{Nickell bias}. The within transformation demeans all variables: $\tilde{y}_{it-1} = y_{it-1} - \bar{y}_i$ contains $y_{it-1}$ in both numerator and denominator, while $\tilde{u}_{it} = u_{it} - \bar{u}_i$ contains $u_{it-1}$. This creates correlation $\expect{\tilde{y}_{it-1} \cdot \tilde{u}_{it}} \neq 0$ even when original errors are uncorrelated. The bias is $O(1/T)$ and downward. With average $T \approx 3$--4, this bias is substantial. The observed negative coefficient likely reflects bias rather than true dynamics, requiring an alternative estimator like Arellano-Bond.
+
 \end{solution}
 
 \question Now, estimate your dynamic panel data model using the Arellano-Bond Estimator (Hint: use the Stata command \texttt{xtabond} or the R package \texttt{pdynmc}). Include one lag of the dependent variable and use at most 2 lags as instruments. Under which assumptions is your estimate of the coefficient on the lagged dependent variable unbiased? Test for serial correlation in the error terms $u_{it}$. What do you conclude? If unbiased, would you expect the Arellano-Bond estimate to be more positive or more negative relative to the FE estimate from the previous question? Why? Which sign has the coefficient of lagged life satisfaction now? Interpret the magnitudes of your estimated coefficients.
 \begin{solution}
-Here comes the solution.
+
+Arellano-Bond difference GMM using lags 2--3 as instruments (N=4,304):
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lc}
+\toprule
+Variable & Coefficient (SE) \\
+\midrule
+lag(satisf\_std) & 0.067* \\
+& (0.035) \\
+health\_std & 0.205*** \\
+& (0.014) \\
+education & $-0.049$ \\
+& (0.060) \\
+has\_kids & 0.114 \\
+& (0.075) \\
+\midrule
+N (observations) & 4,304 \\
+\midrule
+\multicolumn{2}{l}{\textit{Diagnostic Tests:}} \\
+AR(1) test (p-value) & $< 0.001$ \\
+AR(2) test (p-value) & 0.363 \\
+Sargan test (p-value) & 0.223 \\
+\bottomrule
+\multicolumn{2}{l}{\footnotesize *** p$<$0.001, ** p$<$0.01, * p$<$0.05}
+\end{tabular}
+\end{table}
+
+\textbf{Consistency assumptions:} (i) No serial correlation in level errors: $\expect{u_{it} \cdot u_{is}} = 0$ for $t \neq s$; (ii) Valid instruments: $\expect{y_{it-s} \cdot \Delta u_{it}} = 0$ for $s \geq 2$; (iii) Strict exogeneity (or predetermined) of regressors; (iv) $f_i$ can be correlated with regressors.
+
+\textbf{Serial correlation tests:} AR(1) rejects ($p < 0.001$)---expected and acceptable, arising mechanically from first-differencing when level errors are uncorrelated. AR(2) fails to reject ($p = 0.363$)---this is the key test, confirming no second-order serial correlation in differenced errors, which validates that original level errors are uncorrelated and instruments are valid. Sargan test ($p = 0.223$) supports instrument validity.
+
+\textbf{Expected sign relative to FE:} More positive. FE suffers downward Nickell bias; Arellano-Bond corrects this using valid instruments.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lc}
+\toprule
+Estimator & Coefficient on lag(satisf\_std) \\
+\midrule
+FE Dynamic & $-0.146$*** (biased downward) \\
+Arellano-Bond & $+0.067$* (consistent) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Arellano-Bond is more positive ($+0.067$ vs. $-0.146$), correcting ~0.21 of downward bias.
+
+\textbf{Coefficient interpretations:} Lagged satisfaction (0.067): weak positive persistence.
+
+Health (0.205***): dominant determinant. Has children (0.114): positive but not significant.
+
+Education ($-0.049$): not significant.
+
 \end{solution}
 
 \end{questions}

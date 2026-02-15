@@ -45,7 +45,7 @@ c) Suppose $z_{it}=y_{it-1}$ and you know that $\gamma=1$. How would you estimat
 
 Question 3
 
-Download the SOEP practise data set soep_lebensz_en.dta, available on the course website. As in Problem Set 1, construct the binary variable has_kids that indicates if a person at time $t$ has any children. For each individual, keep only the first two time periods. In the following regressions, include as control variables only education and an individual's current standardized health status, and use non-clustered, non-robust standard errors for simplicity.
+Download the SOEP practise data set soep.csv, available on the course website. As in Problem Set 1, construct the binary variable has_kids that indicates if a person at time $t$ has any children. For each individual, keep only the first two time periods. In the following regressions, include as control variables only education and an individual's current standardized health status, and use non-clustered, non-robust standard errors for simplicity.
 
 a) Estimate the effect of the child indicator on standardized life satisfaction in a first-difference model. Next, estimate the effect with a fixed effects regression. Do you expect the estimated coefficients to differ? How would you interpret the estimated coefficients that you obtain? (Hint: Make sure that you explicitly exclude all variables that are differenced-out in the FD model.)
 
