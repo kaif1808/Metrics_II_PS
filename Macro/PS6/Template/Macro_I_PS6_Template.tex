@@ -1,0 +1,574 @@
+\documentclass[11pt]{exam}
+\footer{}{\thepage}{} % avoid ``Page X''
+\usepackage[left=0.7in, right=0.7in, top=0.8in, bottom=0.8in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage[all]{foreign}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,mathtools,bm}
+\usepackage[low-sup]{subdepth} % alignment of sub and sup scripts
+\usepackage{stackengine} % stacking matrix dimensions
+\stackMath
+\def\sss{\scriptstyle}
+\setstackgap{L}{12pt}
+\def\stacktype{L}
+
+\usepackage{siunitx}
+
+\usepackage[sc]{mathpazo}
+%\usepackage{euscript}
+\usepackage{float,booktabs,threeparttable,caption,subcaption,xcolor}
+\usepackage[low-sup]{subdepth}
+\usepackage{mathrsfs,dsfont}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\usepackage{enumitem}
+\graphicspath{{figs/}}
+\usepackage{natbib}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{hyperref}
+\usepackage[noabbrev,nameinlink,capitalise]{cleveref}
+\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
+
+% avoid line breaks at binary operators and relation operators in inline math
+\binoppenalty=10000 
+\relpenalty=10000 
+
+% spacing of align
+\expandafter\def\expandafter\normalsize\expandafter{%
+	\normalsize%
+	\setlength\abovedisplayskip{8pt}%
+	\setlength\belowdisplayskip{8pt}%
+	\setlength\abovedisplayshortskip{-8pt}%
+	\setlength\belowdisplayshortskip{2pt}%
+}
+
+\renewcommand{\questionshook}{\setlength{\itemsep}{0.06in}}
+\renewcommand{\questionlabel}{\alph{question}.}
+% referring to questions
+\Crefformat{question}{#2Q#1#3}
+\crefname{question}{question}{questions}
+\Crefname{question}{Q}{Qs}
+
+\printanswers
+
+%% Build Directory Configuration
+%%
+%% To compile this document with auxiliary files (.aux, .log, .out, etc.) 
+%% written to a separate build folder, use one of the following methods:
+%%
+%% Method 1: Using pdflatex directly
+%%   pdflatex -output-directory=build Macro_I_PS6_Template.tex
+%%   (Note: You may need to run this twice for cross-references)
+%%
+%% Method 2: Using latexmk (recommended)
+%%   latexmk -pdf -auxdir=build -outdir=build Macro_I_PS6_Template.tex
+%%
+%% Method 3: Create a .latexmkrc file in the same directory with:
+%%   $aux_dir = 'build';
+%%   $out_dir = 'build';
+%%   Then run: latexmk -pdf Macro_I_PS6_Template.tex
+%%
+%% The build folder will contain all auxiliary files, keeping your source
+%% directory clean. The PDF output will also be placed in the build folder.
+
+%% notation
+
+% bold math
+\newcommand{\bom}[1]{\bm{#1}}
+\newcommand{\bX}{\bom{X}}
+\newcommand{\bi}{\bom{\iota}}
+
+% probability
+\DeclareMathOperator*{\pp}{\mathbb{P}}
+
+% expectation with round brackets
+\NewDocumentCommand{\expect}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{E}}%     the expectation operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the expectation
+	\IfBooleanTF{#2}{% *-variant
+		\expectarg*{\expectvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\expectarg{\expectvar#4}%
+		}{% optional argument
+			\expectarg[#3]{\expectvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\expectvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\expectarg}[1]{(}{)}{#1}
+
+% expectation with square brackets
+\NewDocumentCommand{\expectsq}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{E}}%     the expectation operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the expectation
+	\IfBooleanTF{#2}{% *-variant
+		\expectargsq*{\expectvarsq#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\expectargsq{\expectvarsq#4}%
+		}{% optional argument
+			\expectargsq[#3]{\expectvarsq#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\expectvarsq}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\expectargsq}[1]{[}{]}{#1}
+
+% covariance
+\NewDocumentCommand{\cov}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{C}ov}%     the covariance operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the covariance
+	\IfBooleanTF{#2}{% *-variant
+		\covarg*{\covvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\covarg{\covvar#4}%
+		}{% optional argument
+			\covarg[#3]{\covvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\covvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\covarg}[1]{(}{)}{#1}
+
+% covariance HAT
+\NewDocumentCommand{\covhat}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\ensuremath{\widehat{\mathbb{C}ov}}}%     the covariance operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the covariance
+	\IfBooleanTF{#2}{% *-variant
+		\covhatarg*{\covhatvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\covhatarg{\covhatvar#4}%
+		}{% optional argument
+			\covhatarg[#3]{\covhatvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\covhatvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\covhatarg}[1]{(}{)}{#1}
+
+% variance
+\NewDocumentCommand{\var}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{V}ar}%     the variance operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the variance
+	\IfBooleanTF{#2}{% *-variant
+		\vararg*{\varvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\vararg{\varvar#4}%
+		}{% optional argument
+			\vararg[#3]{\varvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\varvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\vararg}[1]{(}{)}{#1}
+
+
+\DeclareMathOperator*{\trace}{tr}
+\DeclareMathOperator*{\rank}{rank}
+
+\newcommand{\duedate}{{\large\bfseries\color{red} Due date: Monday, 23rd February, before the seminar}}
+
+
+\title{\vspace*{-4em}Macroeconomics I\\ Problem Set 6
+	\ifprintanswers
+	{\color{red}Solutions}
+	\fi
+\\	
+{\normalsize Barcelona School of Economics, Spring 2026} \\
+\duedate}
+
+\author{Group members: AB, CD, EF, GH.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\vspace*{-1em}
+
+\section*{Submission Instructions}
+Please submit a document with your answers to the course instructor via the designated submission platform by Monday, 23rd February, before the seminar at the very latest. You can work in groups of up to four.
+
+\section{Endogenous Growth}
+
+Consider an economy with the following production function with $K$ and $L$ indicating capital and labor, respectively.
+\begin{align}
+	Y=F(K,L)=AK^{\beta}L^{1-\beta}+BK^{\alpha}L^{1-\alpha}
+	\label{eq:production}
+\end{align}
+where $A>0$, $B>0$, $\beta\in(0,1)$, and $\alpha\in(0,1)$.
+
+\begin{questions}
+
+\question Write down the production function in per capita terms, $f(k)$.
+\begin{solution}
+Define output per capita $y=Y/L$ and capital per capita $k=K/L$. Dividing \eqref{eq:production} by $L$:
+\begin{align}
+	y = \frac{Y}{L} &= \frac{AK^{\beta}L^{1-\beta} + BK^{\alpha}L^{1-\alpha}}{L} \notag \\
+	&= A\frac{K^{\beta}}{L^{\beta}} + B\frac{K^{\alpha}}{L^{\alpha}} = A\left(\frac{K}{L}\right)^{\beta} + B\left(\frac{K}{L}\right)^{\alpha}.
+\end{align}
+Hence the per capita production function is
+\[
+	\boxed{f(k) = Ak^{\beta} + Bk^{\alpha}.}
+\]
+\end{solution}
+
+\question Compute the first derivative with respect to $k$. Is it increasing or decreasing?
+\begin{solution}
+From $f(k)=Ak^{\beta}+Bk^{\alpha}$,
+\[
+	f'(k) = A\beta k^{\beta-1} + B\alpha k^{\alpha-1}.
+\]
+Since $A,B>0$, $\alpha,\beta\in(0,1)$, and $k>0$, both terms are positive. Hence $f'(k)>0$ for all $k>0$: the marginal product of capital is positive.
+
+The second derivative is $f''(k)=A\beta(\beta-1)k^{\beta-2}+B\alpha(\alpha-1)k^{\alpha-2}$. With $\alpha,\beta\in(0,1)$, we have $\beta-1<0$ and $\alpha-1<0$, so $f''(k)<0$ for all $k>0$. Thus $f'(k)$ is \textbf{decreasing} in $k$: there are diminishing returns to capital.
+\end{solution}
+
+\question Compute the second derivative with respect to $k$. Is it increasing or decreasing?
+\begin{solution}
+Differentiating $f'(k)=A\beta k^{\beta-1}+B\alpha k^{\alpha-1}$ with respect to $k$:
+\[
+	f''(k) = A\beta(\beta-1)k^{\beta-2} + B\alpha(\alpha-1)k^{\alpha-2}.
+\]
+Since $\alpha,\beta\in(0,1)$, we have $\beta-1<0$ and $\alpha-1<0$, so $f''(k)<0$ for all $k>0$: the production function is strictly concave.
+
+To determine whether $f''(k)$ is increasing or decreasing in $k$, compute
+\[
+	f'''(k) = A\beta(\beta-1)(\beta-2)k^{\beta-3} + B\alpha(\alpha-1)(\alpha-2)k^{\alpha-3}.
+\]
+With $\beta-2<0$ and $\alpha-2<0$, we have $(\beta-1)(\beta-2)>0$ and $(\alpha-1)(\alpha-2)>0$, so $f'''(k)>0$ for all $k>0$. Thus $f''(k)$ is \textbf{increasing} in $k$ (less negative as $k$ rises).
+\end{solution}
+
+\question Imagine that we are in a situation in which the saving rate (as a fraction of output) is exogenous and equal to $s$. Depreciation rate equals $\delta$ and population growth equals $n$. Time is continuous. Write down the law of motion of capital per capita.
+\begin{solution}
+Aggregate capital accumulates according to $\dot{K}=sY-\delta K=sF(K,L)-\delta K$. With $k=K/L$ and $\dot{L}/L=n$, we have
+\[
+	\dot{k} = \frac{d}{dt}\left(\frac{K}{L}\right) = \frac{\dot{K}L - K\dot{L}}{L^{2}} = \frac{\dot{K}}{L} - nk.
+\]
+Substituting $\dot{K}=sY-\delta K$ and $y=Y/L$:
+\[
+	\dot{k} = s\frac{Y}{L} - \delta\frac{K}{L} - nk = sf(k) - \delta k - nk.
+\]
+Hence the law of motion of capital per capita is
+\[
+	\boxed{\dot{k}(t) = sf(k(t)) - (\delta+n)k(t).}
+\]
+\end{solution}
+
+\question Use this law of motion to get an expression of the growth rate of capital per capita at a given point in time. Draw a diagram to describe it as a function of $k$.
+\[
+\gamma_{kt}=\frac{\dot{k}(t)}{k(t)}
+\]
+\begin{solution}
+From $\dot{k}=sf(k)-(\delta+n)k$, we have
+\[
+	\gamma_{k,t} = \frac{\dot{k}(t)}{k(t)} = s\frac{f(k(t))}{k(t)} - (\delta+n).
+\]
+Since $f(k)/k = Ak^{\beta-1}+Bk^{\alpha-1}$ with $\alpha,\beta\in(0,1)$, both exponents are negative, so $f(k)/k$ is decreasing in $k$. Hence $\gamma_{k,t}$ is decreasing in $k$. As $k\to 0$, $f(k)/k\to\infty$ (both terms diverge), so $\gamma_{k,t}\to\infty$. As $k\to\infty$, $f(k)/k\to 0$ (by L'H\^{o}pital, $\lim f(k)/k = \lim f'(k)=0$), so $\gamma_{k,t}\to -(\delta+n)<0$. There is a unique steady state $k^{*}$ where $\gamma_{k,t}=0$, i.e., $sf(k^{*})/k^{*}=\delta+n$.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9, every node/.style={font=\small}]
+	\draw[->] (0,-1.5) -- (0,3.5) node[above] {$\gamma_{k,t}$};
+	\draw[->] (0,0) -- (5.5,0) node[right] {$k$};
+	\draw[thick, domain=0.15:5, samples=80] plot (\x, {3.5*exp(-0.8*\x) - 1.2});
+	\draw[dashed] (1.35,-1.5) -- (1.35,2.2);
+	\node[below] at (1.35,-0.15) {$k^{*}$};
+	\draw[dashed] (0,-1.2) -- (5,-1.2) node[right] {$-(\delta+n)$};
+\end{tikzpicture}
+\end{center}
+The curve slopes down: $\gamma_{k,t}$ is high when $k$ is small and approaches $-(\delta+n)$ as $k\to\infty$. Capital per capita grows when $k<k^{*}$ and shrinks when $k>k^{*}$.
+\end{solution}
+
+\question Does this model generate endogenous growth? Why? If yes, explain how you could modify the parameters so that the model DOES NOT generate endogenous growth. If not, explain how you could modify the parameters so that the model DOES generate endogenous growth.
+\begin{solution}
+\textbf{No}, this model does \emph{not} generate endogenous growth.
+
+From the lecture notes: sustained growth requires $\lim_{t\to\infty}\gamma_{k,t}>0$, which is equivalent to $\lim_{k\to\infty} s f(k)/k > \delta+n$, or $\lim_{k\to\infty} f'(k) > (\delta+n)/s$ (by L'H\^{o}pital). Here $f'(k)=A\beta k^{\beta-1}+B\alpha k^{\alpha-1}$ with $\alpha,\beta\in(0,1)$, so both exponents are negative. Hence $\lim_{k\to\infty}f'(k)=0$. The marginal product of capital vanishes as $k\to\infty$, so $\lim_{k\to\infty}\gamma_{k,t} = -(\delta+n)<0$. The economy converges to a unique steady state $k^{*}$ with zero long-run growth of capital per capita.
+
+\textbf{Modification to generate endogenous growth:} Allow one exponent to equal 1. For example, if $\beta=1$, then $f(k)=Ak+Bk^{\alpha}$ and $\lim_{k\to\infty}f(k)/k = A$. Then $\lim_{k\to\infty}\gamma_{k,t} = sA - (\delta+n)$. If $sA>\delta+n$, there is sustained growth. Alternatively, add a linear term to the production function so that $\lim_{k\to\infty}f(k)/k$ is a positive constant.
+\end{solution}
+
+\end{questions}
+
+\section{Endogenous Growth with Human Capital Accumulation}
+
+\setcounter{question}{0}
+
+Consider a growth model in continuous time. The planner seeks to maximize
+\[
+\int_{0}^{\infty}e^{-\rho t}\left(\frac{C(t)^{1-\theta}-1}{1-\theta}\right)dt \quad \rho, \theta>0
+\]
+subject to the production function
+\[
+Y(t)=AK(t)^{\alpha}(u(t)H(t))^{1-\alpha}
+\]
+where $0<\alpha<1$, $A>0$, and laws of motion for physical capital and human capital accumulation
+\begin{align}
+	\dot{K}(t)&=Y(t)-C(t)-\delta K(t), \quad 0<\delta<1 \\
+	\dot{H}(t)&=B(1-u(t))H(t)-\delta H(t), \quad B>0
+\end{align}
+and given initial conditions $K(0)>0$ and $H(0)>0$. The interpretation here is that each worker has $H(t)$ units of human capital per unit time and the planner chooses what fraction of their time $u(t)\in[0,1]$ is spent producing goods $Y(t)$ with the remaining time $1-u(t)$ spent acquiring more human capital. To simplify the algebra, physical and human capital have a common depreciation rate $\delta$ and no physical capital is used to produce human capital.
+
+\begin{questions}
+
+\question Set up a current-value Hamiltonian and derive the key optimality conditions for $C(t)$, $K(t)$, $H(t)$ and $u(t)$.
+\begin{solution}
+The current-value Hamiltonian is
+\[
+	\mathcal{H} = \frac{C^{1-\theta}-1}{1-\theta} + \lambda_{K}\bigl[AK^{\alpha}(uH)^{1-\alpha} - C - \delta K\bigr] + \lambda_{H}\bigl[B(1-u)H - \delta H\bigr]
+\]
+with state variables $K$, $H$; control variables $C$, $u$; and co-state variables $\lambda_{K}$, $\lambda_{H}$.
+
+\textbf{First-order conditions:}
+
+\emph{Control $C$:} $\partial\mathcal{H}/\partial C = 0$ gives
+\[
+	C^{-\theta} = \lambda_{K}.
+\]
+
+\emph{Control $u$:} $\partial\mathcal{H}/\partial u = 0$ gives
+\[
+	\lambda_{K}(1-\alpha)\frac{Y}{u} = \lambda_{H}BH \quad \Rightarrow \quad \frac{\lambda_{K}}{\lambda_{H}} = \frac{BuH}{(1-\alpha)Y}.
+\]
+
+\emph{Co-state $K$:} $\dot{\lambda}_{K} = \rho\lambda_{K} - \partial\mathcal{H}/\partial K$ gives
+\[
+	\frac{\dot{\lambda}_{K}}{\lambda_{K}} = \rho - \left(\alpha\frac{Y}{K} - \delta\right).
+\]
+
+\emph{Co-state $H$:} $\dot{\lambda}_{H} = \rho\lambda_{H} - \partial\mathcal{H}/\partial H$ gives
+\[
+	\frac{\dot{\lambda}_{H}}{\lambda_{H}} = \rho - \left[\frac{\lambda_{K}}{\lambda_{H}}(1-\alpha)\frac{Y}{H} + B(1-u) - \delta\right].
+\]
+
+\textbf{Euler equation:} From $C^{-\theta} = \lambda_{K}$, we have $\dot{\lambda}_{K}/\lambda_{K} = -\theta(\dot{C}/C)$. Equating with the co-state equation for $K$:
+\[
+	\frac{\dot{C}}{C} = \frac{1}{\theta}\left(\alpha\frac{Y}{K} - \delta - \rho\right).
+\]
+
+\textbf{Transversality conditions:}
+\[
+	\lim_{t\to\infty}\lambda_{K}(t)K(t)e^{-\rho t} = 0, \qquad \lim_{t\to\infty}\lambda_{H}(t)H(t)e^{-\rho t} = 0.
+\]
+\end{solution}
+
+\question Let $c(t)=C(t)/K(t)$ and $k(t)=K(t)/H(t)$. Show that there is a unique balanced growth path where $C(t)$, $K(t)$, and $H(t)$ all grow at a constant rate $g^{*}$ and where time spent producing goods $u(t)$ is a constant $u^{*}$. Solve for $g^{*}$ and $u^{*}$ and for the ratios $c^{*}$ and $k^{*}$ along the balanced growth path.
+\begin{solution}
+On a balanced growth path (BGP), $C$, $K$, $H$, and $Y$ all grow at a constant rate $g^{*}$, and $u$ is constant at $u^{*}$.
+
+\textbf{Step 1: Equality of returns.} From the FOC on $u$ and the co-state equations, on the BGP the shadow values $\lambda_{K}$, $\lambda_{H}$ must grow at the same rate. The co-state for $K$ gives $\dot{\lambda}_{K}/\lambda_{K} = \rho - (\alpha Y/K - \delta)$. The co-state for $H$ and the FOC on $u$ imply that the return to human capital in production equals the return to human capital accumulation. Imposing $\gamma_{\lambda_{K}} = \gamma_{\lambda_{H}}$ yields
+\[
+	\alpha\frac{Y^{*}}{K^{*}} - \delta = B - \delta \quad \Rightarrow \quad \boxed{\alpha\frac{Y^{*}}{K^{*}} = B.}
+\]
+
+\textbf{Step 2: Growth rate.} From the Euler equation and the condition above,
+\[
+	g^{*} = \frac{\dot{C}}{C} = \frac{1}{\theta}\left(\alpha\frac{Y^{*}}{K^{*}} - \delta - \rho\right) = \frac{1}{\theta}(B - \delta - \rho).
+\]
+Hence
+\[
+	\boxed{g^{*} = \frac{B - \delta - \rho}{\theta}.}
+\]
+
+\textbf{Step 3: Time allocation $u^{*}$.} From $\dot{H}/H = B(1-u) - \delta$ and $\gamma_{H}^{*} = g^{*}$,
+\[
+	B(1-u^{*}) - \delta = g^{*} \quad \Rightarrow \quad u^{*} = 1 - \frac{g^{*} + \delta}{B} = \frac{B - \delta - g^{*}}{B}.
+\]
+Substituting $g^{*} = (B-\delta-\rho)/\theta$:
+\[
+	\boxed{u^{*} = \frac{\rho + (\theta-1)(B-\delta-\rho)/\theta}{B} = \frac{B - \delta - (B-\delta-\rho)/\theta}{B}.}
+\]
+
+\textbf{Step 4: Ratios $c^{*}$ and $k^{*}$.} From $\dot{K}/K = Y/K - C/K - \delta$ and $\gamma_{K}^{*} = g^{*}$,
+\[
+	\frac{Y^{*}}{K^{*}} - c^{*} - \delta = g^{*}.
+\]
+With $\alpha Y^{*}/K^{*} = B$, we have $Y^{*}/K^{*} = B/\alpha$, so
+\[
+	\boxed{c^{*} = \frac{B}{\alpha} - \delta - g^{*}.}
+\]
+
+From $Y = AK^{\alpha}(uH)^{1-\alpha}$, we have $Y/K = A(u/k)^{1-\alpha}$. On the BGP, $\alpha Y/K = B$ implies $Y/K = B/\alpha$, so
+\[
+	A\left(\frac{u^{*}}{k^{*}}\right)^{1-\alpha} = \frac{B}{\alpha} \quad \Rightarrow \quad \frac{u^{*}}{k^{*}} = \left(\frac{B}{\alpha A}\right)^{1/(1-\alpha)}.
+\]
+Hence
+\[
+	\boxed{k^{*} = u^{*}\left(\frac{\alpha A}{B}\right)^{1/(1-\alpha)}.}
+\]
+
+The BGP is unique given the parameters.
+\end{solution}
+
+\question Derive conditions on the parameters that are sufficient for $g^{*}>0$, $u^{*}\in[0,1]$ and for the transversality conditions to be satisfied.
+\begin{solution}
+\textbf{$g^{*} > 0$:} From $g^{*} = (B - \delta - \rho)/\theta$, we need
+\[
+	\boxed{B > \delta + \rho.}
+\]
+
+\textbf{$u^{*} \in [0,1]$:} We have $u^{*} = (B - \delta - g^{*})/B$.
+\begin{itemize}[nosep]
+	\item $u^{*} > 0$ requires $B - \delta - g^{*} > 0$, i.e., $g^{*} < B - \delta$. Since $g^{*} = (B-\delta-\rho)/\theta$, this holds when $(B-\delta-\rho)/\theta < B - \delta$. For $\theta \geq 1$ and $\rho > 0$, we have $(B-\delta-\rho)/\theta \leq B-\delta-\rho < B-\delta$.
+	\item $u^{*} < 1$ requires $B - \delta - g^{*} < B$, i.e., $g^{*} + \delta > 0$, which holds whenever $g^{*} > 0$.
+\end{itemize}
+A sufficient condition is $B > \delta + \rho$ together with $\theta \geq 1$ (or more generally, parameters such that $g^{*} < B - \delta$).
+
+\textbf{Transversality conditions:} We need $\lim_{t\to\infty}\lambda_{K}(t)K(t)e^{-\rho t} = 0$ and $\lim_{t\to\infty}\lambda_{H}(t)H(t)e^{-\rho t} = 0$. On the BGP, $\lambda_{K} \propto C^{-\theta}$ grows at rate $-\theta g^{*}$, and $K$ grows at rate $g^{*}$, so $\lambda_{K}K$ grows at rate $(1-\theta)g^{*}$. Thus $\lambda_{K}Ke^{-\rho t}$ grows at rate $(1-\theta)g^{*} - \rho$. For the limit to vanish,
+\[
+	\rho > (1-\theta)g^{*}.
+\]
+For $\theta \geq 1$, $(1-\theta)g^{*} \leq 0$, so $\rho > 0$ suffices. For $\theta < 1$, substituting $g^{*} = (B-\delta-\rho)/\theta$ and rearranging yields $\rho > (1-\theta)(B-\delta)$. Hence
+\[
+	\boxed{\rho > \max\bigl\{0,\,(1-\theta)(B-\delta)\bigr\}.}
+\]
+\end{solution}
+
+\question Suppose the initial condition $k(0)=K(0)/H(0)$ differs from the value $k^{*}$ along the balanced growth path in part~(b). Characterize the transitional dynamics of $c(t)$, $k(t)$ and $u(t)$. Consider in particular the two cases $\alpha<\theta$ and $\alpha>\theta$.
+
+\medskip
+\noindent\textit{Hint:} With some algebra you can reduce this to a linear differential equation in
+\[
+x(t)=A\left(\frac{u(t)H(t)}{K(t)}\right)^{1-\alpha}=A\left(\frac{u(t)}{k(t)}\right)^{1-\alpha}.
+\]
+\begin{solution}
+Let $x(t)\equiv Y(t)/K(t)=A\bigl(u(t)/k(t)\bigr)^{1-\alpha}$ be the output–capital ratio. The growth rates of the capital stocks are
+\[
+	\gamma_{K} = \frac{\dot{K}}{K} = x - c - \delta, \qquad \gamma_{H} = \frac{\dot{H}}{H} = B(1-u)-\delta,
+\]
+so $\dot{k}/k = \gamma_{K}-\gamma_{H} = x - c - B(1-u)$.
+
+\medskip
+\noindent\textbf{Step 1: Autonomous ODE for $x$.}
+
+From the FOC on $u$,
+\[
+	\frac{\lambda_{K}}{\lambda_{H}} = \frac{BuH}{(1-\alpha)Y} = \frac{Bu}{(1-\alpha)\,Ak^{\alpha}u^{1-\alpha}} = \frac{B}{(1-\alpha)A}\!\left(\frac{u}{k}\right)^{\!\alpha}.
+\]
+Log-differentiating gives $\gamma_{\lambda_{K}}-\gamma_{\lambda_{H}} = \alpha(\gamma_{u}-\gamma_{k})$.
+
+The co-state equation for $K$ gives $\gamma_{\lambda_{K}}=\rho-(\alpha x-\delta)$.
+For the co-state of $H$, note that the FOC identity implies
+\[
+	\frac{\lambda_{K}}{\lambda_{H}}\cdot(1-\alpha)\frac{Y}{H}
+	= \frac{B}{(1-\alpha)A}\!\left(\frac{u}{k}\right)^{\!\alpha}\cdot(1-\alpha)Ak^{\alpha}u^{1-\alpha}
+	= Bu,
+\]
+so the co-state equation $\dot{\lambda}_{H}=\rho\lambda_{H}-\lambda_{K}(1-\alpha)Y/H - \lambda_{H}(B(1-u)-\delta)$ simplifies to
+\[
+	\gamma_{\lambda_{H}} = \rho - Bu - B(1-u)+\delta = \rho - B + \delta.
+\]
+Hence
+\[
+	\gamma_{\lambda_{K}} - \gamma_{\lambda_{H}} = \bigl(\rho - \alpha x + \delta\bigr) - \bigl(\rho - B + \delta\bigr) = B - \alpha x.
+\]
+Since $x = A(u/k)^{1-\alpha}$, we have $\gamma_{x} = (1-\alpha)(\gamma_{u}-\gamma_{k})$, so
+\[
+	(1-\alpha)(\gamma_{u}-\gamma_{k}) = B - \alpha x \quad\Longrightarrow\quad \gamma_{x} = \frac{1-\alpha}{\alpha}(B-\alpha x) = (1-\alpha)\!\left(\frac{B}{\alpha}-x\right).
+\]
+This yields the \emph{autonomous} logistic ODE:
+\[
+	\boxed{\dot{x} = (1-\alpha)\,x\!\left(\frac{B}{\alpha}-x\right).}
+\]
+The substitution $z=1/x$ linearises this to $\dot{z}+(1-\alpha)(B/\alpha)\,z=(1-\alpha)$, confirming global stability. The unique steady state $x^{*}=B/\alpha$ is stable: $\dot{x}>0$ for $x<x^{*}$ and $\dot{x}<0$ for $x>x^{*}$, so \textbf{$x(t)$ converges monotonically to $x^{*}$ from any initial value $x(0)>0$}.
+
+\medskip
+\noindent\textbf{Step 2: ODE for $c = C/K$.}
+
+The Euler equation gives $\gamma_{C} = (\alpha x - \delta - \rho)/\theta$. Using $\dot{c}/c = \gamma_{C}-\gamma_{K}$:
+\[
+	\boxed{\dot{c} = c\!\left[\frac{(\alpha-\theta)\,x}{\theta} + c + \frac{\delta(\theta-1)-\rho}{\theta}\right].}
+\]
+
+\medskip
+\noindent\textbf{Step 3: Linearisation and saddle-path structure.}
+
+The $(x,c)$ system has a unique positive steady state at $(x^{*},c^{*})$ coinciding with the BGP from part~(b). Linearising around it gives the Jacobian
+\[
+	J = \begin{pmatrix} -(1-\alpha)B/\alpha & 0 \\[4pt] c^{*}(\alpha-\theta)/\theta & c^{*} \end{pmatrix}
+\]
+(the upper-right entry is zero because $\dot{x}$ does not depend on $c$; $J_{22}=c^{*}$ follows from the steady-state condition $(\alpha-\theta)x^{*}/\theta + c^{*}+[\delta(\theta-1)-\rho]/\theta=0$). The eigenvalues are the diagonal elements:
+\[
+	\lambda_{1} = -\frac{(1-\alpha)B}{\alpha} < 0, \qquad \lambda_{2} = c^{*} > 0.
+\]
+One negative and one positive eigenvalue confirm a \textbf{unique saddle path} (conditional on the parameter conditions in part~(c)). The stable eigenvector gives the slope of the saddle path in $(x,c)$ space:
+\[
+	\left.\frac{dc}{dx}\right|_{\text{saddle}} = \frac{c^{*}(\alpha-\theta)/\theta}{\lambda_{1}-c^{*}} = \frac{c^{*}(\alpha-\theta)/\theta}{-(1-\alpha)B/\alpha\,-\,c^{*}}.
+\]
+The denominator is strictly negative, so
+\[
+	\operatorname{sgn}\!\left(\left.\frac{dc}{dx}\right|_{\text{saddle}}\right) = \operatorname{sgn}(\alpha-\theta).
+\]
+
+\medskip
+\noindent\textbf{Step 4: Dynamics of $k$, $u$, and $c$ — the two cases.}
+
+We focus on $k(0)>k^{*}$ (the case $k(0)<k^{*}$ is symmetric and discussed at the end). Since $k=K/H$ is a ratio of two state variables, it cannot jump. The planner chooses the initial controls $(c(0),u(0))$ on the saddle path.
+
+\emph{Initial displacement.} With abundant physical capital, the planner optimally devotes \emph{more} time to human-capital accumulation, setting $u(0)<u^{*}$. This lowers $(u/k)^{1-\alpha}$ and therefore $x(0)<x^{*}$. The economy lies to the left of $x^{*}$ in the phase diagram.
+
+\emph{Dynamics of $k$.} Since $\gamma_{H}=B(1-u)-\delta>g^{*}$ (because $u<u^{*}$) and $\gamma_{K}=x-c-\delta<g^{*}$, physical capital grows \emph{slower} than human capital: $\dot{k}/k<0$ and $k(t)$ \textbf{decreases monotonically toward $k^{*}$}.
+
+\emph{Dynamics of $u$.} From $u=k(x/A)^{1/(1-\alpha)}$, $u$ starts below $u^{*}$ and increases monotonically back to $u^{*}$ as $k$ falls and $x$ rises.
+
+\emph{Dynamics of $c$ — role of $\alpha$ vs $\theta$.} With $x(0)<x^{*}$ and $x$ rising, the sign of $dc/dx|_{\text{saddle}}$ determines how $c$ moves:
+
+\begin{itemize}[nosep]
+	\item \textbf{$\alpha>\theta$ (capital-income share exceeds the inverse IES):} The saddle-path slope is \emph{positive}. Since $x$ rises toward $x^{*}$, $c$ also rises monotonically toward $c^{*}$. Intuitively, the return to physical capital $\alpha x$ is currently below its BGP level; with a low intertemporal elasticity of substitution ($1/\theta<1/\alpha$), agents reduce saving today and raise $c$.
+	\item \textbf{$\alpha<\theta$ (high IES):} The saddle-path slope is \emph{negative}. Since $x$ rises, $c$ falls monotonically toward $c^{*}$. With a high willingness to substitute intertemporally, agents increase saving to exploit the return to human-capital accumulation, driving $c$ down.
+\end{itemize}
+
+When $k(0)<k^{*}$, the directions are reversed throughout: $x(0)>x^{*}$, $x$ falls, $k$ rises, $u$ falls toward $u^{*}$; $c$ falls (rises) for $\alpha>\theta$ ($\alpha<\theta$).
+
+\medskip
+\noindent\textbf{Phase diagram.} The $\dot{x}=0$ locus is the vertical line $x=x^{*}=B/\alpha$. The $\dot{c}=0$ locus (setting the bracket in the $\dot{c}$ equation to zero) is a downward-sloping line through $(x^{*},c^{*})$ with slope $-(\alpha-\theta)/\theta$. The arrows indicate: $x$ rises (falls) left (right) of $x=x^{*}$; $c$ rises (falls) above (below) the $\dot{c}=0$ locus.
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0, every node/.style={font=\small},
+	>=Stealth]
+	% axes
+	\draw[->] (0,0) -- (6.5,0) node[right] {$x$};
+	\draw[->] (0,0) -- (0,4.5) node[above] {$c$};
+	% x* vertical nullcline
+	\draw[dashed, thick] (3.5,0) node[below]{$x^{*}$} -- (3.5,4.2);
+	% steady state
+	\fill (3.5,2.2) circle (2pt) node[above right]{$(x^{*},c^{*})$};
+	% saddle path alpha>theta (positive slope) — blue solid lines with midpoint arrows
+	\draw[blue, thick] (1.0,0.7) -- (3.5,2.2);
+	\draw[blue, thick] (6.0,3.7) -- (3.5,2.2);
+	\draw[->, blue, thick] (2.25,1.45) -- (2.45,1.58);  % arrow on left branch
+	\draw[->, blue, thick] (4.75,2.95) -- (4.55,2.82);  % arrow on right branch
+	\node[blue] at (1.5,1.6) {$\alpha>\theta$};
+	% saddle path alpha<theta (negative slope) — red dashed lines
+	\draw[red, thick, dashed] (1.0,3.5) -- (3.5,2.2);
+	\draw[red, thick, dashed] (6.0,0.9) -- (3.5,2.2);
+	\draw[->, red, thick] (2.25,2.98) -- (2.45,2.85);   % arrow on left branch
+	\draw[->, red, thick] (4.75,1.42) -- (4.55,1.55);   % arrow on right branch
+	\node[red] at (1.5,2.8) {$\alpha<\theta$};
+	% flow arrows in x-direction (left of x*: rightward; right of x*: leftward)
+	\draw[->, gray] (1.8,1.5) -- (2.3,1.5);
+	\draw[->, gray] (5.2,2.9) -- (4.7,2.9);
+\end{tikzpicture}
+\end{center}
+
+The blue (solid) saddle path applies when $\alpha>\theta$ and has positive slope: $c$ and $x$ co-move along the transition. The red (dashed) saddle path applies when $\alpha<\theta$ and has negative slope: $c$ and $x$ move in opposite directions. In both cases the economy converges to the unique BGP $(x^{*},c^{*})$.
+\end{solution}
+
+\end{questions}
+
+\end{document}
