@@ -1,0 +1,579 @@
+\documentclass[11pt]{exam}
+\footer{}{\thepage}{} % avoid ``Page X''
+\usepackage[left=0.7in, right=0.7in, top=0.8in, bottom=0.8in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage[all]{foreign}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,mathtools,bm}
+\usepackage[low-sup]{subdepth} % alignment of sub and sup scripts
+\usepackage{stackengine} % stacking matrix dimensions
+\stackMath
+\def\sss{\scriptstyle}
+\setstackgap{L}{12pt}
+\def\stacktype{L}
+
+\usepackage{siunitx}
+
+\usepackage[sc]{mathpazo}
+%\usepackage{euscript}
+\usepackage{float,booktabs,threeparttable,caption,subcaption,xcolor}
+\usepackage[low-sup]{subdepth}
+\usepackage{mathrsfs,dsfont}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\usepackage{enumitem}
+\graphicspath{{figs/}}
+\usepackage{natbib}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{hyperref}
+\usepackage[noabbrev,nameinlink,capitalise]{cleveref}
+\hypersetup{colorlinks = true, urlcolor = blue, linkcolor = blue, citecolor = blue}
+
+% avoid line breaks at binary operators and relation operators in inline math
+\binoppenalty=10000 
+\relpenalty=10000 
+
+% spacing of align
+\expandafter\def\expandafter\normalsize\expandafter{%
+	\normalsize%
+	\setlength\abovedisplayskip{8pt}%
+	\setlength\belowdisplayskip{8pt}%
+	\setlength\abovedisplayshortskip{-8pt}%
+	\setlength\belowdisplayshortskip{2pt}%
+}
+
+\renewcommand{\questionshook}{\setlength{\itemsep}{0.06in}}
+\renewcommand{\questionlabel}{\alph{question}.}
+% referring to questions
+\Crefformat{question}{#2Q#1#3}
+\crefname{question}{question}{questions}
+\Crefname{question}{Q}{Qs}
+
+\printanswers
+
+%% Build Directory Configuration
+%%
+%% To compile this document with auxiliary files (.aux, .log, .out, etc.) 
+%% written to a separate build folder, use one of the following methods:
+%%
+%% Method 1: Using pdflatex directly
+%%   pdflatex -output-directory=build Macro_I_PS7_Template.tex
+%%   (Note: You may need to run this twice for cross-references)
+%%
+%% Method 2: Using latexmk (recommended)
+%%   latexmk -pdf -auxdir=build -outdir=build Macro_I_PS7_Template.tex
+%%
+%% Method 3: Create a .latexmkrc file in the same directory with:
+%%   $aux_dir = 'build';
+%%   $out_dir = 'build';
+%%   Then run: latexmk -pdf Macro_I_PS7_Template.tex
+%%
+%% The build folder will contain all auxiliary files, keeping your source
+%% directory clean. The PDF output will also be placed in the build folder.
+
+%% notation
+
+% bold math
+\newcommand{\bom}[1]{\bm{#1}}
+\newcommand{\bX}{\bom{X}}
+\newcommand{\bi}{\bom{\iota}}
+
+% probability
+\DeclareMathOperator*{\pp}{\mathbb{P}}
+
+% expectation with round brackets
+\NewDocumentCommand{\expect}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{E}}%     the expectation operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the expectation
+	\IfBooleanTF{#2}{% *-variant
+		\expectarg*{\expectvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\expectarg{\expectvar#4}%
+		}{% optional argument
+			\expectarg[#3]{\expectvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\expectvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\expectarg}[1]{(}{)}{#1}
+
+% expectation with square brackets
+\NewDocumentCommand{\expectsq}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{E}}%     the expectation operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the expectation
+	\IfBooleanTF{#2}{% *-variant
+		\expectargsq*{\expectvarsq#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\expectargsq{\expectvarsq#4}%
+		}{% optional argument
+			\expectargsq[#3]{\expectvarsq#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\expectvarsq}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\expectargsq}[1]{[}{]}{#1}
+
+% covariance
+\NewDocumentCommand{\cov}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{C}ov}%     the covariance operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the covariance
+	\IfBooleanTF{#2}{% *-variant
+		\covarg*{\covvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\covarg{\covvar#4}%
+		}{% optional argument
+			\covarg[#3]{\covvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\covvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\covarg}[1]{(}{)}{#1}
+
+% covariance HAT
+\NewDocumentCommand{\covhat}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\ensuremath{\widehat{\mathbb{C}ov}}}%     the covariance operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the covariance
+	\IfBooleanTF{#2}{% *-variant
+		\covhatarg*{\covhatvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\covhatarg{\covhatvar#4}%
+		}{% optional argument
+			\covhatarg[#3]{\covhatvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\covhatvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\covhatarg}[1]{(}{)}{#1}
+
+% variance
+\NewDocumentCommand{\var}{ e{^} s o >{\SplitArgument{1}{|}}m }{%
+	\operatorname{\mathbb{V}ar}%     the variance operator
+	\IfValueT{#1}{{\!}^{#1}}% the measure of the variance
+	\IfBooleanTF{#2}{% *-variant
+		\vararg*{\varvar#4}%
+	}{% no *-variant
+		\IfNoValueTF{#3}{% no optional argument
+			\vararg{\varvar#4}%
+		}{% optional argument
+			\vararg[#3]{\varvar#4}%
+		}%
+	}%
+}
+\NewDocumentCommand{\varvar}{mm}{%
+	#1\IfValueT{#2}{\nonscript\mspace{1mu}\delimsize\vert\nonscript\mspace{1mu}#2}%
+}
+\DeclarePairedDelimiterX{\vararg}[1]{(}{)}{#1}
+
+
+\DeclareMathOperator*{\trace}{tr}
+\DeclareMathOperator*{\rank}{rank}
+
+\newcommand{\duedate}{{\large\bfseries\color{red} Due date: Monday, March 9th}}
+
+
+\title{\vspace*{-4em}Macroeconomics I\\ Problem Set 7
+	\ifprintanswers
+	{\color{red}Solutions}
+	\fi
+\\	
+{\normalsize Barcelona School of Economics, Spring 2026} \\
+\duedate}
+
+\author{Group members: AB, CD, EF, GH.}
+\date{\today}
+
+\begin{document}
+\maketitle
+\vspace*{-1em}
+
+\section*{Submission Instructions}
+Please submit a document with your answers to the course instructor via the designated submission platform by Monday, March 9th, before the seminar at the very latest. You can work in groups of up to four.
+
+\section{Question 1: Endogenous Growth}
+
+Consider the endogenous growth set-up we have studied. A final good producer operates a technology
+\[
+	Y_{t}=L_{Y,t}^{1-\alpha}X_{t}
+\]
+where $L_{Y,t}$ denotes labor used in production and $X_{t}$ is an aggregator of intermediate inputs $x_{i,t}$,
+\[
+	X_{t}=\left(\int_{0}^{N_{t}}A_{i,t}^{1-\alpha}x_{i,t}^{\alpha}di\right) \quad (1)
+\]
+
+\begin{questions}
+
+\question Explain the simplifying assumptions that the expanding variety and Schumpeterian models make on the aggregator (1). Explain also what they imply in terms of sources of economic growth.
+\begin{solution}
+The general aggregator is $X_{t}=\int_{0}^{N_{t}}A_{i,t}^{1-\alpha}x_{i,t}^{\alpha}\,di$.
+
+\textbf{Expanding-variety (horizontal-innovation) model.} This model sets $A_{i,t}=A$ (a constant, normalized to $1$) for all $i$ and $t$, so every variety shares the same quality level at all times.  Growth then comes exclusively from \emph{increasing the mass of varieties} $N_{t}$: new intermediate goods are invented each period, enlarging the range of integration.  No old variety is ever destroyed.  The source of long-run growth is therefore horizontal innovation (love of variety): more differentiated inputs raise the productivity of the final-good sector even at a given quantity per variety.
+
+\textbf{Schumpeterian (quality-ladder / vertical-innovation) model.} This model fixes the number of varieties at $N_{t}=N$ (the upper limit of integration is constant).  Growth instead comes from \emph{improvements in quality} $A_{i,t}$: successful innovators replace the current leader in product line $i$ with a higher-quality version ($A_{i,t}$ jumps up), a process Schumpeter called \emph{creative destruction}.  The source of long-run growth is vertical innovation: a fixed set of goods becomes progressively more productive over time.
+
+In summary: the expanding-variety model sets productivity to a constant and lets the \emph{number} of inputs grow; the Schumpeterian model fixes the number of inputs and lets their \emph{quality} grow.  Both deliver sustained growth, but through entirely different margins of the aggregator.
+\end{solution}
+
+\question Derive the demand of intermediate $x_{i,t}$ assuming that the final good producer operates under perfect competition.
+\begin{solution}
+The final-good producer maximizes profits taking all prices as given (normalizing the output price to $1$):
+\[
+	\max_{L_{Y,t},\,\{x_{i,t}\}} \; L_{Y,t}^{1-\alpha}X_{t} \;-\; w_{t}L_{Y,t} \;-\; \int_{0}^{N_{t}}p_{i,t}\,x_{i,t}\,di
+\]
+where $X_{t}=\int_{0}^{N_{t}}A_{i,t}^{1-\alpha}x_{i,t}^{\alpha}\,di$.  The first-order condition with respect to $x_{i,t}$ is
+\[
+	\frac{\partial Y_{t}}{\partial x_{i,t}} = L_{Y,t}^{1-\alpha}\cdot \alpha A_{i,t}^{1-\alpha}x_{i,t}^{\alpha-1} = p_{i,t}.
+\]
+Solving for $x_{i,t}$:
+\[
+	\boxed{x_{i,t} = \left(\frac{\alpha A_{i,t}^{1-\alpha}L_{Y,t}^{1-\alpha}}{p_{i,t}}\right)^{\!\frac{1}{1-\alpha}}.}
+\]
+This is a standard downward-sloping demand curve in $p_{i,t}$.  The demand for intermediate $i$ is increasing in $A_{i,t}$ (higher quality raises willingness to pay), increasing in $L_{Y,t}$ (more complementary labor raises the marginal product of each intermediate), and decreasing in the price $p_{i,t}$ with constant elasticity $1/(1-\alpha)$.
+\end{solution}
+
+\question Assume that $x_{i,t}$ is produced by a monopolist. The monopolist can produce intermediates through a linear production function. It takes $r$ units of final good to produce one unit of intermediate. In other words, normalizing the price of the final good to $1$, the marginal cost of production is $r$. Derive the optimal price set by this monopolist, the quantity sold, and the profits made by the monopolist.
+\begin{solution}
+The monopolist faces the demand derived in part (b), $x_{i,t}(p_{i,t})=\bigl(\alpha A_{i,t}^{1-\alpha}L_{Y,t}^{1-\alpha}/p_{i,t}\bigr)^{1/(1-\alpha)}$, and maximizes profit:
+\[
+	\pi_{i,t} = (p_{i,t}-r)\,x_{i,t}(p_{i,t}).
+\]
+The price elasticity of demand is $|\varepsilon_{i}| = \partial \log x_{i,t}/\partial \log p_{i,t}|_{\text{abs}} = 1/(1-\alpha)$.  Applying the standard monopoly markup formula $p^{*}=\varepsilon/({\varepsilon-1})\cdot\text{MC}$:
+\[
+	\boxed{p_{i,t}^{*} = \frac{r}{\alpha}.}
+\]
+Since the markup $1/\alpha>1$, the monopolist prices above marginal cost.  Substituting back into the demand function:
+\[
+	\boxed{x_{i,t}^{*} = \left(\frac{\alpha^{2}A_{i,t}^{1-\alpha}L_{Y,t}^{1-\alpha}}{r}\right)^{\!\frac{1}{1-\alpha}} = \alpha^{\frac{2}{1-\alpha}}A_{i,t}L_{Y,t}\,r^{-\frac{1}{1-\alpha}}.}
+\]
+Monopoly profits are:
+\[
+	\pi_{i,t}^{*} = \left(\frac{r}{\alpha}-r\right)x_{i,t}^{*} = \frac{r(1-\alpha)}{\alpha}\,x_{i,t}^{*}
+	= \frac{1-\alpha}{\alpha}\cdot r\cdot\alpha^{\frac{2}{1-\alpha}}A_{i,t}L_{Y,t}\,r^{-\frac{1}{1-\alpha}}
+	= \boxed{(1-\alpha)\,\alpha^{\frac{1+\alpha}{1-\alpha}}\,r^{-\frac{\alpha}{1-\alpha}}\,A_{i,t}\,L_{Y,t}.}
+\]
+Profits are proportional to $A_{i,t}L_{Y,t}$: higher-quality intermediates and a larger complementary workforce both raise monopoly rents.
+\end{solution}
+
+\question Suppose now that $A_{i,t}=1$ for all $i$ and $t$. Further, suppose that by hiring labor $L_{N,t}$, it is possible to create more intermediates according to
+\[
+	\frac{N_{t}-N_{t-1}}{N_{t}}=L_{N,t} \quad (2)
+\]
+Suppose that patents only last for one period and that total labor is constant, $L=L_{N,t}+L_{Y,t}$. Use that the returns to innovation should equal the returns to being a worker to determine the share of innovators in equilibrium (Hint: in this last step use the individual's returns to innovation, those obtained without hiring anyone, when the agent works on her own innovation process). Characterize also the long-run growth rate of the economy.
+\begin{solution}
+\textbf{Step 1: Equilibrium objects under $A_{i,t}=1$.}
+With $A_{i,t}=1$ all intermediates are symmetric.  From part (c): $x_{t}^{*}=\alpha^{2/(1-\alpha)}L_{Y,t}\,r^{-1/(1-\alpha)}$ and $\pi_{t}=(1-\alpha)\alpha^{(1+\alpha)/(1-\alpha)}r^{-\alpha/(1-\alpha)}L_{Y,t}$.  The wage from the FOC on labor is
+\[
+	w_{t}=(1-\alpha)\frac{Y_{t}}{L_{Y,t}}=(1-\alpha)L_{Y,t}^{-\alpha}N_{t}(x_{t}^{*})^{\alpha}
+	= (1-\alpha)\,\alpha^{\frac{2\alpha}{1-\alpha}}\,r^{-\frac{\alpha}{1-\alpha}}\,N_{t}.
+\]
+
+\textbf{Step 2: Individual returns to innovation.}
+The aggregate technology~(2) is linear in $L_{N,t}$, so a single individual who works alone (without hiring) contributes $1$ unit of labor and — by proportionality — creates $N_{t}$ new varieties.  Since patents last only one period, the value of each new variety is the one-period monopoly profit $\pi_{t}$.  Hence the individual return to innovation is $N_{t}\pi_{t}$.
+
+\textbf{Step 3: Arbitrage condition and equilibrium $L_{Y,t}$.}
+In equilibrium the return to innovation equals the wage:
+\[
+	N_{t}\,\pi_{t} = w_{t}.
+\]
+Substituting the expressions derived above:
+\begin{align*}
+	N_{t}\cdot(1-\alpha)\,\alpha^{\frac{1+\alpha}{1-\alpha}}\,r^{-\frac{\alpha}{1-\alpha}}\,L_{Y,t}
+	&= (1-\alpha)\,\alpha^{\frac{2\alpha}{1-\alpha}}\,r^{-\frac{\alpha}{1-\alpha}}\,N_{t}.
+\end{align*}
+Dividing through by $N_{t}(1-\alpha)r^{-\alpha/(1-\alpha)}$ and simplifying the power of $\alpha$:
+\[
+	\alpha^{\frac{1+\alpha}{1-\alpha}}\,L_{Y,t} = \alpha^{\frac{2\alpha}{1-\alpha}}
+	\implies L_{Y,t} = \alpha^{\frac{2\alpha-(1+\alpha)}{1-\alpha}} = \alpha^{\frac{\alpha-1}{1-\alpha}} = \alpha^{-1} = \frac{1}{\alpha}.
+\]
+Thus $L_{Y,t}=1/\alpha$ is constant in equilibrium, and the labor devoted to innovation is $L_{N,t}=L-1/\alpha$.
+
+\textbf{Share of innovators:}
+\[
+	\frac{L_{N,t}}{L} = 1 - \frac{1}{\alpha L}.
+\]
+(This is positive provided $L>1/\alpha$, i.e.\ the labor force is large enough to support positive innovation.)
+
+\textbf{Long-run growth rate.}
+From equation~(2): $N_{t}-N_{t-1}=L_{N,t}N_{t}$, so $N_{t-1}/N_{t}=1-L_{N,t}$ and the gross growth rate is $N_{t}/N_{t-1}=1/(1-L_{N,t})$.  Since output $Y_{t}=L_{Y,t}^{1-\alpha}N_{t}(x_{t}^{*})^{\alpha}\propto N_{t}$ (with both $L_{Y,t}$ and $x_{t}^{*}$ constant), the economy's long-run growth rate is:
+\[
+	\boxed{g = \frac{N_{t}-N_{t-1}}{N_{t-1}} = \frac{L_{N,t}}{1-L_{N,t}} = \frac{L-1/\alpha}{1-L+1/\alpha}.}
+\]
+\end{solution}
+
+\question In the particular setting of the question above, does the decentralized equilibrium grow at a faster or slower rate than the solution to the Planner's problem? Explain why this is the case (no formal derivation of the Planner's problem is needed).
+\begin{solution}
+The decentralized equilibrium grows \textbf{slower} than the planner's optimum.  There are two related sources of inefficiency, both of which depress private incentives to innovate relative to what is socially optimal.
+
+\textbf{1. Monopoly distortion (deadweight loss).}  The monopolist prices each intermediate at $p^{*}=r/\alpha>r$, whereas the social optimum requires pricing at marginal cost $r$.  The above-cost markup reduces the quantity of each intermediate purchased (and hence the level of output) relative to the first-best allocation.  Equivalently, for a given number of varieties $N_{t}$, output under the planner is strictly higher.  This means the \emph{level} of output—and thus the \emph{return} the planner assigns to each new variety—is larger than what private innovators observe.
+
+\textbf{2. Incomplete appropriability (consumer-surplus externality).}  When an innovator creates a new variety, it raises output and wages for \emph{all} final-good workers.  This positive spillover to workers and consumers is not captured by the monopoly profits the innovator earns.  The planner internalizes the full social value of a new variety (including the consumer surplus and the wage premium it generates), making innovation look more attractive than it does to a private agent who only sees monopoly rents.
+
+Both forces imply that private innovators under-invest in research relative to the social optimum.  This is the standard result for the expanding-variety model: the positive externality of research $\Rightarrow$ too little innovation in the market equilibrium, so $g_{\text{CE}}<g_{\text{Planner}}$.  There is no business-stealing (creative destruction) effect here because new varieties expand the product space rather than replacing existing ones, so only the positive externality is active.
+\end{solution}
+
+\end{questions}
+
+\section{Question 2: Horizontal and Vertical Innovation}
+
+Consumption and set-up. We consider a continuous-time economy with a representative household with log preferences
+\[
+	U_{0}=\int_{0}^{\infty}\exp(-(\rho-n)t)\ln(c(t))dt
+\]
+Population $L(t)$ grows exogenously at rate $n$ and $c(t)$ is consumption per capita.
+
+Production. A final good is produced competitive according to:
+\[
+	Y(t)=\frac{1}{1-\beta}\left[\int_{0}^{N(t)}q(\nu,t)x(\nu,t|q)^{1-\beta}d\nu\right]T^{\beta}
+\]
+where there is a continuum of machines $\nu$, and $T$ is a fixed factor of production (land) which we normalize $T=1$ (land is owned by households). $x(\nu,t|q)$ is the quantity of machines at time $t$ in line $\nu$ of quality $q(\nu,t)$ (the formulation already implicitly assumes that at each point in time each type $\nu$ is only supplied by machines of the same quality). Once invented, a machine of quality $q$ is produced using labor according to $l(\nu,t)=(1-\beta)qx(\nu,t|q)$. There is a mass $N(t)$ of machines. Machines are produced monopolistically by the leader in each line.
+
+Innovation. There are two types of innovation. Innovation is always undertaken by entrants and a successful entrant becomes the technological leader in an existing line (vertical innovation) or a new line (horizontal innovation).
+
+Vertical innovation. Each innovator gets access to a technology $\lambda$ times more productive than the incumbent with Poisson rate $\kappa\left(\frac{L_{V}(t)}{N(t)}\right)^{-\psi}\frac{Q(t)}{q(\nu,t)}$ where $L_{V}(t)=\int_{0}^{N(t)}l_{V}(\nu,t)d\nu$ is the total mass of workers $L_{V}(t)$ in vertical innovation. $\psi\in(0,1)$ so there is a stepping-on-the-toe-externality coming from the average amount of vertical innovations across lines. $Q(t)=\frac{1}{N(t)}\int_{0}^{N(t)}q(\nu,t)d\nu$ is the average quality level. We denote by $z(\nu,t)=\kappa\left(\frac{L_{V}(t)}{N(t)}\right)^{-\psi}\frac{Q(t)}{q(\nu,t)}l_{V}(\nu,t)$ the innovation rate in line $\nu$. $\lambda$ is sufficiently large that the leader can charge the monopoly price and ignore competition from the previous incumbent. Moreover, we allow for a subsidy $\sigma$ on vertical innovation (the subsidy is financed lump-sum).
+
+Horizontal innovation. Workers in horizontal innovation invent new machines at rate $\eta$. We denote by $L_{H}(t)$ the total number of workers in horizontal innovation so that $N(t)=\eta L_{H}(t)$. The quality of new machines is $Q(t)$.
+
+Labor. Labor is supplied inelastically so that labor markets clear:
+\[
+	L(t)=L_{P}(t)+L_{V}(t)+L_{H}(t)
+\]
+where $L_{P}(t)$ is labor hired in production.
+
+Note: the problem is designed such that not answering a question does not prevent you from answering the following questions.
+
+\begin{questions}
+
+\question Denote by $a_{t}$ assets per capita of the household. Write down the consumer's problem and derive the Euler equation (you can assume that the assumptions allowing you to take first order conditions are satisfied).
+\begin{solution}
+The representative household maximizes lifetime utility subject to a flow budget constraint.  Denote by $w(t)$ the wage, $r(t)$ the market interest rate, and $R(t)/L(t)$ land rental income per capita (land is owned by households).  Per-capita assets evolve according to
+\[
+	\dot{a}(t) = \bigl(r(t)-n\bigr)a(t) + w(t) + \frac{R(t)}{L(t)} - c(t),
+\]
+where the $-na(t)$ term accounts for dilution of per-capita wealth by population growth.  The consumer's problem is:
+\[
+	\max_{\{c(t)\}_{t\ge0}}\int_{0}^{\infty}e^{-(\rho-n)t}\ln c(t)\,dt
+	\quad\text{s.t.}\quad \dot{a}=(r-n)a+w+R/L-c, \quad a(0)\text{ given},
+\]
+together with the usual transversality condition $\lim_{t\to\infty}e^{-\int_0^t(r(s)-n)ds}a(t)=0$.
+
+\textbf{Euler equation.}  Form the current-value Hamiltonian $\mathcal{H}=\ln c + \mu\bigl[(r-n)a+w+R/L-c\bigr]$.  The optimality conditions are:
+\begin{align*}
+	\frac{\partial \mathcal{H}}{\partial c}=0 &\implies \frac{1}{c}=\mu, \\
+	\dot{\mu}-(\rho-n)\mu = -\frac{\partial\mathcal{H}}{\partial a} &\implies \dot{\mu}=(\rho-n)\mu-(r-n)\mu=(\rho-r)\mu.
+\end{align*}
+Differentiating $\mu=1/c$ gives $\dot{\mu}=-\dot{c}/c^{2}=-\mu\dot{c}/c$.  Equating:
+\[
+	-\mu\frac{\dot{c}}{c}=(\rho-r)\mu \implies
+	\boxed{\frac{\dot{c}(t)}{c(t)}=r(t)-\rho.}
+\]
+With log utility the intertemporal elasticity of substitution equals $1$, so consumption per capita grows at the net real interest rate minus the discount rate.
+\end{solution}
+
+\question Show that the profits of machine producers are given by $\pi(\nu,t|q)=\beta q w(t)^{-\frac{1-\beta}{\beta}}$ (recall $T=1$).
+\begin{solution}
+\textbf{Demand for machine $\nu$.}  The final-good producer maximizes output with respect to machine quantities, taking $T=1$:
+\[
+	\max_{\{x(\nu)\}}\;\frac{1}{1-\beta}\!\int_{0}^{N}q(\nu,t)\,x(\nu,t)^{1-\beta}d\nu - \int_{0}^{N}p(\nu,t)\,x(\nu,t)\,d\nu.
+\]
+The FOC for machine $\nu$ of quality $q=q(\nu,t)$ gives:
+\[
+	q\,x(\nu,t)^{-\beta} = p(\nu,t) \implies x(\nu,t) = \left(\frac{q}{p(\nu,t)}\right)^{\!1/\beta}.
+\]
+
+\textbf{Monopoly price.}  Each machine is produced with labor: $l(\nu,t)=(1-\beta)q\,x(\nu,t)$, so the marginal cost of one unit of $x$ is $w(t)(1-\beta)q$.  The (absolute) demand elasticity is $1/\beta$, so the monopoly price is:
+\[
+	p^{*}(\nu,t) = \frac{1/\beta}{1/\beta - 1}\cdot w(t)(1-\beta)q = \frac{1}{1-\beta}\cdot(1-\beta)\,w(t)\,q = w(t)\,q.
+\]
+
+\textbf{Optimal quantity.}  Substituting $p^{*}=wq$:
+\[
+	x^{*}(\nu,t) = \left(\frac{q}{wq}\right)^{\!1/\beta} = w(t)^{-1/\beta}.
+\]
+
+\textbf{Profits.}
+\begin{align*}
+	\pi(\nu,t|q) &= \bigl(p^{*}-\text{MC}\bigr)\,x^{*}
+	= \bigl(w\,q - w(1-\beta)q\bigr)\,w^{-1/\beta}
+	= \beta\,w\,q\cdot w^{-1/\beta} \\[4pt]
+	&= \beta\,q\,w(t)^{1-1/\beta} = \boxed{\beta\,q\,w(t)^{-\frac{1-\beta}{\beta}}.}
+\end{align*}
+Profits are proportional to quality $q$ and fall with the wage (a higher wage raises marginal cost and thus squeezes the markup for a given demand).
+\end{solution}
+
+\question Show that the total demand for workers in production obeys: $L_{P}(t)=(1-\beta)N(t)Q(t)w(t)^{-\frac{1}{\beta}}$. Derive that output obeys $Y(t)=\frac{1}{(1-\beta)^{2-\beta}}(N(t)Q(t))^{\beta}L_{P}(t)^{1-\beta}$. Comment.
+\begin{solution}
+\textbf{Labor demand.}  From part (b), the optimal quantity of machine $\nu$ with quality $q(\nu,t)$ is $x^{*}(\nu,t)=w(t)^{-1/\beta}$.  The labor required to produce it is $l(\nu,t)=(1-\beta)q(\nu,t)\,w(t)^{-1/\beta}$.  Integrating over all lines:
+\[
+	L_{P}(t)=\int_{0}^{N(t)}l(\nu,t)\,d\nu = (1-\beta)\,w(t)^{-1/\beta}\int_{0}^{N(t)}q(\nu,t)\,d\nu
+	= (1-\beta)\,w(t)^{-1/\beta}\,N(t)\,Q(t),
+\]
+where the last step uses $\int_{0}^{N}q(\nu,t)\,d\nu=N(t)Q(t)$ by definition of the average quality $Q(t)=\frac{1}{N(t)}\int_{0}^{N(t)}q(\nu,t)\,d\nu$.  This gives the required expression.
+
+\textbf{Output.}  Substitute $x^{*}=w^{-1/\beta}$ into the production function ($T=1$):
+\[
+	Y(t)=\frac{1}{1-\beta}\!\int_{0}^{N(t)}q(\nu,t)\,w(t)^{(1-\beta)\cdot(-1/\beta)}\,d\nu
+	=\frac{w(t)^{-(1-\beta)/\beta}}{1-\beta}\,N(t)\,Q(t).
+\]
+From the labor demand expression: $w(t)^{-1/\beta}=L_{P}(t)\bigl[(1-\beta)N(t)Q(t)\bigr]^{-1}$, so
+\[
+	w(t)^{-(1-\beta)/\beta}=\left(\frac{L_{P}(t)}{(1-\beta)N(t)Q(t)}\right)^{\!1-\beta}.
+\]
+Substituting:
+\[
+	Y(t)=\frac{N(t)Q(t)}{1-\beta}\cdot\frac{L_{P}(t)^{1-\beta}}{(1-\beta)^{1-\beta}(N(t)Q(t))^{1-\beta}}
+	= \boxed{\frac{(N(t)Q(t))^{\beta}\,L_{P}(t)^{1-\beta}}{(1-\beta)^{2-\beta}}.}
+\]
+
+\textbf{Comment.}  Output has the form of a Cobb-Douglas production function in two arguments: $N(t)Q(t)$ (the ``effective-technology'' index, i.e.\ the total stock of quality-weighted machine varieties) and $L_{P}(t)$ (production labor).  Long-run output growth per capita requires either an expanding mass of varieties $N$ or rising average quality $Q$ — or both.  The exponent $\beta$ on technology is the land share, reflecting complementarity between machines and the fixed factor.
+\end{solution}
+
+\question We are looking for a balanced growth path (BGP) for this economy, with both horizontal and vertical innovation where output, the mass of machines and the average quality all grow at constant rates, the shares of workers in production, vertical innovation and horizontal innovation are constant and vertical innovation occurs at the same rate $z^{*}$ in all lines. On a BGP, $g_{N}=n$ (you can prove it if you want). What is the relationship between the growth rate of consumption per capita and the growth rates of technologies ($g_{N}$ and $g_{Q}$) on a BGP? Comment.
+\begin{solution}
+From the output expression in part (c): $Y=\frac{1}{(1-\beta)^{2-\beta}}(NQ)^{\beta}L_{P}^{1-\beta}$.
+
+On a BGP the share $L_{P}(t)/L(t)$ is constant, so $L_{P}$ grows at the same rate as total population: $g_{L_{P}}=n$.  Taking growth rates of the output expression:
+\[
+	g_{Y} = \beta(g_{N}+g_{Q})+(1-\beta)\,g_{L_{P}} = \beta(g_{N}+g_{Q})+(1-\beta)n.
+\]
+Since $g_{N}=n$ on a BGP:
+\[
+	g_{Y} = \beta\,n + \beta\,g_{Q} + (1-\beta)n = n + \beta\,g_{Q}.
+\]
+Per-capita output is $y=Y/L$, so $g_{y}=g_{Y}-n=\beta\,g_{Q}$.  Since consumption per capita $c(t)$ moves in proportion to per-capita output on a BGP:
+\[
+	\boxed{g_{c} = \beta\,g_{Q}.}
+\]
+
+\textbf{Comment.}  Growth in per-capita consumption is driven entirely by \emph{quality} improvements ($g_{Q}$), scaled by the technology elasticity $\beta$.  Population growth $n$ (and therefore horizontal innovation $g_{N}=n$) does not contribute to per-capita growth: it only keeps $N$ in step with the growing labor force, leaving output per worker unchanged.  Intuitively, with a fixed factor (land), adding more varieties at constant quality merely keeps pace with population; only raising quality lifts output per person.
+\end{solution}
+
+\question Write down the asset value equation and show that on a BGP the value of a firm obeys
+\[
+	V(t|q)=\frac{\beta qw(t)^{-\frac{1-\beta}{\beta}}}{r^{*}+z^{*}+\frac{1-\beta}{\beta}g_{w}^{*}}
+\]
+[Hint: To obtain the asset value equation do as in class: first write the value function of the firm between two periods, then take the expected value. The final result will be the same as what we did in class, plus a term $\dot{V}$ taking into account that in this model the value of the firm (also in BGP!) is growing. Look at equation 14.12 in Acemoglu (2009) to have an idea. Finally you can substitute the relevant values for the BGP ones]
+\begin{solution}
+\textbf{Asset value equation.}  Between $t$ and $t+dt$ the machine-$\nu$ firm (current quality $q$) earns flow profit $\pi(\nu,t|q)\,dt$.  With Poisson hazard $z(\nu,t)$ of being displaced (its value drops to zero upon replacement), the standard no-arbitrage / HJB condition is:
+\[
+	r(t)\,V(t|q) = \pi(\nu,t|q) + \dot{V}(t|q) - z(\nu,t)\,V(t|q),
+\]
+where $\dot{V}$ captures capital gains on the firm's value.  Rearranging:
+\[
+	\bigl[r(t)+z(\nu,t)\bigr]V(t|q) = \pi(\nu,t|q) + \dot{V}(t|q).
+\]
+
+\textbf{BGP capital-gains term.}  On a BGP, $w(t)$ grows at a constant rate $g_{w}^{*}$.  To determine $g_{w}^{*}$: from part (c), $L_{P}=(1-\beta)NQw^{-1/\beta}$.  Taking growth rates on the BGP ($g_{L_{P}}=n$, $g_{N}=n$, $g_{Q}$):
+\[
+	n = n + g_{Q} - \frac{1}{\beta}g_{w}^{*} \implies g_{w}^{*}=\beta\,g_{Q}.
+\]
+Since $\pi(\nu,t|q)=\beta q\,w(t)^{-(1-\beta)/\beta}$, profits decline at rate $\frac{1-\beta}{\beta}g_{w}^{*}$ as wages rise.  The firm value is proportional to profits, so $V(t|q)\propto w(t)^{-(1-\beta)/\beta}$, giving:
+\[
+	\frac{\dot{V}(t|q)}{V(t|q)} = -\frac{1-\beta}{\beta}\,g_{w}^{*}.
+\]
+
+\textbf{Substituting into the asset value equation} at BGP values $r=r^{*}$, $z=z^{*}$:
+\[
+	\left(r^{*}+z^{*}+\frac{1-\beta}{\beta}g_{w}^{*}\right)V(t|q) = \pi(\nu,t|q) = \beta q\,w(t)^{-\frac{1-\beta}{\beta}}.
+\]
+Solving for $V(t|q)$:
+\[
+	\boxed{V(t|q)=\frac{\beta\,q\,w(t)^{-\frac{1-\beta}{\beta}}}{r^{*}+z^{*}+\dfrac{1-\beta}{\beta}g_{w}^{*}}.}
+\]
+The denominator combines the interest rate (opportunity cost), the creative-destruction hazard (expected loss of leadership), and the rate at which the firm's value is eroded by rising wages.
+\end{solution}
+
+\question Write down the free-entry conditions in horizontal and vertical innovations. Show that the rate of vertical innovation obeys
+\[
+	z^{*}=\left(\frac{\lambda}{\eta(1-\sigma)}\right)^{\frac{1-\psi}{\psi}}\kappa^{\frac{1}{\psi}}
+\]
+[Hints: Start from the equation obtained above and plug it in the free entry conditions; Manipulate them and use the following hint: $z^{}=\kappa\left(\frac{L_{V}(t)}{N(t)}\right)^{1-\psi}$]*
+\begin{solution}
+\textbf{Free-entry conditions.}
+
+\textit{Horizontal innovation.}  Each worker in horizontal R\&D creates a new machine line at rate $\eta$; the new line has quality $Q(t)$ and value $V(t|Q(t))$.  Free entry equalizes expected revenue with the cost of one unit of labor:
+\begin{equation}\tag{H-FE}
+	\eta\,V(t|Q(t)) = w(t).
+\end{equation}
+
+\textit{Vertical innovation.}  A worker in line $\nu$ investing $l_{V}(\nu,t)$ units of labor achieves an innovation at rate $z(\nu,t)=\kappa(L_{V}/N)^{-\psi}(Q/q)\,l_{V}$.  Per unit of labor the innovation rate is $\kappa(L_{V}/N)^{-\psi}Q/q$.  A successful innovator gains quality $\lambda q$ and value $V(t|\lambda q)$.  The subsidy $\sigma$ reduces the effective cost of labor to $(1-\sigma)w(t)$.  Free entry:
+\begin{equation}\tag{V-FE}
+	\kappa\!\left(\frac{L_{V}}{N}\right)^{\!-\psi}\frac{Q}{q(\nu,t)}\,V(t|\lambda q(\nu,t)) = (1-\sigma)\,w(t).
+\end{equation}
+
+\textbf{Solving for $z^{*}$.}
+
+\textit{Step 1: Simplify using linearity of $V$ in $q$.}  From part (e), $V(t|q)\propto q$, so $V(t|\lambda q)=\lambda\,V(t|q)$.  Applying this and (H-FE) $\Rightarrow$ $V(t|Q)=w/\eta$, so $V(t|q)=(q/Q)\,w/\eta$:
+\[
+	\frac{V(t|\lambda q)}{V(t|q)} = \lambda \implies V(t|\lambda q) = \lambda\,\frac{q}{Q}\,\frac{w}{\eta}.
+\]
+Substituting into (V-FE):
+\[
+	\kappa\!\left(\frac{L_{V}}{N}\right)^{\!-\psi}\frac{Q}{q}\cdot\lambda\,\frac{q}{Q}\,\frac{w}{\eta} = (1-\sigma)w
+	\implies \kappa\!\left(\frac{L_{V}}{N}\right)^{\!-\psi}\frac{\lambda}{\eta} = (1-\sigma).
+\]
+
+\textit{Step 2: Solve for $L_{V}/N$.}
+\[
+	\left(\frac{L_{V}}{N}\right)^{\!\psi} = \frac{\kappa\lambda}{(1-\sigma)\eta}
+	\implies \frac{L_{V}}{N} = \left(\frac{\kappa\lambda}{(1-\sigma)\eta}\right)^{\!1/\psi}.
+\]
+
+\textit{Step 3: Use the hint $z^{*}=\kappa(L_{V}/N)^{1-\psi}$.}  (This identity follows from integrating the individual innovation rates across all lines on the BGP where $z$ is constant; see the hint.)
+\begin{align*}
+	z^{*} &= \kappa\!\left(\frac{L_{V}}{N}\right)^{\!1-\psi}
+	= \kappa\cdot\left(\frac{\kappa\lambda}{(1-\sigma)\eta}\right)^{\!(1-\psi)/\psi}
+	= \kappa^{1+(1-\psi)/\psi}\left(\frac{\lambda}{(1-\sigma)\eta}\right)^{\!(1-\psi)/\psi} \\[4pt]
+	&= \kappa^{1/\psi}\left(\frac{\lambda}{(1-\sigma)\eta}\right)^{\!(1-\psi)/\psi}
+	= \boxed{\left(\frac{\lambda}{\eta(1-\sigma)}\right)^{\!\frac{1-\psi}{\psi}}\kappa^{\frac{1}{\psi}}.}
+\end{align*}
+\end{solution}
+
+\question Derive the growth rate of consumption per capita. Does it depend on population, population growth, policy? Is there a scale effect? Is this an endogenous, exogenous or semi-endogenous growth model? Why?
+\begin{solution}
+\textbf{Growth rate of average quality.}  Each line experiences a Poisson innovation at rate $z^{*}$, multiplying quality by $\lambda$.  New lines enter at quality $Q(t)$ and therefore do not change the average quality.  By the law of large numbers:
+\[
+	\frac{\dot{Q}}{Q} = z^{*}(\lambda-1).
+\]
+
+\textbf{Growth rate of consumption per capita.}  From part (d), $g_{c}=\beta\,g_{Q}=\beta\,z^{*}(\lambda-1)$.  Substituting the BGP result from part (f):
+\[
+	\boxed{g_{c} = \beta(\lambda-1)\left(\frac{\lambda}{\eta(1-\sigma)}\right)^{\!\frac{1-\psi}{\psi}}\kappa^{\frac{1}{\psi}}.}
+\]
+
+\textbf{Dependence on population and population growth.}  $g_{c}$ does not contain $L(t)$ or $n$.  Neither the population level nor its growth rate affects the per-capita growth rate.
+
+\textbf{No scale effect.}  In models without the stepping-on-toes externality ($\psi=0$), $z^{*}$ would grow with the number of innovators and hence with $L$, generating a scale effect.  Here $\psi\in(0,1)$ makes the innovation rate per researcher fall with aggregate R\&D intensity, exactly cancelling the scale-level effect: $z^{*}$ depends only on technology parameters $(\lambda,\eta,\kappa,\psi)$ and policy $(\sigma)$, not on $L$ or $n$.
+
+\textbf{Dependence on policy.}  $g_{c}$ increases with the subsidy $\sigma$ (since $(1-\sigma)^{-(1-\psi)/\psi}$ is increasing in $\sigma$): subsidizing vertical innovation raises $z^{*}$ and therefore growth.
+
+\textbf{Model classification: endogenous growth.}  The model delivers \emph{endogenous growth} because:
+\begin{enumerate}
+	\item Growth is sustained even when $n=0$ (no population growth required).  This rules out semi-endogenous growth, where $g>0$ only if $n>0$.
+	\item The growth rate is determined by profit-maximizing innovation decisions rather than by an exogenous TFP trend.  This rules out exogenous growth.
+	\item Scale effects are absent: neither the level of $L$ nor population growth drives $g_{c}$, because the stepping-on-toes externality ($\psi>0$) ensures that more researchers per line lower individual productivity.
+\end{enumerate}
+This distinguishes the model from the simpler endogenous growth models (e.g.\ basic expanding variety) in which the population level enters $g$ directly.
+\end{solution}
+
+\question BONUS Question. This is not part of the problem set. You can do it if you want, to have the satisfaction of closing down the equilibrium. Solve for $N(t)/L(t)$ on a BGP. Comment.
+\begin{solution}
+
+\end{solution}
+
+\end{questions}
+
+\end{document}
