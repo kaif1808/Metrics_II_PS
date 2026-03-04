@@ -571,7 +571,71 @@ This distinguishes the model from the simpler endogenous growth models (e.g.\ ba
 
 \question BONUS Question. This is not part of the problem set. You can do it if you want, to have the satisfaction of closing down the equilibrium. Solve for $N(t)/L(t)$ on a BGP. Comment.
 \begin{solution}
+To close the model we use the labor market clearing condition $L=L_{P}+L_{V}+L_{H}$, expressing each component as a multiple of $N$ and then solving for $N/L$.
 
+\textbf{Step 1: Express each labor component in terms of $N$.}
+
+\textit{Horizontal innovation.}  New machine lines are created at rate $\dot{N}=\eta L_{H}$.  On a BGP $g_{N}=n$, so $\dot{N}=nN$, giving:
+\[
+	L_{H} = \frac{nN}{\eta}.
+\]
+
+\textit{Vertical innovation.}  From part (f):
+\[
+	\frac{L_{V}}{N} = \left(\frac{\kappa\lambda}{(1-\sigma)\eta}\right)^{\!1/\psi}
+	\implies L_{V} = N\!\left(\frac{\kappa\lambda}{(1-\sigma)\eta}\right)^{\!1/\psi}.
+\]
+
+\textit{Production labor.}  Apply the horizontal free-entry condition H-FE to the BGP firm value from part (e):
+\[
+	\eta\,V(t|Q)=w(t)
+	\;\implies\;
+	\eta\cdot\frac{\beta\,Q\,w^{-(1-\beta)/\beta}}{r^{*}+z^{*}+\frac{1-\beta}{\beta}g_{w}^{*}} = w
+	\;\implies\;
+	w^{1/\beta} = \frac{\eta\beta\,Q}{r^{*}+z^{*}+\frac{1-\beta}{\beta}g_{w}^{*}}.
+\]
+From part (c), $w^{1/\beta}=(1-\beta)NQ/L_{P}$.  Substituting:
+\[
+	L_{P} = \frac{(1-\beta)N\!\left(r^{*}+z^{*}+\dfrac{1-\beta}{\beta}g_{w}^{*}\right)}{\eta\beta}.
+\]
+
+\textbf{Step 2: Simplify the discount factor using the Euler equation and BGP rates.}
+
+The Euler equation gives $r^{*}=\rho+g_{c}$.  From parts (d) and (g): $g_{c}=\beta z^{*}(\lambda-1)$ and $g_{w}^{*}=\beta z^{*}(\lambda-1)$.  Therefore:
+\begin{align*}
+	r^{*}+z^{*}+\frac{1-\beta}{\beta}g_{w}^{*}
+	&= \bigl(\rho+\beta z^{*}(\lambda-1)\bigr)+z^{*}+(1-\beta)z^{*}(\lambda-1) \\
+	&= \rho + z^{*}(\lambda-1)\underbrace{[\beta+(1-\beta)]}_{=1}+z^{*}
+	= \rho + z^{*}\lambda.
+\end{align*}
+Hence:
+\[
+	L_{P} = \frac{(1-\beta)N(\rho+z^{*}\lambda)}{\eta\beta}.
+\]
+
+\textbf{Step 3: Labor market clearing.}
+
+\[
+	L = L_{P}+L_{V}+L_{H}
+	= N\!\left[\frac{(1-\beta)(\rho+z^{*}\lambda)}{\eta\beta}
+	+\left(\frac{\kappa\lambda}{(1-\sigma)\eta}\right)^{\!1/\psi}
+	+\frac{n}{\eta}\right].
+\]
+Solving for $N(t)/L(t)$:
+\[
+	\boxed{\frac{N(t)}{L(t)}=\frac{1}{\;\dfrac{(1-\beta)(\rho+z^{*}\lambda)}{\eta\beta}
+	+\left(\dfrac{\kappa\lambda}{(1-\sigma)\eta}\right)^{\!1/\psi}
+	+\dfrac{n}{\eta}\;}}
+\]
+where $z^{*}=\bigl(\lambda/(\eta(1-\sigma))\bigr)^{(1-\psi)/\psi}\kappa^{1/\psi}$ from part (f).
+
+\textbf{Comment.}  Several observations:
+\begin{enumerate}
+	\item \textit{Consistency.}  Since $g_{N}=n=g_{L}$ on the BGP, $N(t)/L(t)$ is indeed constant, confirming that the allocation is balanced.
+	\item \textit{Three-way decomposition.}  The denominator is the sum of three labor-intensity ratios: $(L_{P}/N)$, $(L_{V}/N)$, and $(L_{H}/N)$.  Each term reflects the resource cost of one of the three activities the economy allocates workers to.
+	\item \textit{Comparative statics.}  $N/L$ falls with higher $n$ (maintaining $g_{N}=n$ requires more horizontal innovators per unit of $N$), higher $\rho$ (raises $r^{*}$, hence the required profit flow and thus the production share), and higher $z^{*}$ (via both the $\rho+z^{*}\lambda$ production term and the vertical R\&D intensity).  $N/L$ rises with higher $\eta$ (each worker in horizontal innovation generates more new lines, so fewer are needed relative to $N$).
+	\item \textit{Policy.}  A higher subsidy $\sigma$ raises $z^{*}$ and $L_{V}/N$ but reduces the horizontal FE value of a new line, with an ambiguous net effect on $N/L$.
+\end{enumerate}
 \end{solution}
 
 \end{questions}
