@@ -1,0 +1,625 @@
+% Advanced Microeconomics II: Practice Examination on Game Theory and Information Economics
+% Questions and answer key combined in a single document.
+% Recommended compilation:
+%   latexmk -pdf Micro2Q.tex
+
+\documentclass[12pt,a4paper]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{bm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+% Enumerate style for sub-questions
+\setlist[enumerate,1]{label=\textbf{(\alph*)}, leftmargin=*}
+
+\title{\textbf{Advanced Microeconomics II:}\\[0.25em]
+       \Large Practice Examination on Game Theory and Information Economics}
+\author{ }
+\date{ }
+
+\begin{document}
+
+\maketitle
+
+\section*{Examination Overview}
+
+\begin{itemize}
+  \item \textbf{Subject}: Game Theory and Information Economics
+  \item \textbf{Time Allotted}: 3 Hours
+  \item \textbf{Materials Allowed}: Non-programmable calculator.
+  \item \textbf{Instructions}: Answer all four questions. Show all mathematical derivations rigorously.
+        All equilibrium concepts must be clearly defined and justified using the standard axioms of
+        non-cooperative game theory.
+\end{itemize}
+
+\bigskip
+\noindent\hrulefill
+\bigskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 1. Simultaneous Games
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Simultaneous Games: Dominance, Nash Equilibrium, and Security}
+
+The strategic stability of simultaneous interactions is predicated on the internal consistency
+of players' beliefs and the structural bounds of the strategic environment. In non-cooperative
+settings, the \emph{Iterated Elimination of Strictly Dominated Strategies} (IESDS) provides a
+mechanism for simplifying the strategy space by removing actions that are irrational under any
+consistent belief system. Complementarily, the Maxmin criterion (security strategy) identifies the
+foundational bounds of rational behavior, establishing the minimum utility a player can guarantee
+themselves independently of the opponent's specific play---a concept of paramount importance in
+environments where common knowledge of rationality may be absent.
+
+\subsection*{Question 1: Strategic Reduction and Security Payoffs}
+
+Consider the following \(4 \times 4\) payoff matrix for Player~A (rows) and Player~B (columns):
+
+\begin{table}[h!]
+  \centering
+  \renewcommand{\arraystretch}{1.1}
+  \begin{tabular}{lcccc}
+    \toprule
+    $A \setminus B$ & $b_1$ & $b_2$ & $b_3$ & $b_4$ \\
+    \midrule
+    $a_1$ & $(5,4)$ & $(4,5)$ & $(8,3)$ & $(3,2)$ \\
+    $a_2$ & $(3,3)$ & $(1,2)$ & $(2,6)$ & $(1,1)$ \\
+    $a_3$ & $(4,6)$ & $(2,4)$ & $(6,5)$ & $(2,3)$ \\
+    $a_4$ & $(1,1)$ & $(0,2)$ & $(1,0)$ & $(2,1)$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\noindent\textbf{Tasks.}
+\begin{enumerate}
+  \item Perform the Iterated Elimination of Strictly Dominated Strategies (IESDS).
+        Identify all strictly dominated strategies at each stage and state the final reduced game.
+  \item Determine the Pure-Strategy Nash Equilibrium (PSNE) of the reduced game. Using the
+        definition of Pareto efficiency, evaluate whether this equilibrium is efficient relative
+        to the entire \(4 \times 4\) payoff matrix.
+  \item Using the maxminimization procedure for mixed strategies (referencing the intersection
+        of expected-utility planes as described in the course modules), calculate the security
+        strategy and the security payoff \(v_i\) for both players in the original game.
+\end{enumerate}
+
+\bigskip
+\noindent\textbf{Transition.}
+While simultaneous games assume static timing, many industrial and strategic interactions involve
+a clear leader--follower structure, necessitating the study of sequential commitment and the
+refinement of Nash equilibria.
+
+\bigskip
+\noindent\hrulefill
+\bigskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 2. Sequential Games
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Sequential Games: Subgame Perfection and Market Leadership}
+
+The strategic advantage of commitment allows a first mover to fundamentally alter the follower's
+incentives, thereby selecting a preferred equilibrium path. To ensure the credibility of such
+commitments, we employ Subgame Perfect Nash Equilibrium (SPNE), which utilizes backward induction
+to filter out non-credible threats---strategies that, while part of a Nash equilibrium in normal
+form, would be suboptimal if the relevant subgame were actually reached.
+
+\subsection*{Question 2: Asymmetric Stackelberg Duopoly and Niche Selection}
+
+Consider a market with inverse demand
+\[
+  P(Q) = 150 - Q, \qquad Q = q_1 + q_2.
+\]
+The firms face asymmetric marginal costs \(c_1 = 10\) and \(c_2 = 25\). There are no fixed costs.
+
+\begin{enumerate}
+  \item Compute the Cournot--Nash equilibrium (simultaneous choice) quantities \((q_1^C, q_2^C)\)
+        and the resulting profits \((\pi_1^C, \pi_2^C)\) for both firms.
+  \item Derive the Stackelberg equilibrium where Firm~1 acts as the leader and Firm~2 as the
+        follower. Calculate equilibrium quantities and profits. Quantify the ``first-mover
+        advantage'' for Firm~1 relative to the Cournot benchmark.
+  \item Introduce a \emph{niche choice} stage. Firm~1 and Firm~2 must sequentially choose between
+        the \emph{Premium Niche} or the \emph{Mass Market} (Firm~1 chooses first). If both choose
+        the same segment, they compete as Stackelberg duopolists as solved in part~(b). If they
+        choose different segments, they act as monopolists in their respective niches, each earning
+        a fixed niche profit \(V = 2000\). Entry into either segment requires a sunk cost
+        \(E = 100\). Characterize the unique SPNE path and payoffs.
+\end{enumerate}
+
+\bigskip
+\noindent\textbf{Transition.}
+The structural stability of market entry often transitions into the complexities of bilateral
+negotiation, where the timing of offers and the specificity of assets create new strategic
+frictions.
+
+\bigskip
+\noindent\hrulefill
+\bigskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 3. Bargaining and Holdup
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Bargaining and the Holdup Problem}
+
+Incomplete contracting frequently results in the \emph{holdup problem}, wherein the anticipation of
+future bargaining leads to ex-ante under-investment in relationship-specific assets. This
+inefficiency arises because the investor, having sunk their costs, is vulnerable to a ``squeeze''
+during the negotiation of the resulting surplus, failing to capture the full marginal return of
+their investment.
+
+\subsection*{Question 3: Alternating Offers and Specific Investment}
+
+Consider a three-period alternating-offers bargaining game (\(T = 3\)) over a surplus \(S = 1\).
+The discount factor is \(\delta \in (0,1)\). Player~1 makes offers in periods \(t = 1\) and
+\(t = 3\); Player~2 makes the offer in period \(t = 2\).
+
+\begin{enumerate}
+  \item Solve for the unique SPNE shares of the surplus \((\phi_1, \phi_2)\) at \(t = 1\) using
+        backward induction.
+  \item Precede the bargaining with an investment stage. Player~2 can choose ``High'' investment
+        (cost \(c_H = 0.2\), surplus \(V_H = 1.5\)) or ``Low'' investment
+        (cost \(c_L = 0.05\), surplus \(V_L = 1.0\)). Given the bargaining shares derived in
+        part~(a), determine Player~2's optimal investment choice.
+  \item Evaluate whether a non-credible-threat Nash equilibrium exists that induces High
+        investment. Explain, with reference to subgame perfection, why this threat fails to
+        resolve the ex-ante inefficiency.
+\end{enumerate}
+
+\bigskip
+\noindent\textbf{Transition.}
+Strategic distortions are not limited to offer timing; they also emerge from the fundamental
+inability of market participants to observe the hidden traits of the goods being traded.
+
+\bigskip
+\noindent\hrulefill
+\bigskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 4. Information Economics
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Information Economics: Adverse Selection and Screening}
+
+The ``lemons'' problem demonstrates how asymmetric information regarding quality (hidden traits)
+can lead to adverse selection, where the market price reflects only the average quality of the
+goods offered. If high-quality sellers cannot credibly signal their type, they may exit the market
+entirely, resulting in market thinning or total collapse.
+
+\subsection*{Question 4: Market Thinning and Thresholds}
+
+Assume quality \(\theta\) is distributed uniformly on \([0,2]\). Seller valuation is
+\[
+  V_S(\theta) = \theta, \qquad
+  V_B(\theta) = \theta + a, \quad a > 0.
+\]
+
+\begin{enumerate}
+  \item If the buyer makes a take-it-or-leave-it price offer \(p\), solve for the buyer's optimal
+        price \(p^*\). Determine the specific value of \(a\) for which the equilibrium probability
+        of trade is exactly \(1/2\).
+  \item Consider a competitive screening environment with multiple buyers. Derive the equilibrium
+        price \(p_e\) and determine the condition on \(a\) required for all seller types
+        \(\theta \in [0,2]\) to trade.
+  \item In a discrete version, cars are either High Quality
+        \((G, V_S = 16, V_B = 20)\) or Bad Quality \((B, V_S = 8, V_B = 10)\). Let \(\beta\) be
+        the proportion of bad cars. Determine the threshold \(\beta^*\) at which High-Quality
+        sellers exit the market under competitive equilibrium.
+\end{enumerate}
+
+\bigskip
+\noindent\hrulefill
+\bigskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ANSWER KEY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Answer Key}
+
+This section provides one possible set of fully worked solutions. Unless otherwise stated,
+all expectations and probabilities are taken under the distributions specified in the questions.
+
+\subsection*{1. Simultaneous Games}
+
+\subsubsection*{(a) Iterated Elimination of Strictly Dominated Strategies (IESDS)}
+
+\paragraph{Round 1 (Row player A).}
+Compare row \(a_2\) to \(a_1\):
+\[
+  (3,1,2,1) \quad \text{vs.} \quad (5,4,8,3).
+\]
+For Player~A's payoffs, we have \(3 < 5\), \(1 < 4\), \(2 < 8\), and \(1 < 3\). Thus \(a_1\) strictly
+dominates \(a_2\) for Player~A. Eliminate strategy \(a_2\).
+
+\paragraph{Round 2 (Column player B).}
+In the reduced matrix with rows \(\{a_1,a_3,a_4\}\) and all four columns, compare columns \(b_4\)
+and \(b_2\) for Player~B:
+\[
+  b_4: (2,3,1), \qquad b_2: (5,4,2).
+\]
+Coordinate-wise, \(2<5\), \(3<4\), and \(1<2\). Hence \(b_2\) strictly dominates \(b_4\) for
+Player~B. Eliminate \(b_4\).
+
+\paragraph{Round 3 (Row player A again).}
+In the further-reduced game with rows \(\{a_1,a_3,a_4\}\) and columns \(\{b_1,b_2,b_3\}\),
+compare \(a_4\) to \(a_1\):
+\[
+  a_4: (1,0,1), \qquad a_1: (5,4,8).
+\]
+Again \(1 < 5\), \(0 < 4\), and \(1 < 8\), so \(a_1\) strictly dominates \(a_4\) for Player~A.
+Eliminate \(a_4\).
+
+\paragraph{Reduced game.}
+The final reduced game after IESDS is
+\[
+  \{a_1,a_3\} \times \{b_1,b_2,b_3\}.
+\]
+
+\subsubsection*{(b) Pure-Strategy Nash Equilibrium and Efficiency}
+
+In the \(2 \times 3\) reduced game, compute each player's best responses.
+
+\paragraph{Best responses for Player A.}
+For each column \(b_j\), compare A's payoffs:
+\begin{align*}
+  b_1 &: \; u_A(a_1,b_1) = 5,\quad u_A(a_3,b_1) = 4
+        &&\Rightarrow \text{BR}_A(b_1) = a_1, \\
+  b_2 &: \; u_A(a_1,b_2) = 4,\quad u_A(a_3,b_2) = 2
+        &&\Rightarrow \text{BR}_A(b_2) = a_1, \\
+  b_3 &: \; u_A(a_1,b_3) = 8,\quad u_A(a_3,b_3) = 6
+        &&\Rightarrow \text{BR}_A(b_3) = a_1.
+\end{align*}
+
+\paragraph{Best responses for Player B.}
+For each row, compare B's payoffs:
+\begin{align*}
+  a_1 &: \; (b_1,b_2,b_3) = (4,5,3)
+        &&\Rightarrow \text{BR}_B(a_1) = b_2, \\
+  a_3 &: \; (b_1,b_2,b_3) = (6,4,5)
+        &&\Rightarrow \text{BR}_B(a_3) = b_1.
+\end{align*}
+
+The unique mutual best response is
+\[
+  (a_1,b_2), \qquad \text{with payoffs } (4,5).
+\]
+Hence the unique pure-strategy Nash Equilibrium of the reduced game is \((a_1,b_2)\).
+
+\paragraph{Pareto efficiency.}
+In the original \(4 \times 4\) matrix, consider the outcome \((a_3,b_1)\) which yields
+payoffs \((4,6)\). Relative to the equilibrium \((a_1,b_2) = (4,5)\), we have
+\[
+  4 \ge 4 \quad \text{and} \quad 6 > 5,
+\]
+so \((a_3,b_1)\) Pareto dominates \((a_1,b_2)\). Thus the Nash equilibrium is not Pareto efficient
+in the original game.
+
+\subsubsection*{(c) Security Strategies and Security Payoffs}
+
+Restrict attention to the reduced game. Let Player~A mix between \(\{a_1,a_3\}\) with
+\(\sigma_A = (p,1-p)\). Let Player~B mix among \(\{b_1,b_2,b_3\}\) with
+\(\sigma_B = (q,1-q-r,r)\), and we will see that in the security strategy \(r = 0\).
+
+\paragraph{Player A.}
+For a given \(p\), A's payoffs against each pure column are
+\begin{align*}
+  u_A(\sigma_A,b_1) &= 5p + 4(1-p) = p + 4, \\
+  u_A(\sigma_A,b_2) &= 4p + 2(1-p) = 2p + 2, \\
+  u_A(\sigma_A,b_3) &= 8p + 6(1-p) = 2p + 6.
+\end{align*}
+The lower envelope is \(\min\{p+4,\,2p+2,\,2p+6\}\). For \(p \in [0,1]\), the binding (smallest)
+expression is \(2p + 2\), which is maximized at \(p = 1\). Thus A's security strategy is the pure
+strategy \(a_1\), and her security payoff is
+\[
+  v_A = 4.
+\]
+
+\paragraph{Player B.}
+Let B mix over \(b_1\) and \(b_2\) only with probabilities \((q,1-q,0)\). Then, for each row:
+\begin{align*}
+  u_B(a_1,\sigma_B) &= 4q + 5(1-q) = 5 - q, \\
+  u_B(a_3,\sigma_B) &= 6q + 4(1-q) = 2q + 4.
+\end{align*}
+To maximize the minimum payoff, equalize these:
+\[
+  5 - q = 2q + 4
+  \quad\Longrightarrow\quad
+  3q = 1
+  \quad\Longrightarrow\quad
+  q = \tfrac{1}{3}.
+\]
+The associated security payoff is
+\[
+  v_B = 5 - q = 5 - \tfrac{1}{3} = \tfrac{14}{3} \approx 4.67.
+\]
+Thus B's security strategy is
+\[
+  \sigma_B = \left(\tfrac{1}{3}, \tfrac{2}{3}, 0, 0\right).
+\]
+
+\bigskip
+
+\subsection*{2. Sequential Games}
+
+\subsubsection*{(a) Cournot--Nash Equilibrium}
+
+Firm \(i\)'s profit is
+\[
+  \pi_i(q_1,q_2) = \bigl(150 - q_1 - q_2 - c_i\bigr)\, q_i.
+\]
+Best-response functions are
+\begin{align*}
+  \text{BR}_1(q_2) &= \frac{150 - q_2 - c_1}{2}
+                   = 70 - \tfrac{1}{2}q_2, \\
+  \text{BR}_2(q_1) &= \frac{150 - q_1 - c_2}{2}
+                   = 62.5 - \tfrac{1}{2}q_1.
+\end{align*}
+
+Solving for the Cournot equilibrium:
+\[
+  q_1 = 70 - \tfrac{1}{2}(62.5 - \tfrac{1}{2}q_1)
+  \quad\Longrightarrow\quad
+  0.75\,q_1 = 38.75
+  \quad\Longrightarrow\quad
+  q_1^C \approx 51.67,
+\]
+and
+\[
+  q_2^C = 62.5 - \tfrac{1}{2}q_1^C \approx 36.67.
+\]
+Price is
+\[
+  P^C = 150 - q_1^C - q_2^C \approx 61.67.
+\]
+Profits:
+\begin{align*}
+  \pi_1^C &\approx (61.67 - 10)\cdot 51.67 \approx 2669.7,\\
+  \pi_2^C &\approx (61.67 - 25)\cdot 36.67 \approx 1344.7.
+\end{align*}
+
+\subsubsection*{(b) Stackelberg Equilibrium with Firm 1 as Leader}
+
+In Stackelberg, Firm~1 chooses \(q_1\) anticipating that Firm~2 plays its Cournot best response:
+\[
+  q_2(q_1) = 62.5 - \tfrac{1}{2}q_1.
+\]
+Thus total quantity is
+\[
+  Q = q_1 + q_2(q_1) = 62.5 + \tfrac{1}{2}q_1,
+\]
+and price is
+\[
+  P = 150 - Q = 87.5 - \tfrac{1}{2}q_1.
+\]
+Firm~1's profit as a function of \(q_1\) is
+\[
+  \pi_1(q_1) = (P - c_1)q_1
+             = (87.5 - \tfrac{1}{2}q_1 - 10)q_1
+             = (77.5 - \tfrac{1}{2}q_1)q_1.
+\]
+The FOC gives
+\[
+  \frac{d\pi_1}{dq_1} = 77.5 - q_1 = 0
+  \quad\Longrightarrow\quad
+  q_1^S = 77.5.
+\]
+Then
+\[
+  q_2^S = 62.5 - \tfrac{1}{2}q_1^S = 62.5 - 38.75 = 23.75.
+\]
+Stackelberg profits:
+\begin{align*}
+  \pi_1^S &= (77.5 - \tfrac{1}{2}\cdot 77.5)\cdot 77.5
+          = 38.75 \cdot 77.5
+          \approx 3003.1, \\
+  \pi_2^S &= (P^S - c_2)\,q_2^S
+          \approx (150 - 101.25 - 25)\cdot 23.75
+          \approx 564.1.
+\end{align*}
+The first-mover advantage for Firm~1 is
+\[
+  \pi_1^S - \pi_1^C \approx 3003.1 - 2669.7 = 333.4.
+\]
+
+\subsubsection*{(c) Niche Choice SPNE}
+
+If both firms choose the same segment (Premium or Mass), they play the Stackelberg duopoly from
+part~(b) and, net of entry costs,
+\[
+  \pi_1^{\text{same}} = \pi_1^S - E \approx 3003.1 - 100 = 2903.1,\qquad
+  \pi_2^{\text{same}} = \pi_2^S - E \approx 564.1 - 100 = 464.1.
+\]
+If they choose different segments, each is a monopolist in their own niche and obtains
+\[
+  \pi_i^{\text{diff}} = V - E = 2000 - 100 = 1900.
+\]
+
+We analyze the niche-choice stage by backward induction. Suppose Firm~1 has chosen Mass:
+Firm~2 can either also choose Mass (yielding \(464.1\)) or choose Premium (yielding \(1900\)).
+Thus its best response is to pick the opposite niche. Analogously, if Firm~1 picks Premium,
+Firm~2's best response is to choose Mass.
+
+Anticipating this, Firm~1 understands that choosing either niche leads to the outcome where
+the other firm chooses the opposite niche and both obtain \(1900\). Hence any initial niche
+choice by Firm~1 is optimal (they are indifferent), and Firm~2's unique best response is to
+choose the other segment.
+
+Therefore, the unique SPNE path features the firms in different niches, and the final payoffs are
+\[
+  (\pi_1,\pi_2) = (1900,1900).
+\]
+
+\bigskip
+
+\subsection*{3. Bargaining and the Holdup Problem}
+
+\subsubsection*{(a) SPNE Shares in the \(T=3\) Bargaining Game}
+
+Work backward from period \(t=3\).
+\begin{itemize}
+  \item \textbf{Period 3.} Player~1 makes the final offer. Any accepted offer must give Player~2
+        at least \(0\). Player~1 can therefore extract the entire surplus, offering
+        \((1,0)\). Thus the continuation value at \(t=3\), for Player~1, is \(1\).
+  \item \textbf{Period 2.} Player~2 makes an offer \((x_2,1-x_2)\) knowing that rejection leads to
+        period~3 where Player~1 obtains \(1\). Hence Player~1's continuation value from rejection
+        at \(t=2\) is \(\delta \cdot 1\). To secure acceptance, Player~2 must give Player~1 at least
+        \(\delta\), so the best she can do is to offer \((\delta,1-\delta)\). Thus the period-2
+        continuation value for Player~2 is \(1-\delta\).
+  \item \textbf{Period 1.} Player~1 now proposes \((x_1,1-x_1)\). If Player~2 rejects, the game
+        moves to period~2 where Player~2's expected payoff is \((1-\delta)\), discounted once:
+        \(\delta(1-\delta)\). To induce acceptance, Player~1 must give Player~2 at least this
+        amount. Hence the profit-maximizing offer is
+        \[
+          (\phi_1,\phi_2) = \bigl(1-\delta+\delta^2,\; \delta-\delta^2\bigr).
+        \]
+\end{itemize}
+
+\subsubsection*{(b) Optimal Investment Choice for Player 2}
+
+If Player~2 chooses High investment, the surplus becomes \(V_H = 1.5\), so her payoff is
+\[
+  \pi_2(H) = 1.5(\delta - \delta^2) - 0.2.
+\]
+If she chooses Low investment, the surplus is \(V_L = 1.0\), and her payoff is
+\[
+  \pi_2(L) = 1.0(\delta - \delta^2) - 0.05.
+\]
+High investment is optimal if and only if
+\[
+  \pi_2(H) > \pi_2(L)
+  \quad\Longleftrightarrow\quad
+  1.5(\delta - \delta^2) - 0.2 > (\delta - \delta^2) - 0.05,
+\]
+which simplifies to
+\[
+  0.5(\delta - \delta^2) > 0.15
+  \quad\Longleftrightarrow\quad
+  \delta - \delta^2 > 0.3.
+\]
+Thus Player~2 chooses High investment whenever \(\delta - \delta^2 > 0.3\).
+
+\subsubsection*{(c) Non-credible Threats and Ex-ante Inefficiency}
+
+One can construct a Nash equilibrium in which Player~1 \emph{promises} an offer in the bargaining
+subgame that leaves Player~2 with a sufficiently high share (say, \(x > \delta - \delta^2\)) to
+induce High investment ex ante. However, this threat is not credible.
+
+Once the investment cost is sunk and the game enters the bargaining subgame, Player~1's dominant
+action is to play the SPNE strategy derived in part~(a), namely to offer
+\[
+  (1 - \delta + \delta^2,\; \delta - \delta^2),
+\]
+which maximizes his continuation payoff. Any strategy profile in which Player~1 deviates from this
+offer in the subgame is not sequentially rational and hence cannot be part of a Subgame Perfect
+Nash Equilibrium. Therefore, such promises cannot solve the ex-ante under-investment problem:
+the holdup problem persists.
+
+\bigskip
+
+\subsection*{4. Information Economics: Adverse Selection and Screening}
+
+\subsubsection*{(a) Take-it-or-leave-it Offer and Trade Probability}
+
+For a given price \(p\), only sellers with \(\theta \le p\) are willing to trade, since
+their valuation is \(V_S(\theta) = \theta\). Under a uniform distribution on \([0,2]\), the
+probability of trade is
+\[
+  \Pr(\theta \le p) = \frac{p}{2}, \quad 0 \le p \le 2.
+\]
+Conditional on trade, the expected quality is
+\[
+  \mathbb{E}[\theta \mid \theta \le p] = \frac{p}{2}.
+\]
+Thus the buyer's expected valuation is
+\[
+  \mathbb{E}[V_B(\theta) \mid \theta \le p]
+  = \mathbb{E}[\theta + a \mid \theta \le p]
+  = \frac{p}{2} + a.
+\]
+The buyer's expected payoff is
+\[
+  U_B(p) = \Pr(\theta \le p)\,\bigl(\mathbb{E}[V_B \mid \theta \le p] - p\bigr)
+         = \frac{p}{2} \left(\frac{p}{2} + a - p\right)
+         = \frac{ap}{2} - \frac{p^2}{4}.
+\]
+Maximizing with respect to \(p\):
+\[
+  \frac{dU_B}{dp} = \frac{a}{2} - \frac{p}{2} = 0
+  \quad\Longrightarrow\quad
+  p^* = a \quad (\text{for } a \le 2).
+\]
+The associated probability of trade is
+\[
+  \Pr(\theta \le p^*) = \frac{p^*}{2} = \frac{a}{2}.
+\]
+For the equilibrium probability of trade to equal \(1/2\), we require
+\[
+  \frac{a}{2} = \frac{1}{2} \quad\Longrightarrow\quad a = 1.
+\]
+
+\subsubsection*{(b) Competitive Screening Equilibrium}
+
+Under competition between many buyers, the price \(p_e\) must equal the expected buyer valuation
+conditional on trade:
+\[
+  p_e = \mathbb{E}[V_B(\theta) \mid \theta \le p_e]
+      = \frac{p_e}{2} + a.
+\]
+Solving,
+\[
+  p_e - \frac{p_e}{2} = a
+  \quad\Longrightarrow\quad
+  \frac{p_e}{2} = a
+  \quad\Longrightarrow\quad
+  p_e = 2a.
+\]
+For all seller types \(\theta \in [0,2]\) to be willing to trade, we need
+\[
+  p_e \ge 2
+  \quad\Longrightarrow\quad
+  2a \ge 2
+  \quad\Longrightarrow\quad
+  a \ge 1.
+\]
+
+\subsubsection*{(c) Discrete Threshold with Good and Bad Cars}
+
+Let \(\beta\) be the proportion of bad cars (type \(B\)), and \(1-\beta\) be the proportion of good
+cars (type \(G\)). Buyer valuations are
+\[
+  V_B(G) = 20, \qquad V_B(B) = 10.
+\]
+In competitive equilibrium, the price equals the expected buyer valuation:
+\[
+  p = \mathbb{E}[V_B]
+    = \beta \cdot 10 + (1-\beta)\cdot 20
+    = 20 - 10\beta.
+\]
+High-quality sellers will remain in the market only if the price at least covers their valuation
+of \(16\):
+\[
+  p \ge 16
+  \quad\Longrightarrow\quad
+  20 - 10\beta \ge 16
+  \quad\Longrightarrow\quad
+  4 \ge 10\beta
+  \quad\Longrightarrow\quad
+  \beta \le 0.4.
+\]
+Thus the threshold is
+\[
+  \beta^* = 0.4.
+\]
+
+\end{document}
+
