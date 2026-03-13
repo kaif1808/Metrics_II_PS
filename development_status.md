@@ -1,5 +1,8 @@
 # Development Status
 
+## 2026-03-04 (update 2)
+- Completed bonus Q2(h) in `Macro/PS7/Template/Macro_I_PS7_Template.tex`: solved for $N(t)/L(t)$ on the BGP by (1) expressing $L_H=nN/\eta$, $L_V=N(\kappa\lambda/((1-\sigma)\eta))^{1/\psi}$, and $L_P=(1-\beta)N(\rho+z^*\lambda)/(\eta\beta)$ (using H-FE + part-e firm value, simplified via $r^*+z^*+(1-\beta)/\beta\cdot g_w^*=\rho+z^*\lambda$); (2) applying labor market clearing to obtain the closed-form ratio. Recompiled to 13 pages; committed and pushed.
+
 ## 2026-03-04
 - Completed all 12 solution blocks in `Macro/PS7/Template/Macro_I_PS7_Template.tex` (PS7: Endogenous Growth + Horizontal & Vertical Innovation).
   - Q1(a): Expanding-variety vs Schumpeterian assumptions on the aggregator and sources of growth.
@@ -25,6 +28,11 @@
 - Completed PS4 Q1 (RCT theory) solutions in `PS4/Template/EMII_QSMII_PS4_Template.tex`: (a) expressed $\beta_D$ as $E(Y_{i,post}|D_i=1)-E(Y_{i,post}|D_i=0)$; (b) proved $\beta_D=\text{ATE}$ under random assignment; (c) proved $\beta_{DD}=\text{ATE}$ in the DiD regression; (d) gave three reasons to prefer the DiD specification (precision, balance check, robustness). Based on `PS4/RCT.md` lecture notes.
 - Created `PS4/Template/EMII_QSMII_PS4_Template.tex` — LaTeX problem set template for PS4 (Randomized Controlled Trials), mirroring PS3 structure. Includes: Q1 (RCT theory, parts a–d), Q2 (DGP with binary regressors, parts a–c), Q3 (Project STAR empirical, parts a–i) with variable list, empty solution blocks, and author line (Kai Faulkner, Rayyaan Kazi, Emilia Infante, Katherine Ciaramello).
 - Rewrote PS6 Q2d (transitional dynamics) in `Macro/PS6/Template/Macro_I_PS6_Template.tex`. New solution includes: (1) rigorous derivation of the autonomous logistic ODE $\dot{x}=(1-\alpha)x(B/\alpha-x)$ via co-state equations and the FOC on $u$; (2) ODE for $c=C/K$ from the Euler equation; (3) full linearisation of the $(x,c)$ system with Jacobian and eigenvalues ($\lambda_1=-(1-\alpha)B/\alpha<0$, $\lambda_2=c^*>0$) confirming a unique saddle path; (4) saddle-path slope formula and its sign dependence on $\operatorname{sgn}(\alpha-\theta)$; (5) complete characterisation of $k$, $u$, $c$ dynamics for both $\alpha>\theta$ and $\alpha<\theta$ cases; (6) phase diagram in $(x,c)$ space.
+
+## 2026-03-13
+- Created `MicroPracticeQ/Micro1/Micro1Q.tex` as a LaTeX version of the Micro I practice exam (game theory and information economics), with all problems from `Micro1Q.md` structured into sections, properly formatted math, and payoff tables.
+- Added `MicroPracticeQ/Micro1/Micro1Q_solutions.tex` containing a comprehensive answer key for Sections 1--5 (dominance solvability, bargaining, mixed strategies/zero-sum value, adverse selection, and moral hazard), with full algebra in LaTeX.
+- Set up a local `latexmkrc` in `MicroPracticeQ/Micro1/` to route all build artefacts (`.aux`, `.log`, `.out`, `.fls`, `.fdb_latexmk`) into `MicroPracticeQ/Micro1/aux/`, keeping the main directory limited to source `.tex` and compiled PDFs. Recompiled both question and solutions PDFs via `latexmk`; builds succeed with minor overfull box warnings only.
 
 ## 2026-02-21
 - Created `Macro/PS6/Template/Macro_I_PS6_Template.tex` — problem set template for PS6 (Endogenous Growth) with two exercises: (1) Endogenous Growth (parts a–f) covering per capita production, derivatives, law of motion, growth rate diagram, and endogenous growth discussion; (2) Endogenous growth with human capital accumulation (parts a–d) covering Hamiltonian, balanced growth path, parameter conditions, and transitional dynamics. Based on PS5 template structure with empty solution blocks.

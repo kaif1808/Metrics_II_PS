@@ -1,0 +1,241 @@
+% Advanced Practice Examination: Game Theory and Information Economics
+% Solutions only. Questions are in Micro1Q.tex.
+% Compile with:
+%   latexmk -pdf -outdir=aux Micro1Q_solutions.tex
+
+\documentclass[12pt,a4paper]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{bm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+% Enumerate style
+\setlist[enumerate,1]{label=\arabic*., leftmargin=*}
+
+\title{\textbf{Advanced Practice Examination:}\\
+       \Large Game Theory and Information Economics\\[0.5em]
+       \normalsize Comprehensive Answer Key}
+\author{ }
+\date{ }
+
+\begin{document}
+
+\maketitle
+
+\section{Simultaneous Games and Dominance Solvability}
+
+\subsection*{Solution to Problem 1.1}
+
+\paragraph{Iterated Dominance (IESDS/IEWDS).}
+\begin{itemize}
+  \item \textbf{IESDS Round 1.} Strategy \(a_3\) is strictly dominated by \(a_1\):
+  \[
+    4 > 3,\quad 2 > 1,\quad 8 > 6,\quad 2 > 1.
+  \]
+  Eliminate \(a_3\).
+  \item \textbf{IESDS Round 2.} In the reduced \(3\times 4\) matrix, check Player~B's strategies. For the remaining rows \((a_1, a_2, a_4)\), \(b_3\) is dominated by \(b_2\) for most rows (e.g.\ for \(a_1\) and \(a_4\)), but not strictly for all. We therefore also inspect Player~A again: \(a_2\) is weakly dominated by \(a_1\),
+  \[
+    4 > 1,\quad 2 = 2,\quad 8 > 0,\quad 2 > 1.
+  \]
+  \item \textbf{IEWDS Round.} Eliminating \(a_2\) and \(b_4\) (weakly dominated by \(b_2\)) reduces the game to a \(2\times 2\) between \(a_1, a_4\) and \(b_1, b_2\). The Nash equilibrium of this reduced game is
+  \[
+    (a_1, b_2)
+  \]
+  with payoffs \((2,2)\).
+\end{itemize}
+
+\paragraph{Pareto efficient profiles.}
+The Pareto efficient strategy profiles in the original \(4\times 4\) matrix are
+\[
+  (a_1, b_3),\quad (a_4, b_1),\quad (a_2, b_3).
+\]
+Note in particular that \((a_1, b_3)\) gives Player~A their maximum payoff of \(8\).
+
+\paragraph{``So What?'' evaluation.}
+The Nash equilibrium \((a_1, b_2)\) yields payoffs \((2,2)\), while \((a_4, b_1)\) yields \((5,3)\). Both players strictly prefer \((a_4, b_1)\), but if Player~B believes Player~A will play \(a_4\), then deviating from \(b_1\) to \(b_2\) is profitable. Hence \((a_4, b_1)\) is not a Nash equilibrium. This mirrors a ``Fishermen's Dilemma'': individual incentives to ``overfish'' (deviate) drive the outcome toward a stable but Pareto-inefficient equilibrium, even though cooperation would yield higher payoffs.
+
+\section{Sequential Interaction, Backward Induction, and Bargaining}
+
+\subsection*{Solution to Problem 2.2 (Finite Horizon Bargaining)}
+
+We solve by backward induction for \(T = 3\).
+\begin{itemize}
+  \item \textbf{Period \(T = 3\).} Player~1 makes the final offer. Since any positive amount is strictly preferred by Player~2 to receiving \(0\), Player~1 can offer
+  \[
+    (1,0),
+  \]
+  which is accepted.
+  \item \textbf{Period \(T = 2\).} The surplus at the start of period \(2\) is \(\delta\). Player~2 must give Player~1 at least their continuation value from period \(3\), discounted back one period. At period \(3\), Player~1 would obtain \(\delta\), so at period \(2\) Player~2 must offer
+  \[
+    (\delta,\, 1-\delta).
+  \]
+  \item \textbf{Period \(T = 1\).} Player~1 must give Player~2 at least their discounted continuation value from period \(2\), which is \(\delta(1-\delta)\). Thus Player~1 proposes
+  \[
+    \bigl(1 - \delta + \delta^2,\; \delta - \delta^2\bigr),
+  \]
+  which Player~2 accepts in equilibrium.
+\end{itemize}
+
+As \(T \to \infty\), the equilibrium split converges to
+\[
+  \left(\frac{1}{1+\delta},\, \frac{\delta}{1+\delta}\right).
+\]
+Higher \(\delta\) (greater patience) reduces the first-mover advantage because the responder's threat to wait for a better future offer becomes more credible.
+
+\section{Mixed Strategies, Security Payoffs, and Zero-Sum Dynamics}
+
+\subsection*{Solution to Problem 3.1 (Military Attack)}
+
+\paragraph{(i) Non-existence of pure-strategy Nash equilibrium.}
+Check best responses:
+\begin{itemize}
+  \item If Player~1 plays \(A\), Player~2's best response is \(A\) (yielding \(0\) instead of \(4\)).
+  \item If Player~2 plays \(A\), Player~1's best response is \(B\) (payoff \(3\) instead of \(0\) or \(2\)).
+\end{itemize}
+Iterating this logic over all cells shows that for any candidate pure profile, at least one player has a profitable deviation. Hence no pure-strategy Nash equilibrium exists.
+
+\paragraph{(ii) Maxmin (security) strategy for Player 1.}
+Let Player~1's mixed strategy be \((\sigma_1,\sigma_2,\sigma_3)\) over \((A,B,C)\). The expected payoffs if Player~2 defends each target are
+\begin{align*}
+  \mathbb{E}[U_1 \mid A] &= 0\cdot \sigma_1 + 3\sigma_2 + 2(1-\sigma_1-\sigma_2)
+    = 2 - 2\sigma_1 + \sigma_2,\\
+  \mathbb{E}[U_1 \mid B] &= 4\sigma_1 + 0\cdot \sigma_2 + 2(1-\sigma_1-\sigma_2)
+    = 2 + 2\sigma_1 - 2\sigma_2,\\
+  \mathbb{E}[U_1 \mid C] &= 4\sigma_1 + 3\sigma_2 + 0\cdot (1-\sigma_1-\sigma_2)
+    = 4\sigma_1 + 3\sigma_2.
+\end{align*}
+In a security (maxmin) strategy, Player~1 chooses \((\sigma_1,\sigma_2,\sigma_3)\) so that these three expressions are equal, making Player~2 indifferent across pure strategies. Equating:
+\begin{align*}
+  2 - 2\sigma_1 + \sigma_2 &= 2 + 2\sigma_1 - 2\sigma_2
+  \quad\Rightarrow\quad 4\sigma_1 = 3\sigma_2 \Rightarrow \sigma_2 = \tfrac{4}{3}\sigma_1,\\
+  2 + 2\sigma_1 - 2\sigma_2 &= 4\sigma_1 + 3\sigma_2
+  \quad\Rightarrow\quad
+  2 = 2\sigma_1 + 5\sigma_2.
+\end{align*}
+Substituting \(\sigma_2 = \tfrac{4}{3}\sigma_1\) into the second equation gives
+\[
+  2 = 2\sigma_1 + 5\cdot \tfrac{4}{3}\sigma_1 = \tfrac{26}{3}\sigma_1
+  \quad\Rightarrow\quad
+  \sigma_1 = \frac{3}{13},\quad
+  \sigma_2 = \frac{4}{13},\quad
+  \sigma_3 = 1 - \sigma_1 - \sigma_2 = \frac{6}{13}.
+\]
+
+\paragraph{(iii) Value of the game.}
+Substituting into, say, \(\mathbb{E}[U_1 \mid C]\),
+\[
+  v
+  = 4\cdot \frac{3}{13} + 3\cdot \frac{4}{13}
+  = \frac{12 + 12}{13}
+  = \frac{24}{13}
+  \approx 1.85.
+\]
+This is both the security level and the Nash equilibrium payoff for Player~1.
+
+\paragraph{(iv) Comparison with an Inspection Game.}
+In strictly zero-sum games, the Minmax Theorem implies the equality of the maxmin and minmax values and yields a saddle point: \(v_1 = -v_2\). In a non-zero-sum ``Inspection Game'', the employer's secure monitoring strategy and the worker's secure effort strategy do not generate such a saddle point because gains and losses are not perfectly opposed. As a result, the equality \(v_1 = -v_2\) fails, and equilibrium payoffs depend on the specific strategic interaction structure rather than a single game value.
+
+\section{Adverse Selection and Market Signaling}
+
+\subsection*{Solution to Problem 4.1}
+
+\paragraph{(i) Optimal TIOLI price and trade probability.}
+If the buyer offers a price \(p\), only sellers with \(\theta \leq p\) accept. Since \(\theta \sim \mathcal{U}[0,2]\),
+\[
+  \mathbb{E}[\theta \mid \theta \le p] = \frac{p}{2}.
+\]
+The buyer's expected utility is
+\[
+  \mathbb{E}[U_B]
+  = \bigl(\mathbb{E}[\theta \mid \theta \le p] + a - p\bigr)\cdot \Pr(\theta \le p)
+  = \left(\frac{p}{2} + a - p\right)\cdot \frac{p}{2}
+  = \left(a - \frac{p}{2}\right)\frac{p}{2}.
+\]
+Maximising with respect to \(p\) yields the first-order condition
+\[
+  \frac{\partial}{\partial p}\left[\left(a - \frac{p}{2}\right)\frac{p}{2}\right]
+  = \frac{a}{2} - \frac{p}{2} = 0
+  \quad\Rightarrow\quad p^* = a.
+\]
+For all \(\theta \in [0,2]\) to trade, we need \(p^* \geq \max_{\theta}\theta = 2\), so
+\[
+  a \geq 2
+\]
+is the threshold ensuring a trade probability of \(1\).
+
+\paragraph{(ii) Signaling via disclosure.}
+If the seller reveals type \(\theta\) at cost \(c\), the buyer offers \(V_B(\theta) = \theta + a\), so the seller's payoff is
+\[
+  \theta + a - c.
+\]
+If the seller does not reveal, they receive \(p^* = a\). The seller reveals if
+\[
+  \theta + a - c \;\geq\; a
+  \quad\Longleftrightarrow\quad
+  \theta \geq c.
+\]
+Thus all types with \(\theta \geq c\) optimally disclose. As \(a\) increases, the buyer's valuation premium over the seller's own valuation grows, increasing the information rent that high-\(\theta\) sellers can capture (subject to the fixed disclosure cost \(c\) not being too large).
+
+\section{Moral Hazard and Monopolistic Screening}
+
+\subsection*{Solution to Problem 5.1}
+
+\paragraph{(i) IC and PC constraints.}
+If the worker exerts effort (Work), their expected utility is
+\[
+  U^{W} = w - 50 = 100 - 50 = 50.
+\]
+If the worker shirks (Not Work), then with probability \(1-m\) they receive the wage \(w\), and with probability \(m\) they are caught and receive \(0\). Since shirking has no effort cost, expected utility is
+\[
+  U^{N} = (1-m)w = (1-m)\cdot 100.
+\]
+The incentive compatibility (IC) constraint \(U^{W} \geq U^{N}\) becomes
+\[
+  100 - 50 \geq 100(1-m)
+  \quad\Rightarrow\quad
+  50 \geq 100 - 100m
+  \quad\Rightarrow\quad
+  m \geq 0.5.
+\]
+The participation constraint (PC) requires that the worker's utility from accepting the contract is at least their outside option \(U_0 = 0\):
+\[
+  100 - 50 = 50 \geq 0,
+\]
+which is satisfied.
+
+\paragraph{(ii) Principal's optimal monitoring probability.}
+Output is \(Y = 200\) if the worker exerts effort (which the IC constraint guarantees when \(m \ge 0.5\)), and \(0\) otherwise. Expected profit of the Principal when effort is induced is
+\[
+  \Pi = 200 - 100 - 10m = 100 - 10m.
+\]
+Subject to \(m \ge 0.5\), the Principal minimises the monitoring cost by choosing
+\[
+  m^* = 0.5,
+\]
+yielding
+\[
+  \Pi^{\text{SB}} = 200 - 100 - 10(0.5) = 95.
+\]
+
+\paragraph{(iii) Agency cost and comparison to first-best.}
+In the first-best (effort observable, \(m = 0\)), the Principal pays \(w = 100\) and obtains output \(Y = 200\), so
+\[
+  \Pi^{\text{FB}} = 200 - 100 = 100.
+\]
+The agency cost is the loss in profit relative to the first-best:
+\[
+  \text{Agency Cost} = \Pi^{\text{FB}} - \Pi^{\text{SB}} = 100 - 95 = 5.
+\]
+This efficiency loss represents resources wasted on monitoring that would be unnecessary under symmetric information about effort.
+
+\end{document}
+

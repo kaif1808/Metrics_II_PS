@@ -1,0 +1,183 @@
+% Advanced Practice Examination: Game Theory and Information Economics
+% Questions only. Solutions are in Micro1Q_solutions.tex.
+% Compile with:
+%   latexmk -pdf -outdir=aux Micro1Q.tex
+
+\documentclass[12pt,a4paper]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{bm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+% Enumerate style for sub-tasks
+\setlist[enumerate,1]{label=\arabic*., leftmargin=*}
+
+\title{\textbf{Advanced Practice Examination:}\\
+       \Large Game Theory and Information Economics}
+\author{ }
+\date{ }
+
+\begin{document}
+
+\maketitle
+
+\section{Simultaneous Games and Dominance Solvability}
+
+The bedrock of non-cooperative game theory lies in the concepts of iterated dominance and Nash Equilibrium. In environments with discrete strategy spaces, the process of Iterated Elimination of Strictly Dominated Strategies (IESDS) allows a researcher to winnow down the set of plausible outcomes by assuming only that players are rational. When supplemented by the elimination of weakly dominated strategies (IEWDS), we can often reach a unique prediction. However, these stable equilibrium points---where no player has a unilateral incentive to deviate---frequently fail to achieve social optimality, illustrating the inherent tension between individual rationality and collective efficiency.
+
+\subsection*{Problem 1.1: The 4x4 Strategic Matrix}
+
+Consider a two-player normal-form game where Player~A (Row) chooses
+\(
+  s_A \in \{a_1, a_2, a_3, a_4\}
+\)
+and Player~B (Column) chooses
+\(
+  s_B \in \{b_1, b_2, b_3, b_4\}
+\).
+The payoff matrix \((u_A, u_B)\) is defined as follows:
+
+\begin{table}[h!]
+  \centering
+  \renewcommand{\arraystretch}{1.1}
+  \begin{tabular}{lcccc}
+    \toprule
+    $A \setminus B$ & $b_1$ & $b_2$ & $b_3$ & $b_4$ \\
+    \midrule
+    $a_1$ & $(4,0)$ & $(2,2)$ & $(8,0)$ & $(2,1)$ \\
+    $a_2$ & $(1,0)$ & $(2,1)$ & $(0,6)$ & $(1,1)$ \\
+    $a_3$ & $(3,3)$ & $(1,2)$ & $(6,1)$ & $(1,2)$ \\
+    $a_4$ & $(5,3)$ & $(0,2)$ & $(1,1)$ & $(2,2)$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\noindent\textbf{Tasks.}
+\begin{enumerate}
+  \item \textbf{Iterated Dominance.} Perform multiple rounds of IESDS. Clearly identify which strategies are eliminated and by which dominating strategy. Subsequently, apply IEWDS to the reduced matrix to find the unique equilibrium prediction.
+  \item \textbf{Pareto Efficiency.} Identify all strategy profiles in the original \(4\times 4\) matrix that are Pareto efficient.
+  \item \textbf{Analytical Evaluation.} Explain the ``So What?'' layer: Why does the equilibrium reached through dominance solvability result in a payoff profile that is Pareto dominated by other outcomes? Relate this to the ``Fishermen's Dilemma'' context.
+\end{enumerate}
+
+\bigskip
+\noindent\textbf{Transition.} While discrete choices provide a clear winnowing logic, strategic variables in industrial organization---such as price or quantity---often exist on a continuum, necessitating the use of calculus and reaction functions to find equilibria.
+
+\section{Sequential Interaction, Backward Induction, and Bargaining}
+
+In sequential games, the timing of moves grants players the ability to commit to certain paths, yet the credibility of such commitments is paramount. Subgame Perfect Nash Equilibrium (SPNE) serves as a refinement of the Nash Equilibrium by requiring that players act optimally in every subgame, effectively filtering out non-credible threats that a player would not actually execute if that node were reached.
+
+\subsection*{Problem 2.1: Extensive Form and Forward Induction}
+
+Consider a three-player extensive-form game with \(7\) subgames. Player~1 moves first and can choose to Burn Money (\(B\)) or Not Burn (\(N\)).
+\begin{itemize}
+  \item If Player~1 chooses \(N\), a subgame follows where Player~1 chooses between \(A\) and \(B\). If \(A\), Player~2 chooses \(C\) or \(D\) (where \(D\) yields \((0,0,0)\)). If \(C\), Player~1 chooses \(U\) or \(V\). If \(V\), Player~3 chooses \(X\) or \(Y\).
+  \item If Player~1 chooses \(B\), all of Player~1's terminal payoffs in the subsequent subgame are reduced by \(K = 1\).
+  \item The terminal payoffs for the sequence \((N, A, C, U)\) are \((4, 2, 0)\) and for \((N, B, E, W)\) are \((10, -4, 0)\).
+\end{itemize}
+
+\subsection*{Problem 2.2: Finite Horizon Bargaining}
+
+Two players must divide a surplus of \(1\) over \(T = 3\) periods. In \(T = 1\), Player~1 proposes \((x, 1-x)\). If Player~2 rejects, the surplus is discounted by \(\delta\) and Player~2 proposes in \(T = 2\). If Player~1 rejects, they move to \(T = 3\) where Player~1 makes the final offer. If rejected at \(T = 3\), both receive \(0\).
+
+\noindent\textbf{Tasks.}
+\begin{enumerate}
+  \item Using backward induction, solve for the unique SPNE of the \(T = 3\) bargaining game.
+  \item \textbf{Analytical Task.} Evaluate the impact of the discount factor \(\delta\) on the first-mover advantage. What is the strategic consequence if \(T \to \infty\)? Show the relationship between the equilibrium split and the formula \(\frac{1}{1+\delta}\).
+\end{enumerate}
+
+\bigskip
+\noindent\textbf{Transition.} The certainty of sequential moves gives way to strategic unpredictability when players must randomize their actions to prevent being outguessed by opponents.
+
+\section{Mixed Strategies, Security Payoffs, and Zero-Sum Dynamics}
+
+In strictly competitive environments, randomization is not merely an option but a strategic necessity. The Minmax Theorem, established by von~Neumann, demonstrates that in zero-sum games, a player's security payoff (maxmin) is identical to the equilibrium payoff. By randomizing, a player ensures a ``Value'' for the game that cannot be diminished by any action the opponent takes.
+
+\subsection*{Problem 3.1: Military Attack (Strictly Competitive)}
+
+A commander (Player~1) can strike targets \(A\), \(B\), or \(C\). A defender (Player~2) stationing a battery at the same target successfully intercepts the attack. The payoffs (enemy troop losses for Player~1, gains for Player~2) are represented by the following zero-sum matrix:
+
+\begin{table}[h!]
+  \centering
+  \renewcommand{\arraystretch}{1.1}
+  \begin{tabular}{lccc}
+    \toprule
+    $1 \setminus 2$ & $A$ & $B$ & $C$ \\
+    \midrule
+    $A$ & $0$ & $4$ & $4$ \\
+    $B$ & $3$ & $0$ & $3$ \\
+    $C$ & $2$ & $2$ & $0$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\noindent\textbf{Tasks.}
+\begin{enumerate}
+  \item Prove that no pure-strategy Nash Equilibrium exists for this game.
+  \item Calculate the Maxmin (security) strategies for Player~1. Show the system of equations derived from making Target \(A\), \(B\), and \(C\)'s expected payoffs equal.
+  \item Determine the Value \(v\) of the game.
+  \item \textbf{Analytical Task.} Compare the security strategies of this zero-sum game to a non-zero-sum ``Inspection Game.'' Explain why the Minmax Theorem's equality \(v_1 = -v_2\) fails in the latter.
+\end{enumerate}
+
+\bigskip
+\noindent\textbf{Transition.} Having mastered full-information environments, we now consider markets where one party possesses hidden knowledge about the quality of the good being traded.
+
+\section{Adverse Selection and Market Signaling}
+
+Asymmetric information regarding quality \(\theta\) can lead to the ``Lemons Problem,'' where the inability of buyers to distinguish high from low quality leads to a collapse in trade. If high-quality sellers cannot be adequately compensated, they exit the market, leaving only low-quality types and potentially destroying the gains from trade entirely.
+
+\subsection*{Problem 4.1: The Used Car Market with Disclosure}
+
+Quality \(\theta\) is uniformly distributed on \([0, 2]\). A seller's valuation is
+\(
+  V_S(\theta) = \theta
+\)
+and a buyer's valuation is
+\(
+  V_B(\theta) = \theta + a
+\).
+
+\noindent\textbf{Tasks.}
+\begin{enumerate}
+  \item \textbf{TIOLI Offer.} Solve for the buyer's optimal take-it-or-leave-it price \(p^*\) and identify the threshold of \(a\) that ensures a trade probability of \(1\).
+  \item \textbf{Signaling Disclosure.} Suppose the seller can pay a fixed cost \(c\) to reveal \(\theta\) to the buyer. If the seller reveals, the buyer offers the full valuation \(V_B(\theta)\). If the seller does not reveal, they are subject to the buyer's price \(p^*\).
+\end{enumerate}
+
+\noindent\textbf{Analytical Task.} Derive the condition on \(c\) such that a seller of quality \(\theta\) will choose to reveal. Evaluate how the ``information rent'' captured by the seller changes with \(a\).
+
+\bigskip
+\noindent\textbf{Transition.} Information asymmetries extend beyond hidden types to hidden actions, where incentives must be designed to align the agent's behavior with the principal's goals.
+
+\section{Moral Hazard and Monopolistic Screening}
+
+Moral hazard arises when an agent's effort is unobservable, creating a trade-off between risk-sharing and incentives. In a Principal--Agent framework, the Principal must design a contract that satisfies the agent's Participation Constraint (PC) and Incentive Compatibility (IC) constraint, ensuring the agent chooses the high-effort action despite its private cost.
+
+\subsection*{Problem 5.1: Optimal Monitoring and Agency Costs}
+
+A Principal (Employer) hires an Agent (Worker).
+\begin{itemize}
+  \item Worker: Can choose to Work \((c = 50, \text{Output } Y = 200)\) or Not Work \((c = 0, Y = 0)\).
+  \item Employer: Pays wage \(w = 100\). Can monitor with probability \(m \in [0,1]\) at a cost of \(10m\). If caught shirking, the wage is \(0\).
+  \item Reservation Utility: The agent's outside option is \(U_0 = 0\).
+\end{itemize}
+
+\noindent\textbf{Tasks.}
+\begin{enumerate}
+  \item Derive the Incentive Compatibility (IC) and Participation Constraint (PC) for the agent.
+  \item Solve for the Principal's optimal choice of \(m\).
+  \item \textbf{Efficiency Analysis.} Compare the Principal's profit to the first-best scenario (where effort is observable). Calculate the Agency Cost and explain its origin in the source context.
+\end{enumerate}
+
+\bigskip
+\noindent\textbf{Transition.} This progression from pure game theory to information-contingent applications underscores the necessity of modeling strategic interaction to understand modern market failures.
+
+\end{document}
+
