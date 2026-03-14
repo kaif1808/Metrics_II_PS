@@ -1,0 +1,334 @@
+% Microeconomics II: Practice Examination
+% Questions and answer key combined in a single document.
+% Recommended compilation:
+%   latexmk -pdf Micro3Q.tex
+
+\documentclass[12pt,a4paper]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{bm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+% Enumerate style for sub-questions
+\setlist[enumerate,1]{label=\textbf{(\alph*)}, leftmargin=*}
+
+\title{\textbf{Microeconomics II:}\\[0.25em]
+       \Large Practice Exam}
+\author{ }
+\date{ }
+
+\begin{document}
+
+\maketitle
+
+\bigskip
+\noindent\textbf{NIS:} Please only write your student ID number and not your actual name.
+
+\bigskip
+\noindent\textbf{Note:} No books, notes or other materials allowed except for a (possibly programmable) calculator.
+
+\bigskip
+\noindent\hrulefill
+\bigskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Part I: Game Theory
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Part I: Game Theory}
+
+\subsection*{Question 1 (25 points)}
+
+Consider the following \(2\times2\) game:
+
+\begin{table}[h!]
+  \centering
+  \renewcommand{\arraystretch}{1.1}
+  \begin{tabular}{lcc}
+    \toprule
+    $1 \setminus 2$ & L & R \\
+    \midrule
+    U & $(15,20)$ & $(0,20)$ \\
+    D & $(0,10)$ & $(45,30)$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{enumerate}
+  \item Compute the security strategies of players 1 and 2. What are the expected payoffs to the two players at the profile of security strategies?
+  \item Write down the set of strategy profiles that survive iterated elimination of strictly dominated strategies and also the set of strategy profiles that survive the iterated elimination of weakly dominated strategies.
+  \item Compute the best response correspondences of players 1 and 2.
+  \item Depict the best response correspondence of players 1 and 2 in a \((p, q)\)-diagram as usual, where \(p\) is the probability Player~1 plays U, and \(q\) is the probability Player~2 plays L.
+  \item Using the usual mixed strategy notation, \(\sigma=((\sigma_{1}^{U},\sigma_{1}^{D}), (\sigma_{2}^{L},\sigma_{2}^{R}))\), carefully write down two distinct Nash equilibrium profiles of this game.
+\end{enumerate}
+
+\subsection*{Question 2 (15 points)}
+
+Consider the following variation of the ultimatum bargaining game. Alice receives a sum of €120 to split between herself and Bob. Alice has to propose how to split the €120 and can suggest any split in
+\[
+  X_{120} = \{(x_A, x_B) \in [0,120]^2 : x_A + x_B = 120\}.
+\]
+If Bob accepts Alice's offer, the €120 is split as suggested and the game ends. If Bob rejects Alice's offer, Bob immediately receives a guaranteed outside side-payment of €30 (which he keeps regardless of future actions), and the remaining pie shrinks to €50. Bob now has to propose how to split this €50 and can suggest any split in
+\[
+  Y_{50} = \{(y_A, y_B) \in [0,50]^2 : y_A + y_B = 50\}.
+\]
+If Alice accepts Bob's offer, the €50 is split as suggested, Bob also keeps his €30 side-payment, and the game ends. If Alice rejects Bob's offer, the game ends: Bob keeps his €30, and Alice receives an outside option of €10.
+
+\begin{enumerate}
+  \item Consider the subgame that starts just after Bob rejects Alice's offer. Carefully write down a backward induction equilibrium strategy profile of this subgame.
+  \item Carefully write down a subgame perfect equilibrium strategy profile of the overall game.
+  \item Is there a Nash equilibrium of the overall game where Alice receives €10 as her terminal payoff and Bob receives €110? Explain your answer.
+\end{enumerate}
+
+\subsection*{Question 3 (10 points)}
+
+Consider the following game:
+
+\begin{table}[h!]
+  \centering
+  \renewcommand{\arraystretch}{1.1}
+  \begin{tabular}{lccc}
+    \toprule
+    $1 \setminus 2$ & L & M & R \\
+    \midrule
+    U & $(8,8)$ & $(0,9)$ & $(0,0)$ \\
+    C & $(9,0)$ & $(5,5)$ & $(0,0)$ \\
+    D & $(0,0)$ & $(0,0)$ & $(1,1)$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{enumerate}
+  \item Suppose the game is repeated twice with no discounting so that payoffs are the sum of period 1 and period 2 payoffs. Can the payoffs \((13, 13)\) be sustained as the sum of expected payoffs in a subgame perfect Nash equilibrium of the twice-repeated game? Explain.
+  \item Suppose now that the above game is repeated infinitely often with a common discount factor \(0 < \delta < 1\). Can the path along which actions (U, L) are played in each period \(t=1,2,3,\dots\) be sustained as a subgame perfect equilibrium using a grim trigger strategy that reverts to the Nash equilibrium (D, R)? Explain your answer and find the lower bound for the discount factor \(\delta\) required.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Part II: Information Economics
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Part II: Information Economics}
+
+Write your brief final answers in the boxes that follow the questions.
+
+\subsection*{Question 4 (10 points)}
+
+Used cars can be good (G) or bad (B). Let \(q \in (0,1)\) be the proportion of bad cars. Only the seller knows whether his car is good or bad. Buyers are the ``long side'' of the market. The valuations of the cars for all sellers and buyers are as follows:
+
+\begin{table}[h!]
+  \centering
+  \renewcommand{\arraystretch}{1.1}
+  \begin{tabular}{lcc}
+    \toprule
+    & \(V^S(\theta)\) & \(V^B(\theta)\) \\
+    \midrule
+    B & 10 & 20 \\
+    G & 30 & 50 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Determine whether the following claim is true or false and explain briefly: ``If \(q > 2/3\), no good cars are traded in any equilibrium.''
+
+\medskip
+\noindent Choose one: True/False. Explain briefly:
+
+\medskip
+\noindent\framebox[\linewidth]{\rule{0pt}{2.5em}}
+
+\subsection*{Question 5 (10 points)}
+
+A seller has an object whose quality (value to the buyer) is 10, 20, or 30 (with equal probabilities). The seller's valuation of the good is zero. The seller knows the true quality with probability 1, and can disclose this quality to the buyer at a verifiable cost of \(c = 4\). Suppose that the buyer pays the seller a price exactly equal to the expected quality, given her belief. Find the lowest and highest price that the buyer will pay in equilibrium.
+
+\medskip
+\noindent\framebox[\linewidth]{\rule{0pt}{2.5em}}
+
+\subsection*{Question 6 (10 points)}
+
+Consider a moral hazard model with two effort levels \(e_L\) and \(e_H\). Assume there are two possible outputs \(x \in \{10, 30\}\). The probability of the high output \(x=30\) is \(P(x=30\mid e_H) = 0.8\) given high effort, and \(P(x=30\mid e_L) = 0.4\) given low effort. The agent's payoff from wage \(w\) and effort \(e\) is \(\ln(w) - c(e)\), where \(c(e_L) = 0\) and \(c(e_H) = \ln(2)\). The agent's outside option yields an expected utility of 0. The risk-neutral principal offers a contract to maximize expected profit. Find the optimal wage contract \((w_1, w_2)\) under the assumption that the principal cannot observe the agent's effort and wants to implement \(e_H\).
+
+\medskip
+\noindent\framebox[\linewidth]{\rule{0pt}{2.5em}}
+
+\subsection*{Question 7 (10 points)}
+
+A monopolist produces at a marginal cost \(c=1\). There are two equally likely types of consumers: H and L. The marginal utilities of types H and L when they consume \(q\) units of the good are \(4-q\) and \(3-q\), respectively (implying gross utilities of \(4q - 0.5q^2\) and \(3q - 0.5q^2\)). The monopolist does not observe the consumer's type but knows the distribution. The monopolist can offer a menu of deals, \((q, T)\) (Get \(q\), pay \(T\)). Find the deals \((q_H, T_H)\) and \((q_L, T_L)\) that will be selected by each type in a profit-maximizing menu.
+
+\medskip
+\noindent\framebox[\linewidth]{\rule{0pt}{2.5em}}
+
+\subsection*{Question 8 (10 points)}
+
+Consider the signaling model by Spence with two worker types. If hired by a firm, with probability \(1/2\) the worker will produce \(\theta_H = 10\), and with probability \(1/2\) the worker will produce \(\theta_L = 4\). If the worker's type is \(\theta_L\), his payoff is \(w - 2e\). If the worker's type is \(\theta_H\), his payoff is \(w - e\).
+
+\begin{enumerate}
+  \item Find the education levels and wage schedule for the most efficient separating equilibrium (the Riley equilibrium).
+  \item Consider a pooling equilibrium where both types choose \(e=1\). Give an example of an off-equilibrium education level that, according to the Cho-Kreps intuitive criterion, should convince the firms that the type of a worker who selected that effort level is strictly \(\theta_H\).
+\end{enumerate}
+
+\medskip
+\noindent\framebox[\linewidth]{\rule{0pt}{2.5em}}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ANSWER KEY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Answer Key}
+
+\subsection*{Part I: Game Theory}
+
+\subsubsection*{Question 1}
+
+\begin{enumerate}
+  \item Player~1 security strategy: mix between U and D with \(p = 3/4\). This guarantees \(\min(15p, 45-45p) = 11.25\).
+
+        Player~2 security strategy: play pure R (\(q=0\)). This guarantees \(\min(20, 30-20q) = 20\).
+
+        Expected payoffs at this profile: Player~1 gets
+        \[
+          15\cdot\frac{3}{4}\cdot 0 + 0\cdot\frac{3}{4}\cdot 1 + 0\cdot\frac{1}{4}\cdot 0 + 45\cdot\frac{1}{4}\cdot 1 = 11.25,
+        \]
+        and Player~2 gets 20.
+
+  \item Strictly dominated strategies: none (the whole game survives). Weakly dominated: Player~2's strategy L is weakly dominated by R. Eliminating L leaves Player~1 choosing between U (yielding 0) and D (yielding 45). Player~1 strictly prefers D. Surviving set: \(\{(D, R)\}\).
+
+  \item Best responses:
+        \[
+          \text{BR}_1(L) = U,\quad \text{BR}_1(R) = D,\quad
+          \text{BR}_2(U) = [0,1] \text{ (any mix of L and R)},\quad \text{BR}_2(D) = R.
+        \]
+
+  \item In the \((p,q)\)-diagram, plot \(p\) on the vertical axis and \(q\) on the horizontal axis. Player~1's best response correspondence is a step function: \(p=0\) for \(q<0.75\), vertical at \(q=0.75\), and \(p=1\) for \(q>0.75\). Player~2's best response correspondence is also a step function: \(q=0\) for \(p<1\), with a horizontal segment at \(p=1\) for all \(q\).
+
+  \item Nash equilibrium profiles:
+        \begin{itemize}
+          \item \(((0, 1), (0, 1))\), which corresponds to the pure strategy profile \((D,R)\).
+          \item \(((1, 0), (q, 1-q))\) for any \(q \in [0.75, 1]\).
+        \end{itemize}
+\end{enumerate}
+
+\subsubsection*{Question 2}
+
+\begin{enumerate}
+  \item In the subgame that starts after Bob rejects Alice's offer, Bob proposes \((y_A, y_B) = (10, 40)\). Alice accepts any offer with \(y_A \ge 10\) and rejects otherwise.
+
+  \item In a subgame perfect equilibrium of the overall game, Alice proposes \((x_A, x_B) = (50, 70)\). Bob accepts any offer with \(x_B \ge 70\) and rejects otherwise. If he rejects, the continuation play is as in part (a): Bob proposes \((y_A, y_B) = (10, 40)\), and Alice accepts any \(y_A \ge 10\).
+
+  \item Yes. There is a Nash equilibrium where Alice receives 10 and Bob receives 110. In this equilibrium, Alice proposes \((10, 110)\). Bob accepts any offer with \(x_B \ge 110\) and rejects otherwise. In the subgame, Bob proposes \((10, 40)\), and Alice accepts any \(y_A \ge 10\). On the equilibrium path, Alice's payoff is 10. If she deviates to ask for more, Bob rejects, and in the subgame she again receives 10. Thus Alice cannot strictly improve her payoff by deviating.
+\end{enumerate}
+
+\subsubsection*{Question 3}
+
+\begin{enumerate}
+  \item Yes. Consider the following strategy profile. In period \(t=1\), the players play \((U,L)\). In period \(t=2\), they play \((C,M)\) if \((U,L)\) was played in period 1; otherwise they play \((D,R)\). On the equilibrium path, payoffs are \(8+5 = 13\) for each player. A deviation in period 1 yields at most \(9+1 = 10\). Since \(13 \ge 10\), no player has a profitable deviation, and the payoffs \((13,13)\) can be sustained in a subgame perfect equilibrium.
+
+  \item Yes. Consider a grim trigger strategy that starts at \((U,L)\) and reverts forever to \((D,R)\) following any deviation. On the equilibrium path, each player's discounted payoff is
+        \[
+          \frac{8}{1-\delta}.
+        \]
+        A one-shot deviation yields
+        \[
+          9 + \frac{\delta}{1-\delta}.
+        \]
+        For no profitable deviation we require
+        \[
+          \frac{8}{1-\delta} \ge 9 + \frac{\delta}{1-\delta}
+          \;\Longrightarrow\;
+          8 \ge 9 - 8\delta
+          \;\Longrightarrow\;
+          \delta \ge \frac{1}{8}.
+        \]
+\end{enumerate}
+
+\subsection*{Part II: Information Economics}
+
+\subsubsection*{Question 4}
+
+The statement is \textbf{true}. The expected value of a pooled market is
+\[
+  E[V] = 20q + 50(1-q) = 50 - 30q.
+\]
+If \(q > 2/3\), then \(E[V] < 50 - 30 \cdot (2/3) = 30\). Since the maximum buyers are willing to pay (which is strictly less than 30) is strictly less than the \(V^S(G) = 30\) required by good sellers, all good sellers drop out of the market (adverse selection), and no good cars are traded in equilibrium.
+
+\subsubsection*{Question 5}
+
+Lowest price: 10. Highest price: 30.
+
+Type 30 discloses since \(30-4 = 26 > E[10,20,30]=20\). Type 20 discloses since \(20-4 = 16 > E[10,20]=15\). Type 10 stays silent since \(10-4=6 < 10\). The market perfectly unravels.
+
+\subsubsection*{Question 6}
+
+An optimal contract that implements high effort has wages
+\[
+  w_1 = \frac{1}{2}, \qquad w_2 = 2\sqrt{2} \approx 2.83.
+\]
+This can be derived by imposing a binding individual rationality (IR) constraint
+\[
+  0.2\ln(w_1) + 0.8\ln(w_2) = \ln(2)
+\]
+and a binding incentive compatibility (IC) constraint
+\[
+  0.8\ln(w_2) + 0.2\ln(w_1) - \ln(2)
+  = 0.4\ln(w_2) + 0.6\ln(w_1),
+\]
+which implies
+\[
+  \ln(w_2) - \ln(w_1) = 2.5\ln(2).
+\]
+Solving yields \(\ln(w_1) = -\ln(2)\) and \(\ln(w_2) = 1.5\ln(2)\), i.e.\ \(w_1 = 1/2\) and \(w_2 = 2\sqrt{2}\).
+
+\subsubsection*{Question 7}
+
+The profit-maximizing menu is
+\[
+  (q_H, T_H) = (3, 6.5), \qquad (q_L, T_L) = (1, 2.5).
+\]
+One way to see this is to maximize
+\[
+  \Pi = 0.5(T_H - q_H) + 0.5(T_L - q_L)
+\]
+subject to the low-type individual rationality constraint
+\[
+  T_L = 3q_L - 0.5q_L^2
+\]
+and the high-type incentive compatibility constraint
+\[
+  T_H = 4q_H - 0.5q_H^2 - q_L.
+\]
+Substituting these into \(\Pi\) and taking first-order conditions yields the stated menu.
+
+\subsubsection*{Question 8}
+
+\begin{enumerate}
+  \item In the Riley (most efficient separating) equilibrium, the low type chooses education \(e_L = 0\) and receives wage \(w_L = 4\), while the high type chooses education \(e_H = 3\) and receives wage \(w_H = 10\). The level \(e_H\) is pinned down by the low-type's binding IC constraint:
+        \[
+          4 = 10 - 2e_H \;\Longrightarrow\; e_H = 3.
+        \]
+
+  \item Consider a pooling equilibrium where both types choose \(e=1\) and receive wage 7. Then
+        \[
+          U_L = 7 - 2\cdot 1 = 5, \qquad U_H = 7 - 1\cdot 1 = 6.
+        \]
+        For an off-equilibrium education level \(e'\) to break this pooling equilibrium under the Cho--Kreps intuitive criterion, it must be dominated for the low type but strictly profitable for the high type if firms believe the deviator is high type. This requires
+        \[
+          10 - 2e' < 5 \;\Longrightarrow\; e' > 2.5,
+        \]
+        and
+        \[
+          10 - e' > 6 \;\Longrightarrow\; e' < 4.
+        \]
+        Any \(e' \in (2.5, 4)\) (for example, \(e'=3\)) satisfies these inequalities and thus would convince firms that the deviator is strictly of type \(\theta_H\).
+\end{enumerate}
+
+\end{document}
+

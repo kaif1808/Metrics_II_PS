@@ -35,6 +35,9 @@
 - Set up a local `latexmkrc` in `MicroPracticeQ/Micro1/` to route all build artefacts (`.aux`, `.log`, `.out`, `.fls`, `.fdb_latexmk`) into `MicroPracticeQ/Micro1/aux/`, keeping the main directory limited to source `.tex` and compiled PDFs. Recompiled both question and solutions PDFs via `latexmk`; builds succeed with minor overfull box warnings only.
 - Converted `MicroPracticeQ/Micro2/Micro2Q.md` into `MicroPracticeQ/Micro2/Micro2Q.tex`, a standalone LaTeX exam (questions plus integrated answer key) mirroring the Micro1 style, and compiled `Micro2Q.pdf` successfully via `latexmk` (10 pages, only minor overfull box warnings).
 
+## 2026-03-14
+- Converted `MicroPracticeQ/Micro3/Micro3Q.md` into `MicroPracticeQ/Micro3/Micro3Q.tex`, a standalone LaTeX practice exam (game theory and information economics) mirroring the Micro1/Micro2 style, including payoff tables, answer boxes, and an integrated answer key. Successfully compiled `Micro3Q.pdf` via `latexmk` (7 pages, only minor overfull-box warnings).
+
 ## 2026-02-21
 - Created `Macro/PS6/Template/Macro_I_PS6_Template.tex` — problem set template for PS6 (Endogenous Growth) with two exercises: (1) Endogenous Growth (parts a–f) covering per capita production, derivatives, law of motion, growth rate diagram, and endogenous growth discussion; (2) Endogenous growth with human capital accumulation (parts a–d) covering Hamiltonian, balanced growth path, parameter conditions, and transitional dynamics. Based on PS5 template structure with empty solution blocks.
 
