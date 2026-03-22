@@ -1,5 +1,8 @@
 # Development Status
 
+## 2026-03-22
+- Fixed overfull `\hbox` warnings in `Revision/CausalInference_Proofs.tex`: shortened long `propositio` titles for `tcolorbox`, split wide displays (reverse-causality OLS limit, RCT conditional means, saturated-X LIE step, IPW--ATT integral line, fuzzy RDD numerator, DiD difference-of-differences), rewrote the TWFE proof opening and the RCT selection-bias sentence, and corrected the fuzzy RDD two-sided proof step to $\E[\beta_i D_i\mid X_i=c,Z_i=1]-\E[\beta_i D_i\mid X_i=c,Z_i=0]$. Rebuilt with `latexmk` from `Revision/`; `build/CausalInference_Proofs.log` reports no overfull boxes.
+
 ## 2026-03-04 (update 2)
 - Completed bonus Q2(h) in `Macro/PS7/Template/Macro_I_PS7_Template.tex`: solved for $N(t)/L(t)$ on the BGP by (1) expressing $L_H=nN/\eta$, $L_V=N(\kappa\lambda/((1-\sigma)\eta))^{1/\psi}$, and $L_P=(1-\beta)N(\rho+z^*\lambda)/(\eta\beta)$ (using H-FE + part-e firm value, simplified via $r^*+z^*+(1-\beta)/\beta\cdot g_w^*=\rho+z^*\lambda$); (2) applying labor market clearing to obtain the closed-form ratio. Recompiled to 13 pages; committed and pushed.
 

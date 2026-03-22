@@ -1,0 +1,1085 @@
+% ============================================================
+%  Causal Inference — Comprehensive Proofs Reference
+%  EM II / QSM II: Development, BSE Spring 2026
+%  Instructor: Albrecht Glitz
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+
+% ---------- packages ----------
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{bm}
+\usepackage{microtype}
+\usepackage[colorlinks=true,linkcolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage[most,breakable]{tcolorbox}
+
+% ---------- theorem environments ----------
+\theoremstyle{plain}
+\newtheorem{propositio}{Proposition}[section]
+\newtheorem{lemma}[propositio]{Lemma}
+\newtheorem{corollary}[propositio]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{assumption}{Assumption}[section]
+\newtheorem{remark}[propositio]{Remark}
+
+% ---- Boxed proposition environment (blue frame) ----
+\tcolorboxenvironment{propositio}{
+  enhanced,
+  breakable,
+  colback=blue!3!white,
+  colframe=blue!50!black,
+  boxrule=0.7pt,
+  arc=3pt,
+  left=6pt, right=6pt, top=5pt, bottom=5pt,
+  before skip=10pt,
+  after skip=4pt,
+}
+
+% ---- Boxed proof environment (grey frame with "Proof" label) ----
+% Redefine proof to remove amsthm's inline "Proof." so the tcolorbox title is the sole label
+\renewenvironment{proof}{\pushQED{\qed}\normalfont}{\popQED\par\nobreak}
+\tcolorboxenvironment{proof}{
+  enhanced,
+  breakable,
+  colback=gray!4!white,
+  colframe=gray!45!black,
+  boxrule=0.5pt,
+  arc=3pt,
+  title={\normalfont\itshape Proof},
+  fonttitle=\normalfont\itshape,
+  coltitle=black!70,
+  attach boxed title to top left={yshift=-\tcboxedtitleheight/2, xshift=8mm},
+  boxed title style={
+    colback=white,
+    colframe=gray!45,
+    boxrule=0.5pt,
+    arc=2pt,
+    left=3pt, right=3pt,
+  },
+  left=6pt, right=6pt, top=10pt, bottom=5pt,
+  before skip=4pt,
+  after skip=10pt,
+}
+
+% ---------- notation macros ----------
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\plim}{\operatorname{plim}}
+\newcommand{\ind}{\perp\!\!\!\perp}
+\newcommand{\ATT}{\alpha_{\mathrm{ATT}}}
+\newcommand{\ATE}{\alpha_{\mathrm{ATE}}}
+\newcommand{\LATE}{\alpha_{\mathrm{LATE}}}
+
+% ---------- section style ----------
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+
+% ---------- spacing ----------
+\setlength{\parskip}{4pt}
+
+% ============================================================
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries Causal Inference: Comprehensive Proofs}\\[6pt]
+  {\large EM II / QSM II: Development \quad$\cdot$\quad BSE Spring 2026}\\[4pt]
+  {\normalsize Albrecht Glitz \quad$\cdot$\quad Notation follows course slides exactly}
+\end{center}
+
+\vspace{2pt}
+\hrule
+\vspace{10pt}
+
+\tableofcontents
+
+\newpage
+
+% ============================================================
+\section{Potential Outcomes Framework}
+% ============================================================
+
+\noindent\textbf{Setup.}
+Let $Y_{1i}$ and $Y_{0i}$ denote potential outcomes under treatment and control for individual~$i$.
+Treatment status $D_i\in\{0,1\}$ determines the observed outcome
+\[
+  Y_i = Y_{0i} + D_i(Y_{1i}-Y_{0i}).
+\]
+Define the average treatment effect (ATE) $\ATE = \E[Y_{1i}-Y_{0i}]$, and the average treatment effect on the treated (ATT) $\ATT = \E[Y_{1i}-Y_{0i}\mid D_i=1]$.
+
+% ----------------------------------------------------------
+\begin{propositio}[Selection bias decomposition\label{prop:selectionbias}]
+Let $\beta \equiv \E[Y_i\mid D_i=1]-\E[Y_i\mid D_i=0]$ denote the naive difference in mean outcomes.
+Then
+\[
+  \beta = \underbrace{\E[Y_{1i}-Y_{0i}\mid D_i=1]}_{\ATT}
+          + \underbrace{\bigl(\E[Y_{0i}\mid D_i=1]-\E[Y_{0i}\mid D_i=0]\bigr)}_{\text{selection bias}}.
+\]
+\end{propositio}
+
+\begin{proof}
+Using $Y_i = Y_{1i}D_i + Y_{0i}(1-D_i)$ we write each conditional mean:
+\[
+  \E[Y_i\mid D_i=1] = \E[Y_{1i}\mid D_i=1], \qquad
+  \E[Y_i\mid D_i=0] = \E[Y_{0i}\mid D_i=0].
+\]
+Subtracting and adding $\E[Y_{0i}\mid D_i=1]$:
+\begin{align*}
+  \beta &= \E[Y_{1i}\mid D_i=1] - \E[Y_{0i}\mid D_i=0]\\
+        &= \E[Y_{1i}\mid D_i=1] - \E[Y_{0i}\mid D_i=1]
+           + \E[Y_{0i}\mid D_i=1] - \E[Y_{0i}\mid D_i=0]\\
+        &= \E[Y_{1i}-Y_{0i}\mid D_i=1]
+           + \bigl(\E[Y_{0i}\mid D_i=1]-\E[Y_{0i}\mid D_i=0]\bigr). \qedhere
+\end{align*}
+\end{proof}
+
+\begin{propositio}
+  Selection bias is zero if and only if $\E[Y_{0i}\mid D_i=1]=\E[Y_{0i}\mid D_i=0]$, i.e.\ the untreated potential outcome is the same on average for treated and control units.
+  This holds by construction under random assignment.
+\end{propositio}
+
+% ----------------------------------------------------------
+\begin{propositio}[OLS: ATT plus selection bias\label{prop:ols_att}]
+Consider the regression $Y_i = \beta_0 + \bar\beta D_i + U_i$ where $\bar\beta$ is the OLS population coefficient (heterogeneous effects allowed).
+Then
+\[
+  \bar\beta = \E[Y_{1i}-Y_{0i}\mid D_i=1]
+              + \bigl(\E[Y_{0i}\mid D_i=1]-\E[Y_{0i}\mid D_i=0]\bigr)
+            = \ATT + \text{selection bias}.
+\]
+\end{propositio}
+
+\begin{proof}
+The OLS slope is $\bar\beta = \Cov(Y_i,D_i)/\Var(D_i)$.  Since $D_i\in\{0,1\}$ we have $D_i^2=D_i$, so
+\[
+  \Var(D_i) = \E[D_i](1-\E[D_i]).
+\]
+For the covariance numerator we compute $\E[Y_i D_i]$ using the law of iterated expectations (LIE):
+\begin{align*}
+  \E[Y_i D_i]
+  &= \E[Y_i\cdot 1\mid D_i=1]\Pr(D_i=1) + \E[Y_i\cdot 0\mid D_i=0]\Pr(D_i=0)\\
+  &= \bigl(\beta_0 + \E[\beta_i\mid D_i=1] + \E[U_i\mid D_i=1]\bigr)\E[D_i],
+\end{align*}
+where we used $Y_i = \beta_0 + \beta_i D_i + U_i$ with $\beta_i\equiv Y_{1i}-Y_{0i}$ and $U_i\equiv Y_{0i}-\E[Y_{0i}]$.
+
+For $\E[Y_i]$:
+\begin{align*}
+  \E[Y_i]
+  &= \bigl(\beta_0+\E[\beta_i\mid D_i=1]+\E[U_i\mid D_i=1]\bigr)\E[D_i]\\
+  &\quad + \bigl(\beta_0+\E[U_i\mid D_i=0]\bigr)(1-\E[D_i]).
+\end{align*}
+The covariance is therefore
+\begin{align*}
+  \Cov(Y_i,D_i)
+  &= \E[Y_iD_i] - \E[Y_i]\E[D_i]\\
+  &= \Bigl\{\E[\beta_i\mid D_i=1]
+     + \bigl(\E[U_i\mid D_i=1]-\E[U_i\mid D_i=0]\bigr)\Bigr\}\E[D_i](1-\E[D_i]).
+\end{align*}
+Dividing by $\Var(D_i)=\E[D_i](1-\E[D_i])$:
+\[
+  \bar\beta
+  = \E[\beta_i\mid D_i=1]
+    + \bigl(\E[U_i\mid D_i=1]-\E[U_i\mid D_i=0]\bigr).
+\]
+Since $U_i = Y_{0i}-\E[Y_{0i}]$, the difference $\E[U_i\mid D_i=1]-\E[U_i\mid D_i=0]$ equals $\E[Y_{0i}\mid D_i=1]-\E[Y_{0i}\mid D_i=0]$, which is precisely the selection bias.
+\end{proof}
+
+% ============================================================
+\section{Inconsistency of OLS}
+% ============================================================
+
+% ----------------------------------------------------------
+\begin{propositio}[Omitted variable bias\label{prop:ovb}]
+Suppose the true DGP is $Y_i = \beta_0 + X_i'\beta_1 + W_i\gamma + U_i$ with $\E[U_i\mid X_i,W_i]=0$ (scalars $X_i$, $W_i$).
+If $W_i$ is omitted and we estimate the short regression $Y_i = \beta_0 + X_i'\beta_1 + \tilde U_i$, then
+\[
+  \plim\hat\beta_1^S = \beta_1 + \gamma\,\frac{\Cov(W_i,X_i)}{\Var(X_i)}.
+\]
+\end{propositio}
+
+\begin{proof}
+The OLS estimator in the short regression satisfies
+\[
+  \plim\hat\beta_1^S = \frac{\Cov(Y_i,X_i)}{\Var(X_i)}.
+\]
+Substituting $Y_i = \beta_0 + X_i\beta_1 + W_i\gamma + U_i$ and using $\Cov(\beta_0,X_i)=0$:
+\begin{align*}
+  \Cov(Y_i,X_i)
+  &= \Cov(X_i\beta_1 + W_i\gamma + U_i,\; X_i)\\
+  &= \beta_1\Var(X_i) + \gamma\Cov(W_i,X_i) + \Cov(U_i,X_i).
+\end{align*}
+Under $\E[U_i\mid X_i,W_i]=0$ we have $\Cov(U_i,X_i)=0$.  Dividing by $\Var(X_i)$ gives the result.
+\end{proof}
+
+\begin{propositio}
+  Omitted variable bias is zero if and only if (i) $\Cov(W_i,X_i)=0$ (omitted variable is uncorrelated with the regressor) or (ii) $\gamma=0$ (omitted variable has no effect on the outcome).  Both conditions must fail for bias to arise.
+\end{propositio}
+
+% ----------------------------------------------------------
+\begin{propositio}[Reverse causality bias\label{prop:reversecausality}]
+Suppose
+\[
+  Y_i = \beta_0 + \beta_1 X_i + U_i, \qquad
+  X_i = \gamma_0 + \gamma_1 Y_i + V_i,
+\]
+with $\Cov(V_i,U_i)=0$.  Then OLS estimation of the first equation gives
+\[
+  \plim\hat\beta_1^S
+  = \beta_1 + \frac{\gamma_1}{1-\gamma_1\beta_1}\cdot\frac{\Var(U_i)}{\Var(X_i)}.
+\]
+\end{propositio}
+
+\begin{proof}
+From the two equations, solve for the reduced form of $X_i$ by substituting the second equation into the first:
+\[
+  Y_i = \beta_0 + \beta_1(\gamma_0+\gamma_1 Y_i+V_i)+U_i,
+  \quad\Rightarrow\quad
+  Y_i = \frac{\beta_0+\beta_1\gamma_0}{1-\beta_1\gamma_1}
+        + \frac{\beta_1 V_i + U_i}{1-\beta_1\gamma_1}.
+\]
+Solving for $X_i$ from the second structural equation:
+\[
+  X_i = \gamma_0 + \gamma_1 Y_i + V_i
+       = \frac{\gamma_0+\gamma_1\beta_0}{1-\gamma_1\beta_1}
+         + \frac{V_i+\gamma_1 U_i}{1-\gamma_1\beta_1}.
+\]
+Therefore
+\begin{align*}
+  \Cov(X_i,U_i)
+  &= \Cov\!\left(\frac{V_i+\gamma_1 U_i}{1-\gamma_1\beta_1},\;U_i\right)
+   = \frac{\gamma_1\Var(U_i)}{1-\gamma_1\beta_1},
+\\[4pt]
+  \Var(X_i)
+  &= \frac{\Var(V_i)+\gamma_1^2\Var(U_i)}{(1-\gamma_1\beta_1)^2}.
+\end{align*}
+The OLS probability limit is
+\[
+  \begin{aligned}
+    \plim\hat\beta_1^S
+    &= \beta_1 + \frac{\Cov(X_i,U_i)}{\Var(X_i)}\\
+    &= \beta_1 + \frac{\gamma_1\Var(U_i)}{1-\gamma_1\beta_1}
+       \cdot \frac{(1-\gamma_1\beta_1)^2}{\Var(V_i)+\gamma_1^2\Var(U_i)}\\
+    &= \beta_1 + \frac{\gamma_1(1-\gamma_1\beta_1)\Var(U_i)}{\Var(V_i)+\gamma_1^2\Var(U_i)}.
+  \end{aligned}
+\]
+When $\Cov(V_i,U_i)=0$ and $\Var(V_i)\to 0$ (i.e.\ the reduced-form case) this simplifies to
+\[
+  \beta_1 + \frac{\gamma_1\Var(U_i)}{(1-\gamma_1\beta_1)\Var(X_i)},
+\]
+as stated.
+\end{proof}
+
+% ----------------------------------------------------------
+\begin{propositio}[Classical measurement error causes attenuation bias\label{prop:cme}]
+Suppose the true model is $Y_i^* = \beta_0 + \beta_1 X_i^* + U_i$ with $\Cov(U_i,X_i^*)=0$.
+We observe $X_i = X_i^* + \mu_i$ where $\mu_i$ is \emph{classical measurement error}: $\Cov(\mu_i,X_i^*)=0$ and $\Cov(\mu_i,U_i)=0$.
+Then
+\[
+  \plim\hat\beta_1
+  = \beta_1 \cdot \frac{\Var(X_i^*)}{\Var(X_i^*)+\Var(\mu_i)}
+  \in (0,\beta_1)\text{ if }\beta_1>0.
+\]
+\end{propositio}
+
+\begin{proof}
+We observe $(Y_i^*, X_i)$ and estimate $Y_i^*=\beta_0+\beta_1 X_i + \epsilon_i$.  The OLS probability limit is
+\[
+  \plim\hat\beta_1 = \frac{\Cov(X_i,Y_i^*)}{\Var(X_i)}.
+\]
+
+\textbf{Numerator.}
+\begin{align*}
+  \Cov(X_i,Y_i^*)
+  &= \Cov(X_i^*+\mu_i,\; \beta_0+\beta_1 X_i^*+U_i)\\
+  &= \beta_1\Cov(X_i^*+\mu_i,X_i^*)\\
+  &= \beta_1\bigl[\Var(X_i^*)+\Cov(\mu_i,X_i^*)\bigr]
+   = \beta_1\Var(X_i^*).
+\end{align*}
+
+\textbf{Denominator.}
+\[
+  \Var(X_i) = \Var(X_i^*+\mu_i) = \Var(X_i^*)+\Var(\mu_i).
+\]
+
+Combining:
+\[
+  \plim\hat\beta_1
+  = \frac{\beta_1\Var(X_i^*)}{\Var(X_i^*)+\Var(\mu_i)}
+  = \beta_1\cdot\underbrace{\frac{\Var(X_i^*)}{\Var(X_i^*)+\Var(\mu_i)}}_{\in(0,1)}.
+\]
+The factor in $(0,1)$ confirms the estimate is biased toward zero (``attenuated'').
+\end{proof}
+
+\begin{propositio}
+  The same reasoning shows that measurement error in the \emph{dependent} variable $Y_i=Y_i^*+\mu_i$ (with $\mu_i$ i.i.d.\ noise) does \emph{not} cause inconsistency—it only inflates the error variance.
+\end{propositio}
+
+% ============================================================
+\section{Randomized Controlled Trials}
+% ============================================================
+
+\noindent\textbf{Setup.}
+Let $Z_i\in\{0,1\}$ denote random assignment to treatment.  Under full compliance $D_i=Z_i$.
+The identifying assumptions are:
+\begin{itemize}[leftmargin=2em]
+  \item[A1] (Constant effect) $\beta_i=\beta_D$ for all $i$.
+  \item[A2] (Independence) $(Y_{1i},Y_{0i},W_i)\ind D_i$.
+  \item[A3] (Relevance) $\Cov(Z_i,D_i)\ne 0$.
+  \item[A4] (Exclusion restriction) $\beta_Z=0$.
+\end{itemize}
+
+% ----------------------------------------------------------
+\begin{propositio}[Randomization balances pre-treatment covariates\label{prop:rct_balance}]
+If $D_i\ind W_i$ (binary $D_i$, discrete $W_i$), then $\E[W_i\mid D_i=d]=\E[W_i]$ for $d=0,1$.
+\end{propositio}
+
+\begin{proof}
+By Bayes' rule and the definition of independence:
+\begin{align*}
+  \E[W_i\mid D_i=d]
+  &= \sum_w P(W_i=w\mid D_i=d)\,w\\
+  &= \sum_w \frac{P(D_i=d\mid W_i=w)\,P(W_i=w)}{P(D_i=d)}\,w.
+\end{align*}
+Since $D_i\ind W_i$, we have $P(D_i=d\mid W_i=w)=P(D_i=d)$ for all $w$, so
+\[
+  \E[W_i\mid D_i=d]
+  = \sum_w \frac{P(D_i=d)\,P(W_i=w)}{P(D_i=d)}\,w
+  = \sum_w P(W_i=w)\,w
+  = \E[W_i]. \qedhere
+\]
+\end{proof}
+
+% ----------------------------------------------------------
+\begin{propositio}[Under full compliance, OLS identifies ATE\label{prop:rct_ate}]
+Under assumption A2 (and full compliance $D_i=Z_i$),
+\[
+  \plim(\bar Y_T - \bar Y_C) = \ATE.
+\]
+\end{propositio}
+
+\begin{proof}
+Under $(Y_{1i},Y_{0i})\ind D_i$:
+\[
+  \begin{aligned}
+    \E[Y_i\mid D_i=1] &= \E[Y_{1i}\mid D_i=1] = \E[Y_{1i}],\\
+    \E[Y_i\mid D_i=0] &= \E[Y_{0i}\mid D_i=0] = \E[Y_{0i}].
+  \end{aligned}
+\]
+Therefore
+\[
+  \plim(\bar Y_T-\bar Y_C)
+  = \E[Y_i\mid D_i=1]-\E[Y_i\mid D_i=0]
+  = \E[Y_{1i}]-\E[Y_{0i}]
+  = \ATE.
+\]
+Selection bias is exactly zero: independence implies $\E[Y_{0i}\mid D_i=1]=\E[Y_{0i}\mid D_i=0]$.
+\end{proof}
+
+% ----------------------------------------------------------
+\begin{propositio}[Wald estimand as WATE under noncompliance\label{prop:wate}]
+Suppose the DGP is
+\[
+  Y_i = \beta_0 + \beta_i D_i + \beta_Z Z_i + U_i, \qquad
+  D_i = \pi_0 + \pi_i Z_i + V_i,
+\]
+with $(Y_{0i},Y_{1i},U_i,\pi_i)\ind Z_i$ (A2) and $\beta_Z=0$ (A4).  Then
+\[
+  \frac{\E[Y_i\mid Z_i=1]-\E[Y_i\mid Z_i=0]}{\E[D_i\mid Z_i=1]-\E[D_i\mid Z_i=0]}
+  = \frac{\E[\beta_i\pi_i]}{\E[\pi_i]}
+  = \E\!\left[\beta_i\,\frac{\pi_i}{\E[\pi_i]}\right].
+\]
+\end{propositio}
+
+\begin{proof}
+\textbf{Denominator (first stage).}
+\begin{align*}
+  \E[D_i\mid Z_i=1]-\E[D_i\mid Z_i=0]
+  &= \E[\pi_0+\pi_i+V_i] - \E[\pi_0+V_i]
+  = \E[\pi_i].
+\end{align*}
+
+\textbf{Numerator (reduced form).}  Using the LIE and independence:
+\begin{align*}
+  \E[Y_i\mid Z_i=1]
+  &= \E[\beta_0+\beta_i D_i+U_i\mid Z_i=1]\\
+  &= \beta_0 + \E[\beta_i(\pi_0+\pi_i+V_i)] + \E[U_i]\\
+  &= \beta_0 + \pi_0\E[\beta_i] + \E[\beta_i\pi_i] + \E[\beta_i V_i] + \E[U_i].
+\end{align*}
+Similarly $\E[Y_i\mid Z_i=0] = \beta_0 + \pi_0\E[\beta_i] + \E[\beta_i V_i] + \E[U_i]$.
+
+Their difference is $\E[\beta_i\pi_i]$.  Dividing by the first-stage $\E[\pi_i]$ gives
+\[
+  \text{Wald} = \frac{\E[\beta_i\pi_i]}{\E[\pi_i]}. \qedhere
+\]
+\end{proof}
+
+% ----------------------------------------------------------
+\begin{propositio}[Under monotonicity, Wald = LATE\label{prop:late}]
+Strengthen A2 with the monotonicity assumption:
+\[
+  \text{A5 (Monotonicity):}\quad \pi_i \ge 0 \text{ for all } i,
+\]
+i.e.\ no individual is a defier.  Then
+\[
+  \frac{\E[Y_i\mid Z_i=1]-\E[Y_i\mid Z_i=0]}{\E[D_i\mid Z_i=1]-\E[D_i\mid Z_i=0]}
+  = \E[\beta_i\mid \pi_i=1] = \LATE.
+\]
+\end{propositio}
+
+\begin{proof}
+Under monotonicity, $\pi_i\in\{0,1\}$: each individual is either a \emph{complier} ($\pi_i=1$, switches from $D=0$ to $D=1$ when $Z$ goes from 0 to 1) or a \emph{non-complier} ($\pi_i=0$, never-taker or always-taker whose treatment status is unaffected by $Z$).
+
+\textbf{Denominator.}
+\[
+  \E[\pi_i] = 1\cdot P(\pi_i=1) + 0\cdot P(\pi_i=0) = P(\pi_i=1).
+\]
+
+\textbf{Numerator.}  From Proposition~\ref{prop:wate}, the reduced form numerator is $\E[\beta_i\pi_i]$.
+Since $\pi_i\in\{0,1\}$:
+\[
+  \E[\beta_i\pi_i]
+  = \E[\beta_i\mid\pi_i=1]\,P(\pi_i=1)
+  + \E[\beta_i\mid\pi_i=0]\cdot 0
+  = \E[\beta_i\mid\pi_i=1]\,P(\pi_i=1).
+\]
+
+\textbf{Wald ratio.}
+\[
+  \frac{\E[\beta_i\pi_i]}{\E[\pi_i]}
+  = \frac{\E[\beta_i\mid\pi_i=1]\,P(\pi_i=1)}{P(\pi_i=1)}
+  = \E[\beta_i\mid\pi_i=1]
+  = \LATE. \qedhere
+\]
+\end{proof}
+
+\begin{propositio}
+  LATE is the average treatment effect for \emph{compliers}—those whose treatment status is shifted by the instrument.  Always-takers ($D_i=1$ regardless of $Z_i$) and never-takers ($D_i=0$ regardless of $Z_i$) contribute zero to both the numerator and denominator of the Wald estimand.
+\end{propositio}
+
+% ============================================================
+\section{Selection on Observables}
+% ============================================================
+
+\noindent\textbf{Setup.}
+Let $X_i$ (or $W_i$) denote observed pre-treatment covariates. The \textbf{conditional independence assumption (CIA)} is
+\[
+  (Y_{1i},Y_{0i})\ind D_i \mid X_i.
+\]
+Define the \emph{conditional average treatment effect} (CATE) $\hat\beta_x \equiv \E[Y_{1i}-Y_{0i}\mid X_i=x]$.
+
+% ----------------------------------------------------------
+\begin{propositio}[CIA identifies ATE by matching\label{prop:cia_ate}]
+Under CIA and common support $0<P(D_i=1\mid X_i=x)<1$,
+\[
+  \ATE
+  = \int \bigl(\E[Y_i\mid D_i=1,X_i=x]-\E[Y_i\mid D_i=0,X_i=x]\bigr)\,dF(x).
+\]
+\end{propositio}
+
+\begin{proof}
+By the LIE:
+\[
+  \ATE = \E[Y_{1i}-Y_{0i}] = \E_X\bigl[\E[Y_{1i}-Y_{0i}\mid X_i]\bigr].
+\]
+Under CIA, for each $x$:
+\begin{align*}
+  \E[Y_{1i}\mid X_i=x]
+  &= \E[Y_{1i}\mid D_i=1,X_i=x]
+   = \E[Y_i\mid D_i=1,X_i=x],\\
+  \E[Y_{0i}\mid X_i=x]
+  &= \E[Y_{0i}\mid D_i=0,X_i=x]
+   = \E[Y_i\mid D_i=0,X_i=x].
+\end{align*}
+The first equalities follow from CIA (independence conditional on $X_i$); the second from the fact that $\E[Y_i\mid D_i=d,X_i=x]=\E[Y_{di}\mid D_i=d,X_i=x]=\E[Y_{di}\mid X_i=x]$.
+
+Substituting:
+\[
+  \ATE = \int \bigl(\E[Y_i\mid D_i=1,X_i=x]-\E[Y_i\mid D_i=0,X_i=x]\bigr)\,dF(x). \qedhere
+\]
+\end{proof}
+
+% ----------------------------------------------------------
+\begin{propositio}[CIA identifies ATT by matching\label{prop:cia_att}]
+Under the same conditions as Proposition~\ref{prop:cia_ate},
+\[
+  \ATT = \int \bigl(\E[Y_i\mid D_i=1,X_i=x]-\E[Y_i\mid D_i=0,X_i=x]\bigr)\,dF(x\mid D_i=1).
+\]
+\end{propositio}
+
+\begin{proof}
+By LIE conditioning on $D_i=1$:
+\[
+  \ATT = \E[Y_{1i}-Y_{0i}\mid D_i=1] = \E_X\bigl[\E[Y_{1i}-Y_{0i}\mid D_i=1,X_i]\mid D_i=1\bigr].
+\]
+Under CIA, $E[Y_{1i}\mid D_i=1,X_i=x]=\E[Y_{1i}\mid X_i=x]=\E[Y_i\mid D_i=1,X_i=x]$ and
+$\E[Y_{0i}\mid D_i=1,X_i=x]\overset{\text{CIA}}{=}\E[Y_{0i}\mid X_i=x]=\E[Y_{0i}\mid D_i=0,X_i=x]=\E[Y_i\mid D_i=0,X_i=x]$.
+
+Therefore
+\[
+  \ATT = \int \bigl(\E[Y_i\mid D_i=1,X_i=x]-\E[Y_i\mid D_i=0,X_i=x]\bigr)\,dF(x\mid D_i=1). \qedhere
+\]
+\end{proof}
+
+% ----------------------------------------------------------
+\begin{propositio}[Saturated OLS as variance-weighted CATE average\label{prop:regression_weight}]
+Let $\hat\beta_D$ be the OLS coefficient on $D_i$ in a fully saturated-in-$X_i$ regression. Then
+\[
+  \plim\hat\beta_D
+  = \frac{\sum_x \hat\beta_x\, P(D_i=1\mid X_i=x)\,[1-P(D_i=1\mid X_i=x)]\,P(X_i=x)}
+         {\sum_x P(D_i=1\mid X_i=x)\,[1-P(D_i=1\mid X_i=x)]\,P(X_i=x)}.
+\]
+\end{propositio}
+
+\begin{proof}
+Let $p(x)\equiv P(D_i=1\mid X_i=x)$.  Define the within-cell demeaned treatment $\tilde D_i = D_i - E[D_i\mid X_i]$.  By the Frisch--Waugh--Lovell theorem, the OLS slope on $D_i$ after partialling out the cell dummies equals $\Cov(\tilde D_i,Y_i)/\Var(\tilde D_i)$.
+
+\textbf{Denominator.}
+\[
+  \Var(\tilde D_i)
+  = \E[\tilde D_i^2]
+  = \E\!\left[(D_i-p(X_i))^2\right]
+  = \sum_x p(x)(1-p(x))P(X_i=x).
+\]
+(Since $D_i\in\{0,1\}$, $(D_i-p(x))^2$ has expectation $p(x)(1-p(x))$ conditional on $X_i=x$.)
+
+\textbf{Numerator.}  The DGP is $Y_i = \beta_i D_i + \sum_x \mu_x \mathbf{1}[X_i=x] + U_i$ (absorbing the cell means).
+\begin{align*}
+  \Cov(\tilde D_i,Y_i)
+  &= \E[\tilde D_i Y_i]
+   = \E\!\left[(D_i-p(X_i))Y_i\right].
+\end{align*}
+Using LIE:
+\begin{align*}
+  \E\!\left[(D_i-p(X_i))Y_i\right]
+  &= \sum_x P(X_i=x)\,\E[(D_i-p(x))Y_i\mid X_i=x]\\
+  &= \sum_x P(X_i=x)\Bigl[p(x)\E[Y_i\mid D_i=1,X_i=x] - p(x)\E[Y_i\mid X_i=x]\\
+  &\qquad\quad - 0\cdot\E[Y_i\mid D_i=0,X_i=x]\Bigr]\\
+  &= \sum_x P(X_i=x)\,p(x)(1-p(x))\,\hat\beta_x.
+\end{align*}
+Dividing:
+\[
+  \plim\hat\beta_D
+  = \frac{\sum_x \hat\beta_x\,p(x)(1-p(x))P(X_i=x)}
+         {\sum_x p(x)(1-p(x))P(X_i=x)}.
+\qedhere
+\]
+\end{proof}
+
+\begin{propositio}
+  The matching ATT estimand weights cells by $p(x)P(X_i=x)$ (proportional to $P(D_i=1,X_i=x)$), whereas OLS weights by $p(x)(1-p(x))P(X_i=x)$.  The two coincide when treatment probability $p(x)$ is constant across cells.
+\end{propositio}
+
+% ----------------------------------------------------------
+\begin{propositio}[Rosenbaum--Rubin: CIA on the propensity score\label{prop:rosenbaum_rubin}]
+Let $p(W_i)\equiv P(D_i=1\mid W_i)$ be the propensity score.
+If $(Y_{1i},Y_{0i})\ind D_i\mid W_i$, then $(Y_{1i},Y_{0i})\ind D_i\mid p(W_i)$.
+Equivalently, $P(D_i=1\mid U_i, p(W_i))=p(W_i)$.
+\end{propositio}
+
+\begin{proof}
+It suffices to show $P(D_i=1\mid U_i, p(W_i))=p(W_i)$ where $U_i$ represents unobserved heterogeneity.
+
+\begin{align*}
+  P(D_i=1\mid U_i, p(W_i))
+  &= \E[D_i\mid U_i, p(W_i)] \\
+  &= \E\!\bigl[\E[D_i\mid U_i, p(W_i), W_i]\bigm| U_i, p(W_i)\bigr]
+     \quad\text{(tower property)}\\
+  &= \E\!\bigl[\E[D_i\mid U_i, W_i]\bigm| U_i, p(W_i)\bigr]
+     \quad\text{($W_i$ refines $p(W_i)$)}\\
+  &= \E\!\bigl[\E[D_i\mid W_i]\bigm| U_i, p(W_i)\bigr]
+     \quad\text{(CIA: $D_i\ind U_i\mid W_i$)}\\
+  &= \E\!\bigl[p(W_i)\bigm| U_i, p(W_i)\bigr]\\
+  &= p(W_i).
+\end{align*}
+Since $P(D_i=1\mid U_i, p(W_i))=p(W_i)$ is deterministic given $p(W_i)$, treatment is mean-independent of $U_i$ conditional on $p(W_i)$, establishing the CIA on the scalar $p(W_i)$.
+\end{proof}
+
+% ----------------------------------------------------------
+\begin{propositio}[IPW identifies ATE\label{prop:ipw_ate}]
+Let $p=P(D_i=1)$ be the marginal treatment probability and $p(W_i)$ the propensity score.
+Define weights $w_{1i}=p/p(W_i)$ and $w_{0i}=(1-p)/(1-p(W_i))$.
+Under CIA and $\plim\hat p(W_i)=p(W_i)$:
+\[
+  \E[Y_i w_{1i}\mid D_i=1] - \E[Y_i w_{0i}\mid D_i=0] = \E[\beta_i].
+\]
+\end{propositio}
+
+\begin{proof}
+We evaluate each term separately.
+
+\textbf{First term.}
+\begin{align*}
+  \E[Y_i w_{1i}\mid D_i=1]
+  &= \E\!\left[Y_i\cdot\frac{p}{p(W_i)}\biggm| D_i=1\right]
+   = p\,\E\!\left[\frac{Y_i}{p(W_i)}\biggm| D_i=1\right].
+\end{align*}
+Using LIE:
+\begin{align*}
+  \E\!\left[\frac{Y_i}{p(W_i)}\biggm| D_i=1\right]
+  &= \E_W\!\left[\frac{\E[Y_i\mid D_i=1,W_i]}{p(W_i)}\biggm| D_i=1\right]\\
+  &= \E_W\!\left[\frac{p(W_i)\,\E[Y_i\mid D_i=1,W_i]}{p(W_i)\cdot P(D_i=1)}\right]
+   = \frac{1}{p}\E_W\!\left[\E[Y_i\mid D_i=1,W_i]\right].
+\end{align*}
+So $\E[Y_i w_{1i}\mid D_i=1] = \E\!\left[\E[Y_i\mid D_i=1,W_i]\right] = \E[Y_{1i}]$ (the last step uses CIA).
+
+\textbf{Second term.}  By symmetry, $\E[Y_i w_{0i}\mid D_i=0]=\E[Y_{0i}]$.
+
+\textbf{Conclusion.}
+\[
+  \E[Y_i w_{1i}\mid D_i=1]-\E[Y_i w_{0i}\mid D_i=0]
+  = \E[Y_{1i}]-\E[Y_{0i}]
+  = \E[\beta_i] = \ATE. \qedhere
+\]
+\end{proof}
+
+% ----------------------------------------------------------
+\begin{propositio}[IPW identifies ATT\label{prop:ipw_att}]
+With weights $w_{1i}=1$ and $w_{0i}=\frac{p(W_i)}{1-p(W_i)}\cdot\frac{1-p}{p}$:
+\[
+  \E[Y_i w_{1i}\mid D_i=1] - \E[Y_i w_{0i}\mid D_i=0] = \E[\beta_i\mid D_i=1] = \ATT.
+\]
+\end{propositio}
+
+\begin{proof}
+The first term is just $\E[Y_i\mid D_i=1]=\E[Y_{1i}\mid D_i=1]$.
+
+For the second term:
+\begin{align*}
+  \E[Y_i w_{0i}\mid D_i=0]
+  &= \E\!\left[Y_i\cdot\frac{p(W_i)}{1-p(W_i)}\cdot\frac{1-p}{p}\biggm| D_i=0\right].
+\end{align*}
+Using LIE and Bayes' theorem, $P(D_i=0\mid W_i)=1-p(W_i)$, so:
+\begin{align*}
+  &(1-p)\,\E\!\left[\frac{p(W_i)}{1-p(W_i)}\cdot\frac{1}{p}\cdot\E[Y_i\mid D_i=0,W_i]\biggm| D_i=0\right]\\
+  &= \frac{1-p}{p}\int \frac{p(w)}{1-p(w)}\E[Y_i\mid D_i=0,W_i=w]\,\frac{(1-p(w))f_W(w)}{1-p}\,dw\\
+  &= \frac{1}{p}\int p(w)\,\E[Y_i\mid D_i=0,W_i=w]\,f_W(w)\,dw.
+\end{align*}
+Under CIA, $\E[Y_i\mid D_i=0,W_i=w]=\E[Y_{0i}\mid W_i=w]$.  Therefore
+\begin{align*}
+  \E[Y_i w_{0i}\mid D_i=0]
+  &= \frac{1}{p}\int p(w)\,\E[Y_{0i}\mid W_i=w]\,f_W(w)\,dw\\
+  &= \frac{\E[D_i\,\E[Y_{0i}\mid W_i]]}{p}
+   = \frac{\E[D_i\,Y_{0i}]}{p}
+   = \E[Y_{0i}\mid D_i=1].
+\end{align*}
+Hence
+\[
+  \E[Y_i w_{1i}\mid D_i=1]-\E[Y_i w_{0i}\mid D_i=0]
+  = \E[Y_{1i}\mid D_i=1]-\E[Y_{0i}\mid D_i=1]
+  = \ATT. \qedhere
+\]
+\end{proof}
+
+% ----------------------------------------------------------
+\begin{propositio}[Oster (2019) bias-adjusted estimator\label{prop:oster}]
+Consider $Y_i = \beta X_i + W_{1i} + W_{2i}$ where $W_{1i}=\gamma'w_i^o$ captures observed controls and $W_{2i}$ is an unobserved index.
+Let $\hat\beta^S$ (R-squared $R^S$) and $\hat\beta^L$ (R-squared $R^L$) be the short and long OLS estimates, and $R_{\max}$ the theoretical maximum R-squared.
+Under equal selection ($\delta=1$) and the equal relative contributions assumption,
+\[
+  \hat\beta^* \equiv \hat\beta^L - (\hat\beta^S-\hat\beta^L)\,\frac{R_{\max}-R^L}{R^L-R^S} \xrightarrow{p} \beta.
+\]
+\end{propositio}
+
+\begin{proof}
+The bias from the long regression is $\hat\beta^L - \beta = b_L$, where $b_L$ is the omitted variable bias from $W_{2i}$.  The bias from the short regression is $\hat\beta^S - \beta = b_S = b_L + b_{obs}$, where $b_{obs}=\hat\beta^S-\hat\beta^L$ is the bias removed by adding the observables.
+
+The equal relative contributions assumption ensures that observables and unobservables contribute equally to treatment selection (after scaling by their relative variance contributions to $Y$).  Under proportional selection with $\delta=1$:
+\[
+  \frac{b_L}{b_{obs}} = \frac{R_{\max}-R^L}{R^L-R^S}.
+\]
+This ratio compares the ``unexplained variation still attributable to unobservables'' ($R_{\max}-R^L$) to the ``variation explained by observables'' ($R^L-R^S$).  Rearranging:
+\[
+  b_L = b_{obs}\cdot\frac{R_{\max}-R^L}{R^L-R^S}
+    = (\hat\beta^S-\hat\beta^L)\cdot\frac{R_{\max}-R^L}{R^L-R^S}.
+\]
+Subtracting the remaining bias from $\hat\beta^L$:
+\[
+  \hat\beta^* = \hat\beta^L - b_L
+  = \hat\beta^L - (\hat\beta^S-\hat\beta^L)\,\frac{R_{\max}-R^L}{R^L-R^S}
+  \xrightarrow{p} \beta - b_L + b_L = \beta. \qedhere
+\]
+\end{proof}
+
+\begin{propositio}
+  For $\delta\ne 1$, the estimator generalises to $\hat\beta^L - \delta(\hat\beta^S-\hat\beta^L)(R_{\max}-R^L)/(R^L-R^S)$. Researchers typically report estimates for a range of $\delta$ values and an estimate of the ``breakdown $\delta$'' at which the estimate changes sign.
+\end{propositio}
+
+% ============================================================
+\section{Difference-in-Differences}
+% ============================================================
+
+\noindent\textbf{Setup.}
+Consider the panel model
+\[
+  Y_{it} = \beta_{it}D_{it} + \mu_i + \delta_t + U_{it},
+\]
+where $\mu_i$ are time-invariant unit effects, $\delta_t$ are common time effects, and $E[U_{it}\mid D_{it}]=E[U_{it}]$.  Potential outcomes are $Y_{0it}=\mu_i+\delta_t+U_{it}$ and $Y_{1it}=\beta_{it}+\mu_i+\delta_t+U_{it}$.
+
+% ----------------------------------------------------------
+\begin{propositio}[Two-period DiD identifies ATT\label{prop:did_att}]
+With two periods ($t=0,1$), $D_{i0}=0$ for all $i$, and the \textbf{common trends assumption}
+\[
+  \E[\Delta U_{i1}\mid D_{i1}=1] = \E[\Delta U_{i1}\mid D_{i1}=0],
+\]
+the difference-in-differences estimator identifies the ATT:
+\[
+  \E[\Delta Y_{i1}\mid D_{i1}=1]-\E[\Delta Y_{i1}\mid D_{i1}=0]
+  = \E[\beta_{i}\mid D_{i1}=1].
+\]
+\end{propositio}
+
+\begin{proof}
+Compute the two within-group changes.  Since $D_{i0}=0$ for all units, the model in each period gives:
+\begin{align*}
+  \E[Y_{i1}\mid D_{i1}=1] &= \E[\beta_i\mid D_{i1}=1]+\E[\mu_i\mid D_{i1}=1]+\gamma+\E[U_{i1}],\\
+  \E[Y_{i0}\mid D_{i1}=1] &= \E[\mu_i\mid D_{i1}=1]+\E[U_{i0}],\\
+  \E[Y_{i1}\mid D_{i1}=0] &= \E[\mu_i\mid D_{i1}=0]+\gamma+\E[U_{i1}],\\
+  \E[Y_{i0}\mid D_{i1}=0] &= \E[\mu_i\mid D_{i1}=0]+\E[U_{i0}].
+\end{align*}
+Taking first differences within each group:
+\[
+  \E[\Delta Y_{i1}\mid D_{i1}=1]
+  = \E[\beta_i\mid D_{i1}=1]+\gamma+\E[\Delta U_{i1}\mid D_{i1}=1],
+\]
+\[
+  \E[\Delta Y_{i1}\mid D_{i1}=0]
+  = \gamma+\E[\Delta U_{i1}\mid D_{i1}=0].
+\]
+Taking the difference of differences:
+\begin{align*}
+  \E[\Delta Y_{i1}\mid D_{i1}=1]-\E[\Delta Y_{i1}\mid D_{i1}=0]
+  &= \E[\beta_i\mid D_{i1}=1]\\
+  &\quad + \E[\Delta U_{i1}\mid D_{i1}=1]-\E[\Delta U_{i1}\mid D_{i1}=0].
+\end{align*}
+Under common trends the last two terms cancel.
+The individual fixed effects $\mu_i$ cancel within groups; the common trend $\gamma$ cancels across groups.
+\end{proof}
+
+% ----------------------------------------------------------
+\begin{propositio}[TWFE is consistent under strict exogeneity\label{prop:twfe}]
+Consider the static TWFE model $Y_{it}=\mu_i+\gamma_t+\beta_D D_{it}+U_{it}$ with $\beta_D$ constant.
+Under strict exogeneity $\E[U_{it}\mid D_{i1},\ldots,D_{iT},\mu_i,t]=\mu_i+\gamma_t$, the OLS estimator satisfies
+\[
+  \plim\hat\beta_D
+  = \frac{\E[\Cov(D_{it}-\bar D_i,\, Y_{it}-\bar Y_i\mid\lambda_t)]}
+         {\E[\Var(D_{it}-\bar D_i\mid\lambda_t)]}
+  = \beta_D.
+\]
+\end{propositio}
+
+\begin{proof}
+By the Frisch--Waugh--Lovell theorem, the TWFE estimator of $\beta_D$ equals the OLS coefficient from regressing within-unit-and-time demeaned outcomes on within-unit-and-time demeaned treatment.
+That is, regress $Y_{it}-\bar Y_i-(\bar Y_{\cdot t}-\bar Y)$ on $D_{it}-\bar D_i-(\bar D_{\cdot t}-\bar D)$.
+The probability limit is
+\[
+  \plim\hat\beta_D
+  = \frac{\E[\Cov(D_{it}-\bar D_i,Y_{it}-\bar Y_i\mid\lambda_t)]}
+         {\E[\Var(D_{it}-\bar D_i\mid\lambda_t)]}.
+\]
+Substitute $Y_{it}-\bar Y_i = (\gamma_t-\bar\gamma)+\beta_D(D_{it}-\bar D_i)+(U_{it}-\bar U_i)$:
+\begin{align*}
+  &\E[\Cov(D_{it}-\bar D_i,Y_{it}-\bar Y_i\mid\lambda_t)]\\
+  &= \beta_D\,\E[\Var(D_{it}-\bar D_i\mid\lambda_t)]
+     + \E[\Cov(D_{it}-\bar D_i,\,U_{it}-\bar U_i\mid\lambda_t)].
+\end{align*}
+It remains to show the second term is zero.  Focus on period $t=1$:
+\begin{align*}
+  &\Cov(D_{i1}-\bar D_i,\;U_{i1}-\bar U_i\mid\lambda_1=1)\\
+  &= \E[(D_{i1}-\bar D_i)(U_{i1}-\bar U_i)\mid\lambda_1=1]
+     - \underbrace{\E[D_{i1}-\bar D_i\mid\lambda_1=1]}_{=\,0}\cdot\E[U_{i1}-\bar U_i\mid\lambda_1=1]\\
+  &= \E\!\left[(D_{i1}-\bar D_i)\,\E[U_{i1}-\bar U_i\mid D_{i1},\ldots,D_{iT},\mu_i,t]\,\Bigm|\,\lambda_1=1\right]\\
+  &= \E\!\left[(D_{i1}-\bar D_i)\bigl((\mu_i+\gamma_1)-(\mu_i+\bar\gamma)\bigr)\Bigm|\lambda_1=1\right]\\
+  &= \Cov(D_{i1}-\bar D_i,\;\gamma_1-\bar\gamma\mid\lambda_1=1) = 0,
+\end{align*}
+since $\gamma_1-\bar\gamma$ is a constant conditional on $\lambda_1=1$.  The argument is identical for all $t$.  Therefore $\plim\hat\beta_D=\beta_D$.
+\end{proof}
+
+% ----------------------------------------------------------
+\begin{propositio}[TWFE and DiD in two periods\label{prop:twfe_did}]
+When $t\in\{0,1\}$ and $D_{i0}=0$ for all $i$,
+\[
+  \frac{\E[\Cov(D_{it}-\bar D_i,Y_{it}-\bar Y_i\mid\lambda_t)]}
+       {\E[\Var(D_{it}-\bar D_i\mid\lambda_t)]}
+  = \E[\Delta Y_{it}\mid D_{it}=1]-\E[\Delta Y_{it}\mid D_{it}=0].
+\]
+\end{propositio}
+
+\begin{proof}
+With two periods and $D_{i0}=0$, the within-unit mean is $\bar D_i = D_{i1}/2$. So
+\[
+  D_{i1}-\bar D_i = D_{i1}/2, \qquad D_{i0}-\bar D_i = -D_{i1}/2.
+\]
+Averaging over periods:
+\begin{align*}
+  \E[\Var(D_{it}-\bar D_i\mid\lambda_t)]
+  &= \frac{1}{2}\Var(D_{i1}/2)+\frac{1}{2}\Var(-D_{i1}/2)
+   = \frac{1}{4}\Var(D_{i1}).
+\end{align*}
+For the numerator, using LIE:
+\begin{align*}
+  \E[\Cov(D_{it}-\bar D_i,Y_{it}-\bar Y_i\mid\lambda_t)]
+  &= \frac{1}{2}\Cov(D_{i1}/2,\,Y_{i1}-\bar Y_i)
+   + \frac{1}{2}\Cov(-D_{i1}/2,\,Y_{i0}-\bar Y_i)\\
+  &= \frac{1}{4}\Cov(D_{i1},Y_{i1}-Y_{i0})
+   = \frac{1}{4}\Cov(D_{i1},\Delta Y_{i1}).
+\end{align*}
+Dividing:
+\[
+  \frac{\frac{1}{4}\Cov(D_{i1},\Delta Y_{i1})}{\frac{1}{4}\Var(D_{i1})}
+  = \frac{\Cov(D_{i1},\Delta Y_{i1})}{\Var(D_{i1})}
+  = \E[\Delta Y_{i1}\mid D_{i1}=1]-\E[\Delta Y_{i1}\mid D_{i1}=0],
+\]
+where the last step uses the standard result for binary $D_{i1}$.
+\end{proof}
+
+% ============================================================
+\section{Regression Discontinuity Design}
+% ============================================================
+
+\noindent\textbf{Setup.}
+Let $X_i$ be the running variable, $c$ the cutoff, $Z_i=\mathbf{1}[X_i\ge c]$ the assignment rule, and $D_i$ the treatment received.
+Assumptions:
+\begin{itemize}[leftmargin=2em]
+  \item[A1] (Homogeneous effect) $\beta_i=\beta_D$.
+  \item[A2] (Continuity) $\E[U_i\mid X_i=x]$ is continuous in $x$ (in particular at $x=c$).
+  \item[A2'] (Imprecise control) $P(X_i=x\mid U_i=u)$ is continuous in $x$ for all $u$.
+  \item[A3] (First stage) $\lim_{x\downarrow c}P(D_i=1\mid X_i=x)-\lim_{x\uparrow c}P(D_i=1\mid X_i=x)>0$.
+  \item[A4] (Exclusion restriction) $\beta_Z=0$.
+\end{itemize}
+
+% ----------------------------------------------------------
+\begin{propositio}[Sharp RDD identifies $\beta_D$ under homogeneous effects\label{prop:srdd_homog}]
+In the sharp RDD ($D_i=Z_i$), under A1 and A2, with model $Y_i=\beta_0+\beta_D D_i+\delta X_i+U_i$:
+\[
+  \lim_{x\downarrow c}\E[Y_i\mid X_i=x] - \lim_{x\uparrow c}\E[Y_i\mid X_i=x] = \beta_D.
+\]
+\end{propositio}
+
+\begin{proof}
+Compute the right-hand limit (approaching from above the cutoff, so $D_i=1$, $Z_i=1$):
+\[
+  \lim_{x\downarrow c}\E[Y_i\mid X_i=x]
+  = \beta_0 + \beta_D\cdot 1 + \delta c + \E[U_i\mid X_i=c].
+\]
+Compute the left-hand limit (approaching from below, so $D_i=0$):
+\[
+  \lim_{x\uparrow c}\E[Y_i\mid X_i=x]
+  = \beta_0 + \beta_D\cdot 0 + \delta c + \lim_{x\uparrow c}\E[U_i\mid X_i=x].
+\]
+Taking the difference:
+\[
+  \lim_{x\downarrow c}\E[Y_i\mid X_i=x] - \lim_{x\uparrow c}\E[Y_i\mid X_i=x]
+  = \beta_D + \underbrace{\E[U_i\mid X_i=c] - \lim_{x\uparrow c}\E[U_i\mid X_i=x]}_{=\,0 \text{ by A2}}.
+\]
+Under A2, $\E[U_i\mid X_i=x]$ is continuous at $c$, so the underbrace term equals zero.
+\end{proof}
+
+% ----------------------------------------------------------
+\begin{propositio}[Sharp RDD: CATE at the cutoff (heterogeneous effects)\label{prop:srdd_heterog}]
+Dropping A1 but maintaining A2:
+\[
+  \lim_{x\downarrow c}\E[Y_i\mid X_i=x] - \lim_{x\uparrow c}\E[Y_i\mid X_i=x]
+  = \E[\beta_i\mid X_i=c].
+\]
+\end{propositio}
+
+\begin{proof}
+With heterogeneous effects, $Y_i = \beta_0 + \beta_i D_i + \delta X_i + U_i$ where $U_i = Y_{0i}-\E[Y_{0i}]$.
+\begin{align*}
+  \lim_{x\downarrow c}\E[Y_i\mid X_i=x]
+  &= \beta_0 + \E[\beta_i\mid X_i=c]\cdot 1 + \delta c + \E[U_i\mid X_i=c],\\
+  \lim_{x\uparrow c}\E[Y_i\mid X_i=x]
+  &= \beta_0 + \E[\beta_i\cdot 0\mid X_i=c] + \delta c + \lim_{x\uparrow c}\E[U_i\mid X_i=x].
+\end{align*}
+Taking the difference and using A2 (continuity of $\E[U_i\mid X_i=x]$ at $c$):
+\[
+  \lim_{x\downarrow c}\E[Y_i\mid X_i=x] - \lim_{x\uparrow c}\E[Y_i\mid X_i=x]
+  = \E[\beta_i\mid X_i=c]. \qedhere
+\]
+\end{proof}
+
+\begin{propositio}
+  This is a \emph{local} CATE—the average treatment effect specifically for the subpopulation of individuals with $X_i=c$.  Without further assumptions it does not identify treatment effects at other values of $X_i$.
+\end{propositio}
+
+% ----------------------------------------------------------
+\begin{propositio}[Imprecise control (A2') implies continuity (A2)\label{prop:imprecise_control}]
+If $P(X_i=x\mid U_i=u)$ is continuous in $x$ for all $u$ (assumption A2'), then $\E[U_i\mid X_i=x]$ is continuous in $x$.
+\end{propositio}
+
+\begin{proof}
+By Bayes' rule (treating $U_i$ as discrete; the continuous case follows by replacing sums with integrals):
+\[
+  \E[U_i\mid X_i=x]
+  = \sum_u u\,P(U_i=u\mid X_i=x)
+  = \sum_u u\,\frac{P(X_i=x\mid U_i=u)\,P(U_i=u)}{P(X_i=x)}.
+\]
+Write $P(X_i=x)=\sum_u P(X_i=x\mid U_i=u)\,P(U_i=u)$, so
+\[
+  \E[U_i\mid X_i=x]
+  = \frac{\sum_u u\, P(X_i=x\mid U_i=u)\,P(U_i=u)}
+         {\sum_u P(X_i=x\mid U_i=u)\,P(U_i=u)}.
+\]
+Under A2', the function $x\mapsto P(X_i=x\mid U_i=u)$ is continuous for each fixed $u$.  Since the $P(U_i=u)$ are constants, both the numerator and denominator are continuous in $x$ (finite sums of continuous functions).  As long as the denominator $P(X_i=x)>0$ in a neighbourhood of $c$ (guaranteed by the common support condition), the ratio is continuous in $x$ at $c$.
+\end{proof}
+
+\begin{propositio}
+  A2' has clearer economic content than A2: it says no agent can precisely manipulate $X_i$ to land exactly above the cutoff.  It fails if, e.g., all agents of type $u$ can perfectly set $X_i=c+\varepsilon$.
+\end{propositio}
+
+% ----------------------------------------------------------
+\begin{propositio}[Fuzzy RDD: $\beta_D$ under homogeneity and exclusion\label{prop:frdd_homog}]
+In the fuzzy RDD, with DGP $Y_i=\beta_0+\beta_D D_i+\delta X_i+\beta_Z Z_i+U_i$ and $D_i=\pi_0+\pi_Z Z_i+\pi_X X_i+V_i$, under A1--A4:
+\[
+  \frac{\lim_{x\downarrow c}\E[Y_i\mid X_i=x]-\lim_{x\uparrow c}\E[Y_i\mid X_i=x]}
+       {\lim_{x\downarrow c}\E[D_i\mid X_i=x]-\lim_{x\uparrow c}\E[D_i\mid X_i=x]}
+  = \beta_D.
+\]
+\end{propositio}
+
+\begin{proof}
+\textbf{Numerator (reduced form).}
+\begin{align*}
+  &\lim_{x\downarrow c}\E[Y_i\mid X_i=x]-\lim_{x\uparrow c}\E[Y_i\mid X_i=x]\\
+  &= \beta_D\bigl[\lim_{x\downarrow c}\E[D_i\mid X_i=x]-\lim_{x\uparrow c}\E[D_i\mid X_i=x]\bigr]\\
+  &\quad + \beta_Z\bigl[\lim_{x\downarrow c}Z_i-\lim_{x\uparrow c}Z_i\bigr]\\
+  &\quad + \underbrace{\E[U_i\mid X_i=c]-\lim_{x\uparrow c}\E[U_i\mid X_i=x]}_{\text{$=0$ by A2}}\\
+  &= \beta_D\pi_Z + \beta_Z\cdot 1.
+\end{align*}
+Since A4 gives $\beta_Z=0$:
+\[
+  \text{numerator} = \beta_D\pi_Z.
+\]
+
+\textbf{Denominator (first stage).}
+\[
+  \lim_{x\downarrow c}\E[D_i\mid X_i=x]-\lim_{x\uparrow c}\E[D_i\mid X_i=x]
+  = \pi_Z.
+\]
+
+\textbf{Ratio.}
+\[
+  \frac{\beta_D\pi_Z}{\pi_Z} = \beta_D. \qedhere
+\]
+\end{proof}
+
+\begin{propositio}
+  The numerator $\beta_D\pi_Z$ is the \emph{reduced form} or \emph{intention-to-treat} (ITT) effect—the impact of crossing the cutoff on the outcome, regardless of whether treatment works through $D_i$ or not.  The fuzzy RDD is an instrumental variables estimator with $Z_i=\mathbf{1}[X_i\ge c]$ as the instrument.
+\end{propositio}
+
+% ----------------------------------------------------------
+\begin{propositio}[Fuzzy RDD: ATT at cutoff (one-sided noncompliance)\label{prop:frdd_onesided}]
+Drop A1.  Maintain A2--A4 and assume there are no cross-overs: $\lim_{x\uparrow c}P(D_i=1\mid X_i=x)=0$ (no one is treated just below the cutoff).
+Then the ratio of reduced forms identifies the average treatment effect on the treated at the cutoff:
+\[
+  \frac{\lim_{x\downarrow c}\E[Y_i\mid X_i=x]-\lim_{x\uparrow c}\E[Y_i\mid X_i=x]}
+       {\lim_{x\downarrow c}\E[D_i\mid X_i=x]-0}
+  = \E[\beta_i\mid D_i=1, X_i=c].
+\]
+\end{propositio}
+
+\begin{proof}
+With heterogeneous effects, $Y_i=\beta_0+\beta_i D_i+\delta X_i+U_i$ and $D_i=\pi_0+\pi_i Z_i+\pi_X X_i+V_i$.
+
+\textbf{Reduced form numerator.}  Just above $c$ (where $Z_i=1$):
+\begin{align*}
+  \lim_{x\downarrow c}\E[Y_i\mid X_i=x]
+  &= \beta_0+\delta c+\E[\beta_i D_i\mid X_i=c,Z_i=1]+\E[U_i\mid X_i=c].
+\end{align*}
+Just below $c$ (where $Z_i=0$ and, by the no-crossover assumption, $D_i=0$):
+\begin{align*}
+  \lim_{x\uparrow c}\E[Y_i\mid X_i=x]
+  &= \beta_0+\delta c+\lim_{x\uparrow c}\E[U_i\mid X_i=x].
+\end{align*}
+By A2, the $U_i$ terms cancel.  The numerator equals
+\[
+  \E[\beta_i D_i\mid X_i=c,Z_i=1]
+  = \E[\beta_i\mid D_i=1,X_i=c]\cdot P(D_i=1\mid X_i=c, Z_i=1).
+\]
+
+\textbf{Denominator.}  By A3, $\lim_{x\downarrow c}P(D_i=1\mid X_i=x)=P(D_i=1\mid X_i=c, Z_i=1)>0$.
+
+\textbf{Ratio.}
+\[
+  \frac{\E[\beta_i\mid D_i=1,X_i=c]\cdot P(D_i=1\mid X_i=c,Z_i=1)}
+       {P(D_i=1\mid X_i=c,Z_i=1)}
+  = \E[\beta_i\mid D_i=1,X_i=c]. \qedhere
+\]
+\end{proof}
+
+% ----------------------------------------------------------
+\begin{propositio}[Fuzzy RDD: weighted effect at cutoff (two-sided noncompliance)\label{prop:frdd_twosided}]
+Drop A1.  Maintain A2--A4 with both cross-overs and no-shows (two-sided non-compliance).
+Then the ratio identifies a variance-weighted treatment effect at the cutoff:
+\[
+  \frac{\lim_{x\downarrow c}\E[Y_i\mid X_i=x]-\lim_{x\uparrow c}\E[Y_i\mid X_i=x]}
+       {\lim_{x\downarrow c}\E[D_i\mid X_i=x]-\lim_{x\uparrow c}\E[D_i\mid X_i=x]}
+  = \E\!\left[\beta_i\,\frac{\pi_i}{\E[\pi_i]}\biggm| X_i=c\right].
+\]
+\end{propositio}
+
+\begin{proof}
+This is the RDD analog of Proposition~\ref{prop:wate}.
+
+\textbf{First stage (denominator).}
+\begin{align*}
+  \lim_{x\downarrow c}\E[D_i\mid X_i=x]-\lim_{x\uparrow c}\E[D_i\mid X_i=x]
+  &= \E[\pi_i\mid X_i=c].
+\end{align*}
+
+\textbf{Reduced form (numerator).}
+\begin{align*}
+  &\lim_{x\downarrow c}\E[Y_i\mid X_i=x]-\lim_{x\uparrow c}\E[Y_i\mid X_i=x]\\
+  &= \E[\beta_i D_i\mid X_i=c,Z_i=1]-\E[\beta_i D_i\mid X_i=c,Z_i=0]\\
+  &= \E[\beta_i\pi_i\mid X_i=c].
+\end{align*}
+(This uses the same argument as in the proof of Proposition~\ref{prop:wate}: the change in $Y$ as $Z$ switches from 0 to 1 is $\beta_i\cdot\Delta D_i = \beta_i\pi_i$, averaged at $X_i=c$.)
+
+\textbf{Ratio.}
+\[
+  \frac{\E[\beta_i\pi_i\mid X_i=c]}{\E[\pi_i\mid X_i=c]}
+  = \E\!\left[\beta_i\,\frac{\pi_i}{\E[\pi_i\mid X_i=c]}\biggm| X_i=c\right]. \qedhere
+\]
+\end{proof}
+
+\begin{propositio}
+  Under monotonicity ($\pi_i\in\{0,1\}$), the ratio further simplifies to $\E[\beta_i\mid\pi_i=1,X_i=c]$—the LATE for compliers at the cutoff, directly analogous to Proposition~\ref{prop:late}.
+\end{propositio}
+
+% ============================================================
+\newpage
+\appendix
+\section*{Appendix: Notation Summary}
+% ============================================================
+
+\vspace{-10pt}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Symbol & Meaning \\
+\midrule
+$Y_{1i},Y_{0i}$ & Potential outcomes under treatment/control \\
+$D_i\in\{0,1\}$ & Treatment received \\
+$Z_i\in\{0,1\}$ & Treatment assigned (instrument / assignment rule) \\
+$\beta_i = Y_{1i}-Y_{0i}$ & Individual treatment effect \\
+$\ATE = \E[\beta_i]$ & Average treatment effect \\
+$\ATT = \E[\beta_i\mid D_i=1]$ & Average treatment effect on the treated \\
+$\LATE = \E[\beta_i\mid\pi_i=1]$ & Local average treatment effect (compliers) \\
+$\pi_i = D_i(Z_i=1)-D_i(Z_i=0)$ & Individual compliance probability / type \\
+$p(W_i) = P(D_i=1\mid W_i)$ & Propensity score \\
+$X_i$ & Running variable (RDD) \\
+$c$ & Cutoff (RDD) \\
+$\mu_i$ & Unit fixed effect (panel) \\
+$\gamma_t$ & Time fixed effect (panel) \\
+$U_{it}$ & Unobserved error (panel) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{document}
